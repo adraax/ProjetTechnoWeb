@@ -1,0 +1,6 @@
+// Place your settings in this file to overwrite default and user settings.
+{
+    "php.validate.executablePath": "C:/wamp64/bin/php/php7.0.0/php.exe",
+    "files.autoSave": "afterDelay",
+    "editor.wrappingColumn": 135
+}

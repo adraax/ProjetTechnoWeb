@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<definitions>
+    <define param='nombre_news' value='5'/>
+    <define param='nombre_caracteres' value='200'/>
+
+    <!-- Config BD -->
+    <define param="db_host" value="localhost"/>
+    <define param="db_name" value="projet_techno_web"/>
+    <define param="db_user" value="cadoc"/>
+    <define param="db_passwd" value="perceval"/>
+</definitions>

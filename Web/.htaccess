@@ -1,0 +1,17 @@
+<IfModule mod_rewrite.c>
+    <IfModule mod_negotiation.c>
+        Options -MultiViews
+    </IfModule>
+
+    RewriteEngine On
+
+    # Redirige les pages admin/ sur le Backend
+    RewriteRule ^admin/ bootstrap.php?app=Backend [QSA,L]
+
+    # Si le fichier auquel on tente d'accéder existe (si on veut accéder à une image par exemple).
+    # Alors on ne réécrit pas l'URL.
+    RewriteCond %{REQUEST_FILENAME} !-f
+
+    # Redirige toutes les autres requetes sur le Frontend
+    RewriteRule ^(.*)$ bootstrap.php?app=Frontend [QSA,L]
+</IfModule>
