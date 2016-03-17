@@ -2,4 +2,5 @@
 <routes>
     <route url="/" module="Test" action="index" />
     <route url="/connection" module="Test" action="connection" />
+    <route url="/inscription" module="Test" action="inscription" />
 </routes>

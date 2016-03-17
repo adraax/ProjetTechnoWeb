@@ -1,4 +1,4 @@
-<form action="/">
+<form action="/connection">
     <div class="form-group">
         <label for="username">Nom d'utilisateur :</label>
         <input type="text" name="username" id="username" class="form-control" required="required">
@@ -9,3 +9,4 @@
     </div>
     <button type="submit" class="btn btn-default">Connexion</button>
 </form>
+<a href="/inscription">Pas de compte ? Cliquez ici pour vous inscrire</a>

@@ -24,4 +24,9 @@ class TestController extends BaseController
     {
         
     }
+    
+    public function inscriptionAction(HTTPRequest $request)
+    {
+        
+    }
 }
