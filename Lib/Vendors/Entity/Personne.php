@@ -1,5 +1,5 @@
 <?php
-namespace \Entity;
+namespace Entity;
 
 use \GJLMFramework\Entity;
 
