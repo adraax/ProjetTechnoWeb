@@ -52,7 +52,7 @@ class Form
         //on génère les champs du formulaire
         foreach ($this->fields as $field) 
         {
-            $view .= $field->buildWidget().'<br/>';
+            $view .= $field->buildWidget();
         }
         
         return $view;
