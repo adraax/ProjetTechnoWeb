@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <routes>
-    <route url="/" module="Test" action="connection" />
+    <route url="/" module="Test" action="index" />
+    <route url="/connection" module="Connection" action="connection" auth="no"/>
+    <route url="/inscription" module="Connection" action="inscription" auth="no"/>
 </routes>

@@ -43,7 +43,7 @@ class Page extends ApplicationComponent
     {
         if(!is_string($contentFile) || empty($contentFile) || !file_exists($contentFile))
         {
-            throw new \InvalidArgumentException("La vue spécifiée est invalide");
+            throw new \InvalidArgumentException("La vue spécifiée est invalide : ".$contentFile);
         }
 
         $this->contentFile = $contentFile;
