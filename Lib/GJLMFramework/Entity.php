@@ -3,6 +3,8 @@ namespace GJLMFramework;
 
 abstract class Entity
 {
+    use Hydrator;
+    
     /* ********** Propriétés ********** */
     protected $id;
     protected $errors = [];
@@ -36,17 +38,5 @@ abstract class Entity
     public function isNew()
     {
         return !isset($this->id);
-    }
-    
-    public function hydrate(array $donnees)
-    {
-        foreach ($donnees as $attribut => $valeur)
-        {
-            $method = 'set'.ucfirst($attribut);
-            if(is_callable([$this, $method]))
-            {
-                $this->method($valeur);
-            }
-        }
     }
 }
