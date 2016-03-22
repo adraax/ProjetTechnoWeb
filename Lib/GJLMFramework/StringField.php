@@ -37,7 +37,7 @@ class StringField extends Field
         }
         
         $widget .= '<label for="'.$this->name.'">'.$this->label.'</label>';
-        $widget .= '<input type="text" id="'.$this->label.'" name="'.$this->label.'class="form-control" required="required"';
+        $widget .= '<input type="text" id="'.$this->name.'" name="'.$this->name.'class="form-control" required="required"';
         
         if(!empty($this->value))
         {
