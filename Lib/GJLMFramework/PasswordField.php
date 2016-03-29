@@ -6,6 +6,7 @@ class PasswordField extends Field
     /* ********** Méthodes ********** */
     public function buildWidget()
     {        
+        $class = "";
         if(!empty($this->errorMessage))
         {
             $class = "has-error";
@@ -19,12 +20,12 @@ class PasswordField extends Field
         }
         
         $widget .= '<label for="'.$this->name.'">'.$this->label.'</label>';
-        $widget .= '<input type="password" id="'.$this->name.'" name="'.$this->name.'class="form-control" required="required"';
+        $widget .= '<input type="password" id="'.$this->name.'" name="'.$this->name.'" class="form-control"';
         
         if(!empty($this->value))
         {
             $widget .= ' value="'.htmlspecialchars(strip_tags($this->value)).'"';
         }
-        return $widget .= ' />';
+        return $widget .= ' /></div>';
     }
 }

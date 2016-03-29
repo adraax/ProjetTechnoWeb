@@ -52,7 +52,7 @@ class TextField extends Field
         }
         
         $widget .= '<label for="'.$this->name.'">'.$this->label.'</label>';
-        $widget .= '<textarea id="'.$this->name.'" name="'.$this->name.'class="form-control" required="required"';
+        $widget .= '<textarea id="'.$this->name.'" name="'.$this->name.'class="form-control"';
         
         if(!empty($this->cols))
         {

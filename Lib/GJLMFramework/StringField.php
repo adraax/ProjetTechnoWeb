@@ -10,7 +10,7 @@ class StringField extends Field
     public function setMaxLength($maxLength)
     {
         $maxLength = (int) $maxLength;
-         if($amxLength > 0)
+         if($maxLength > 0)
          {
              $this->maxLength = $maxLength;
          }
@@ -36,7 +36,7 @@ class StringField extends Field
         }
         
         $widget .= '<label for="'.$this->name.'">'.$this->label.'</label>';
-        $widget .= '<input type="text" id="'.$this->name.'" name="'.$this->name.'class="form-control" required="required"';
+        $widget .= '<input type="text" id="'.$this->name.'" name="'.$this->name.'" class="form-control"';
         
         if(!empty($this->value))
         {

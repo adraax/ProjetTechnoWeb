@@ -1,12 +1,9 @@
-<form action="/connection">
-    <div class="form-group">
-        <label for="username">Nom d'utilisateur :</label>
-        <input type="text" name="username" id="username" class="form-control" required="required">
-    </div>
-    <div class="form-group">
-        <label for="password">Mot de passe :</label>
-        <input type="password" name="password" id="password" class="form-control" required="required">    
-    </div>
+<form method="post" action="/connection">
+    <?php echo $form; ?>
     <button type="submit" class="btn btn-default">Connexion</button>
 </form>
 <a href="/inscription">Pas de compte ? Cliquez ici pour vous inscrire</a>
+
+<hr/>
+
+

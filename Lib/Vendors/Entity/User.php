@@ -8,6 +8,7 @@ class User extends Entity
     /* ********** Propriétés ********** */
     protected $username,
                 $droits = [],
+                $password,
                 $roles = [];
     
     /* *********** Constantes *********** */
@@ -16,7 +17,10 @@ class User extends Entity
     /* ********** Getter *********** */
     public function getUsername()
     {
-        return $this->username;
+        if(isset($this->username))
+        {
+            return $this->username;
+        }
     }
     
     public function getDroits()
@@ -24,8 +28,30 @@ class User extends Entity
         return $this->droits;
     }
     
+    public function getPassword()
+    {
+        return $this->password;
+    }
+    
     public function getRoles()
     {
         return $this->roles;
+    }
+    
+    /* ********** Setter ********** */
+    public function setUsername($username)
+    {
+        if(is_string($username) && !empty($username))
+        {
+            $this->username = $username;
+        }
+    }
+    
+    public function setPassword($password)
+    {
+        if(is_string($password) && !empty($password))
+        {
+            $this->password = $password;
+        }
     }
 }
