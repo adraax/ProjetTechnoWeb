@@ -17,10 +17,7 @@ class User extends Entity
     /* ********** Getter *********** */
     public function getUsername()
     {
-        if(isset($this->username))
-        {
             return $this->username;
-        }
     }
     
     public function getDroits()

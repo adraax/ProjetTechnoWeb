@@ -28,7 +28,5 @@ class UserFormBuilder extends FormBuilder
                 new NotNullValidator('tape kelke chause salo')
             ]
         ]));
-        
-        var_dump(new MaxLengthValidator('tro lon batar', 5));
     }
 }

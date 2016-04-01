@@ -22,9 +22,6 @@ class ConnectionController extends BaseController
             $user = new User;
         }
         
-        
-        var_dump($request->getMethod());
-        
         $formBuilder = new UserFormBuilder($user);
         $formBuilder->build();
         
