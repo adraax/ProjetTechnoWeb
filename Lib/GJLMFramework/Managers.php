@@ -1,6 +1,7 @@
 <?php
 namespace GJLMFramework;
 
+//manager
 class Managers
 {
     protected $api = null;
