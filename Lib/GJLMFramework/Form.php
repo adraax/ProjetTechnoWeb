@@ -7,6 +7,12 @@ class Form
     protected $entity;
     protected $fields = [];
     
+    /* ********** Constructeur ********** */
+    public function __construct(Entity $entity)
+    {
+        $this->setEntity($entity);
+    }
+    
     /* ********** Getter ********** */
     public function getEntity()
     {
@@ -25,7 +31,7 @@ class Form
         $attr = 'get'.ucfirst($field->getName()); //on récupère le nom du champ
         $field->setValue($this->entity->$attr()); //on assigne la valeur de l'attribut au champ
         
-        $this->fields[] = $fields; //on ajoute le champ à la liste des champs
+        $this->fields[] = $field; //on ajoute le champ à la liste des champs
         return $this; //on retourne le formulaire pour pouvoir ajouter des champs plus facilement
     }
     
