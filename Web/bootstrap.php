@@ -16,6 +16,15 @@ $GJLMFrameworkLoader->register();
 $AppLoader = new SplClassLoader('App', __DIR__.'/..');
 $AppLoader->register();
 
+$modelLoader = new SplClassLoader('Model', __DIR__.'/../lib/vendors');
+$modelLoader->register();
+
+$entityLoader = new SplClassLoader('Entity', __DIR__.'/../lib/vendors');
+$entityLoader->register();
+
+$formBuilderLoader = new SplClassLoader('FormBuilder', __DIR__.'/../lib/vendors');
+$formBuilderLoader->register();
+
 $appClass = 'App\\'.$_GET['app'].'\\'.$_GET['app'].'Application';
 
 $app = new $appClass;
