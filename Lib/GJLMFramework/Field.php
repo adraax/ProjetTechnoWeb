@@ -10,6 +10,7 @@ abstract class Field
     protected $errorMessage;
     protected $label;
     protected $name;
+    protected $validators = [];
     protected $value;
     
     /* *********** Constructeur *********** */
@@ -30,6 +31,11 @@ abstract class Field
     public function getName()
     {
         return $this->name;
+    }
+    
+    public function getValidators()
+    {
+        return $this->validators;
     }
     
     public function getValue()
@@ -54,6 +60,17 @@ abstract class Field
         }
     }
     
+    public function setValidators(array $validators)
+    {
+        foreach ($validators as $validator)
+        {
+            if($validator instanceof Validator && !in_array($validator, $this->validators))
+            {
+                $this->validators[] = $validator;
+            }
+        }
+    }
+    
     public function setValue($value)
     {
         if(is_string($value))
@@ -67,6 +84,14 @@ abstract class Field
     
     public function isValid()
     {
-        //TODO 
+        foreach ($this->validators as $validator)
+        {
+            if(!$validator->isValid($this->value))
+            {
+                $this->errorMessage = $validator->getErrorMessage();
+                return false;
+            }
+        }
+        return true;
     }
 }
