@@ -8,11 +8,13 @@ class Licence extends Entity
     /* ********** Propriétés ********** */
     protected $num,
                 $type,
-                $id_personne;
+                $id_personne,
+                $activated;
                 
     const NUM_INV = 1;
     const TYPE_INV = 2;
     const ID_PERSONNE_INV = 3;
+    const ACTIVATED_INV = 4;
     
     /* *********** Getter ********** */
     public function getNum()
@@ -28,6 +30,11 @@ class Licence extends Entity
     public function getId_personne()
     {
         return $this->id_personne;
+    }
+    
+    public function getActivated()
+    {
+        return $this->activated;
     }
     
     /* ********** Setter ********** */
@@ -59,5 +66,28 @@ class Licence extends Entity
         }
         
         $this->id_personne = $id;
+    }
+    
+    public function setActivated($bool)
+    {
+        $bool = (int) $bool;
+        
+        if($bool !== 1 || $bool !== 0)
+        {
+            $this->errors[] = self::ACTIVATED_INV;
+        }
+        
+        if($bool === 0)
+        {
+            $this->activated = false;
+        }
+        else if($bool === 1)
+        {
+            $this->activated = true;
+        }
+        else
+        {
+            $this->activated = $bool;
+        }
     }
 }

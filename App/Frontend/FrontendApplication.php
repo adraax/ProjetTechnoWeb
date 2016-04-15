@@ -20,7 +20,6 @@ class FrontendApplication extends Application
         if($auth->getAuth())
         {
             $controller = new Modules\Connection\ConnectionController($this, 'Connection', 'connection');
-            echo 'bleu';
         }  
         else
         {

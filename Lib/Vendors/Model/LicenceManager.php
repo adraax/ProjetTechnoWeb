@@ -1,0 +1,28 @@
+<?php
+namespace Model;
+
+use \GJLMFramework\Manager;
+use \Entity\Licence;
+
+abstract class LicenceManager extends Manager
+{
+    abstract protected function add(Licence $licence);
+    abstract protected function modify(Licence $licence);
+    abstract public function delete($num);
+    
+    abstract public function getByPersonneId($id);
+    abstract public function getUnique($num);
+    
+    public function save(Licence $licence)
+    {
+        if($news->isValid())
+        {
+            $news->isNew() ? $this->add($news) : $this->modify($news);
+        }
+        else
+        {
+            throw new \RuntimeException("La licence soit être valide pour être enregistrée.");
+        }
+    }
+    
+}
