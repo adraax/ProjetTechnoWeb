@@ -72,7 +72,7 @@ class Licence extends Entity
     {
         $bool = (int) $bool;
         
-        if($bool !== 1 || $bool !== 0)
+        if($bool <= 0)
         {
             $this->errors[] = self::ACTIVATED_INV;
         }
@@ -81,13 +81,9 @@ class Licence extends Entity
         {
             $this->activated = false;
         }
-        else if($bool === 1)
+        else if($bool >0)
         {
             $this->activated = true;
-        }
-        else
-        {
-            $this->activated = $bool;
         }
     }
 }

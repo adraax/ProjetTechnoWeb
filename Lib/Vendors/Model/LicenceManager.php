@@ -15,9 +15,9 @@ abstract class LicenceManager extends Manager
     
     public function save(Licence $licence)
     {
-        if($news->isValid())
+        if($licence->isValid())
         {
-            $news->isNew() ? $this->add($news) : $this->modify($news);
+            $licence->isNew() ? $this->add($licence) : $this->modify($licence);
         }
         else
         {

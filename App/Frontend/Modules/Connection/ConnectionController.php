@@ -4,6 +4,7 @@ namespace App\Frontend\Modules\Connection;
 use \GJLMFramework\BaseController;
 use \GJLMFramework\HTTPRequest;
 use \Entity\User;
+use \Entity\Licence;
 use \FormBuilder\UserFormBuilder;
 
 class ConnectionController extends BaseController
@@ -37,6 +38,16 @@ class ConnectionController extends BaseController
     
     public function inscriptionAction(HTTPRequest $request)
     {
-        
+        if($request->getMethod() == 'POST')
+        {
+            $licenceManager = $this->managers->getManagerOf('Licence');
+            $licence = $licenceManager->getUnique($request->getPostData('num_license'));
+            var_dump($licence);
+            
+            if(!is_null($licence))
+            {
+                $personneManager = $this->managers->getManagerOf('Personne');
+            }
+        }
     }
 }

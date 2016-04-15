@@ -1,4 +1,4 @@
-<form action="/inscription">
+<form method="post" action="/inscription">
     <div class="form-group">
         <label for="num_license">N° Licence : </label>
         <input type="text" name="num_license" id="num_license" class="form-control" required="required">
