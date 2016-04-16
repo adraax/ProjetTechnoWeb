@@ -10,16 +10,18 @@ class Personne extends Entity
                 $adresse,
                 $date_naissance,
                 $email,
-                $certif_med, 
+                $tel,
+                $sexe,
                 $linked;
                 
     const PRENOM_INV = 1;
     const NOM_INV = 2;
     const ADRESSE_INV = 3;
     const DATE_NAISSANCE_INV = 4;
-    const EMAIL_IN = 5;
-    const CERTIF_MED_INV = 6;
+    const EMAIL_INV = 5;
+    const TEL_INV = 6;
     const LINKED_INV = 7;
+    const SEXE_INV = 8;
     
                 
     /* ********** Setter ********** */
@@ -73,14 +75,14 @@ class Personne extends Entity
         $this->email = $email;
     }
     
-    public function setCertif_med($certif)
+    public function setTel($tel)
     {
-        if($certif !== 0 || $certif !== 1)
+        if(!is_int($tel))
         {
-            $this->errors[] = self::CERTIF_MED_INV;
+            $this->errors[] = self::TEL_INV;
         }
         
-        $this->certif = $certif;
+        $this->tel = $tel;
     }
     
     public function setLinked($linked)
@@ -91,6 +93,16 @@ class Personne extends Entity
         }
         
         $this->linked = $linked;
+    }
+    
+    public function setSexe($sexe)
+    {
+        if($sexe !== "F" && $sexe !== "H")
+        {
+            $this->errors[] = self::SEXE_INV;
+        }
+        
+        $this->sexe = $sexe;
     }
     
     /* ********** Getter ********** */
@@ -119,13 +131,18 @@ class Personne extends Entity
         return $this->email;
     }
     
-    public function getCertif_med()
+    public function getTel()
     {
-        return $this->certif_med;
+        return $this->tel;
     }
     
     public function getLinked()
     {
         return $this->linked;
+    }
+    
+    public function getSexe()
+    {
+        return $this->sexe;
     }
 }
