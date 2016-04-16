@@ -20,7 +20,7 @@ abstract class PersonneManager extends Manager
         }
         else
         {
-            throw new \RuntimeException("La personne soit être valide pour être enregistrée.");
+            throw new \RuntimeException("La personne doit être valide pour être enregistrée.");
         }
     }
 }

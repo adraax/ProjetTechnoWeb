@@ -21,7 +21,7 @@ abstract class LicenceManager extends Manager
         }
         else
         {
-            throw new \RuntimeException("La licence soit être valide pour être enregistrée.");
+            throw new \RuntimeException("La licence doit être valide pour être enregistrée.");
         }
     }
     
