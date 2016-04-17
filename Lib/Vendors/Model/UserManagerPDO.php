@@ -32,4 +32,36 @@ class UserManagerPDO extends UserManager
     {
         $this->dao-exec('DELETE FROM user WHERE id = '.(int) $id);
     }
+    
+    public function getUnique($id)
+    {
+        $requete = $this->dao->prepare('SELECT username, password WHERE id = :id');
+        $requete->bindValue(':id', $id, \PDO::PARAM_INT);
+        $requete->execute();
+        
+        $requete->setFetchMode(\PDO::FETCH_CLASS | \PDO::FETCH_PROPS_LATE, '\Entity\User');
+        
+        if($user = $requete->fetch())
+        {
+            return $user;
+        }
+        
+        return null;
+    }
+    
+    public function getByPersonneId($id)
+    {
+        $requete = $this->dao->prepare('SELECT id, username, personne WHERE id_personne = :id');
+        $requete->bindValue(':id', $id, \PDO::PARAM_INT);
+        $requete->execute();
+        
+        $requete->setFetchMode(\PDO::FETCH_CLASS | \PDO::FETCH_PROPS_LATE, '\Entity\Personne');
+        
+         if($user = $requete->fetch())
+        {
+            return $user;
+        }
+        
+        return null;
+    }
 }

@@ -48,6 +48,11 @@ class ConnectionController extends BaseController
             {
                 $personneManager = $this->managers->getManagerOf('Personne');
             }
+            else
+            {
+                $this->app->getUser()->setFlash('Vous ne pouvez pas vous inscrire avec cette licence', 'alert-danger');
+                $this->app->getHttpResponse()->redirect('/inscription');
+            }
         }
     }
 }

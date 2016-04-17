@@ -17,7 +17,7 @@ class FrontendApplication extends Application
     {
         $auth = new Auth($this, $this->httpRequest->getRequestURI());
         
-        if($auth->getAuth() && !$this->app->getUser()->isAuthenticated())
+        if($auth->getAuth() && !$this->user->isAuthenticated())
         {
             $controller = new Modules\Connection\ConnectionController($this, 'Connection', 'connection');
         }  
