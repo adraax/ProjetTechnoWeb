@@ -49,7 +49,17 @@
     </nav>
 
     <div id="content" class="container">
-        <?php echo $content;?>
+        <?php
+        if($user->hasFlash())
+        {
+            $type = $user->getAttribute('flash_type');
+            $flash = $user->getFlash();
+            
+            echo '<div class="alert alert-dismissible '.$type.'" role="alert">
+              <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            '.$flash.'</div>';
+        }
+        echo $content;?>
     </div>
 
     <script src="<?php echo $path;?>js/jquery.js"></script>

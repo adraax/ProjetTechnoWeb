@@ -25,9 +25,10 @@ class User
         $_SESSION[$attr] = $value;
     }
 
-    public function setFlash($value)
+    public function setFlash($value, $type)
     {
         $_SESSION['flash'] = $value;
+        $_SESSION['flash_type'] = $type;
     }
 
     public function setAuthenticated($authenticated = true)
