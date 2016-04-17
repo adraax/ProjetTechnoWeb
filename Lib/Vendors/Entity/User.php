@@ -9,23 +9,16 @@ class User extends Entity
     protected $username,
                 $password,
                 $id_personne,
-                $droits = [],
                 $roles = [];
     
     /* *********** Constantes *********** */
     const INVALID_USERNAME = 1;
     const INVALID_ROLES = 2;
-    const INVALID_DROITS = 3;
                 
     /* ********** Getter *********** */
     public function getUsername()
     {
         return $this->username;
-    }
-    
-    public function getDroits()
-    {
-        return implode(',', $this->droits);
     }
     
     public function getPassword()
@@ -75,18 +68,6 @@ class User extends Entity
         else
         {
             $this->roles[] = explode(",", $roles);
-        }
-    }
-    
-    public function setDroits($droits)
-    {
-        if(!is_string($droits))
-        {
-            $this->errors[] = self::INVALID_DROITS;
-        }
-        else
-        {
-            $this->droits[] = explode(",", $droits);
         }
     }
     
