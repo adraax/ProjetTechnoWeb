@@ -3,10 +3,11 @@
 -- http://www.phpmyadmin.net
 --
 -- Client :  127.0.0.1
--- Généré le :  Ven 15 Avril 2016 à 14:38
+-- Généré le :  Dim 17 Avril 2016 à 11:51
 -- Version du serveur :  5.7.9
 -- Version de PHP :  7.0.0
 
+SET FOREIGN_KEY_CHECKS=0;
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
 
@@ -135,7 +136,7 @@ DROP TABLE IF EXISTS `licence`;
 CREATE TABLE IF NOT EXISTS `licence` (
   `num` int(11) NOT NULL,
   `id_personne` int(11) NOT NULL,
-  `type` varchar(30) CHARACTER SET utf8 NOT NULL,
+  `type` varchar(30) NOT NULL,
   `activated` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`num`),
   KEY `numeroAherent` (`id_personne`)
@@ -181,7 +182,7 @@ CREATE TABLE IF NOT EXISTS `personne` (
   `sexe` varchar(1) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `numero` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 
 --
 -- Contenu de la table `personne`
@@ -199,11 +200,10 @@ INSERT INTO `personne` (`id`, `nom`, `prenom`, `num_tel`, `email`, `adresse`, `d
 DROP TABLE IF EXISTS `user`;
 CREATE TABLE IF NOT EXISTS `user` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
+  `id_personne` int(11) NOT NULL,
   `username` varchar(30) NOT NULL,
   `password` varchar(255) NOT NULL,
-  `droits` varchar(255) NOT NULL,
   `roles` varchar(255) NOT NULL,
-  `id_personne` int(11) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -250,6 +250,7 @@ ALTER TABLE `equipage`
 ALTER TABLE `parent`
   ADD CONSTRAINT `parent_ibfk_1` FOREIGN KEY (`numeroAdherent`) REFERENCES `adherent` (`numero`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `parent_ibfk_2` FOREIGN KEY (`numeroPersonne`) REFERENCES `personne` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+SET FOREIGN_KEY_CHECKS=1;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
