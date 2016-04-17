@@ -6,6 +6,7 @@ use \GJLMFramework\HTTPRequest;
 use \Entity\User;
 use \Entity\Licence;
 use \FormBuilder\UserFormBuilder;
+use \FormBuilder\LicenceFormBuilder;
 
 class ConnectionController extends BaseController
 {
@@ -40,8 +41,25 @@ class ConnectionController extends BaseController
     {
         if($request->getMethod() == 'POST')
         {
+            $licence = new Licence([
+                'num' => $request->getPostData('num'),
+                'date' => $request->getPostData('date')
+                ]);
+        }
+        else
+        {
+            $licence = new Licence;
+        }
+        
+        $formBuilder = new LicenceFormBuilder($licence);
+        $formBuilder->build();
+        
+        $form = $formBuilder->getForm();
+        
+        if($request->getMethod() == 'POST' && $form->isValid())
+        {
             $licenceManager = $this->managers->getManagerOf('Licence');
-            $licence = $licenceManager->getUnique($request->getPostData('num_license'));
+            $licence = $licenceManager->getUnique($request->getPostData('num'));
             var_dump($licence);
             
             if(!is_null($licence))
@@ -54,5 +72,7 @@ class ConnectionController extends BaseController
                 $this->app->getHttpResponse()->redirect('/inscription');
             }
         }
+        
+        $this->page->addVar('form', $form->createView());
     }
 }

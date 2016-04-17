@@ -9,7 +9,8 @@ class Licence extends Entity
     protected $num,
                 $type,
                 $id_personne,
-                $activated;
+                $activated,
+                $date; //stockage temporaire pour inscription
                 
     const NUM_INV = 1;
     const TYPE_INV = 2;
@@ -35,6 +36,11 @@ class Licence extends Entity
     public function getActivated()
     {
         return $this->activated;
+    }
+    
+    public function getDate()
+    {
+        return $this->date;
     }
     
     /* ********** Setter ********** */
@@ -85,5 +91,10 @@ class Licence extends Entity
         {
             $this->activated = true;
         }
+    }
+    
+    public function setDate($date)
+    {
+        $this->date = $date;
     }
 }

@@ -14,18 +14,17 @@ class UserFormBuilder extends FormBuilder
         $this->form->add(new StringField([
             'label' => "Nom d'utilisateur :",
             'name' => "username",
-            'maxLength' => 5,
+            'maxLength' => 30,
             'validators' => [
-                new MaxLengthValidator('tro lon batar', 2),
-                new NotNullValidator('tape kelke chause salo')
+                new MaxLengthValidator("Le nom d'utilisateur ne doit pas dépasser 30 caractères.", 30),
+                new NotNullValidator("Le nom d'utilisateur ne peut pas être vide.")
             ]
         ]))
         ->add( new PasswordField([
             'label' => "Mot de passe : ",
             'name' => "password",
             'validators' => [
-                new MaxLengthValidator('tro lon batar', 2),
-                new NotNullValidator('tape kelke chause salo')
+                new NotNullValidator('Le mot de passe ne peut pas être vide.')
             ]
         ]));
     }
