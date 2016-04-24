@@ -64,7 +64,13 @@ class ConnectionController extends BaseController
             
             if(!is_null($licence))
             {
-                $personneManager = $this->managers->getManagerOf('Personne');
+                $userManager = $this->managers->getManagerOf('User');
+                $user = $userManager->getByPersonneId($licence->getId_personne());
+                
+                if(is_null($user))
+                {
+                    $this->app->getUser()->setFlash("Aucun compte n'est lié à cette licence. <br/> Remplissez le formulaire suivant pour le créer.", 'alert-info');
+                }                
             }
             else
             {

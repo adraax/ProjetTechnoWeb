@@ -51,11 +51,11 @@ class UserManagerPDO extends UserManager
     
     public function getByPersonneId($id)
     {
-        $requete = $this->dao->prepare('SELECT id, username, personne WHERE id_personne = :id');
-        $requete->bindValue(':id', $id, \PDO::PARAM_INT);
+        $requete = $this->dao->prepare('SELECT id, username FROM user WHERE id_personne = :id');
+        $requete->bindValue(':id',(int) $id, \PDO::PARAM_INT);
         $requete->execute();
         
-        $requete->setFetchMode(\PDO::FETCH_CLASS | \PDO::FETCH_PROPS_LATE, '\Entity\Personne');
+        $requete->setFetchMode(\PDO::FETCH_CLASS | \PDO::FETCH_PROPS_LATE, '\Entity\User');
         
          if($user = $requete->fetch())
         {
