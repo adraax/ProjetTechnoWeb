@@ -8,6 +8,7 @@ class User extends Entity
     /* ********** Propriétés ********** */
     protected $username,
                 $password,
+                $confirm_password,
                 $id_personne,
                 $roles = [];
     
@@ -24,6 +25,11 @@ class User extends Entity
     public function getPassword()
     {
         return $this->password;
+    }
+    
+    public function getConfirm_password()
+    {
+        return $this->confirm_password;
     }
     
     public function getRoles()
@@ -51,6 +57,11 @@ class User extends Entity
         {
             $this->password = password_hash($password, PASSWORD_DEFAULT);
         }
+    }
+    
+    public function setConfirm_password($password)
+    {
+        $this->confirm_password = $password;
     }
     
     public function setId_Personne($id)

@@ -3,4 +3,5 @@
     <route url="/" module="Test" action="index" auth="yes"/>
     <route url="/connection" module="Connection" action="connection" auth="no"/>
     <route url="/inscription" module="Connection" action="inscription" auth="no"/>
+    <route url="/createuser" module="Connection" action="createUser" auth="no"/>
 </routes>

@@ -7,6 +7,7 @@ use \Entity\User;
 use \Entity\Licence;
 use \Entity\Personne;
 use \FormBuilder\UserFormBuilder;
+use \FormBuilder\UserInscriptionFormBuilder;
 use \FormBuilder\LicenceFormBuilder;
 
 class ConnectionController extends BaseController
@@ -77,6 +78,9 @@ class ConnectionController extends BaseController
                     if(is_null($user))
                     {
                         $this->app->getUser()->setFlash("Aucun compte n'est lié à cette licence. <br/> Remplissez le formulaire suivant pour le créer.", 'alert-info');
+                        $this->app->getUser()->setAttribute('num_licence', $licence2->getNum());
+                        $this->app->getUser()->setAttribute('type_licence', $licence2->getType());
+                        $this->app->getHttpResponse()->redirect('/createuser');
                     }
                 }
                 else
@@ -93,5 +97,39 @@ class ConnectionController extends BaseController
         }
         
         $this->page->addVar('form', $form->createView());
+    }
+    
+    public function createUserAction(HTTPRequest $request)
+    {  
+        if(isset($_SESSION['num_licence'], $_SESSION['type_licence']))
+        {
+            if($request->getMethod() == 'POST')
+            {
+                $user = new User([
+                    'username' => $request->getPostData('username'),
+                    'password' => $request->getPostData('password')
+                ]);
+            }
+            else
+            {
+                $user = new User;
+            }
+            
+            $formBuilder = new UserInscriptionFormBuilder($user);
+            $formBuilder->build();
+            
+            $form = $formBuilder->getForm();
+            
+            if($request->getMethod() == 'POST' && $form->isValid())
+            {
+                $this->app->getHttpResponse()->redirect('/');
+            }
+            
+            $this->page->addVar('form', $form->createView());
+        }
+        else
+        {
+            $this->app->getHttpResponse()->redirect('/');
+        }
     }
 }
