@@ -10,9 +10,8 @@ class Personne extends Entity
                 $adresse,
                 $date_naissance,
                 $email,
-                $tel,
-                $sexe,
-                $linked;
+                $num_tel,
+                $sexe;
                 
     const PRENOM_INV = 1;
     const NOM_INV = 2;
@@ -20,8 +19,7 @@ class Personne extends Entity
     const DATE_NAISSANCE_INV = 4;
     const EMAIL_INV = 5;
     const TEL_INV = 6;
-    const LINKED_INV = 7;
-    const SEXE_INV = 8;
+    const SEXE_INV = 7;
     
                 
     /* ********** Setter ********** */
@@ -75,7 +73,7 @@ class Personne extends Entity
         $this->email = $email;
     }
     
-    public function setTel($tel)
+    public function setNum_tel($tel)
     {
         if(!is_int($tel))
         {
@@ -83,16 +81,6 @@ class Personne extends Entity
         }
         
         $this->tel = $tel;
-    }
-    
-    public function setLinked($linked)
-    {
-        if($linked !== 0 || $linked !== 1)
-        {
-            $this->errors[] = self::LINKED_INV;
-        }
-        
-        $this->linked = $linked;
     }
     
     public function setSexe($sexe)
@@ -134,11 +122,6 @@ class Personne extends Entity
     public function getTel()
     {
         return $this->tel;
-    }
-    
-    public function getLinked()
-    {
-        return $this->linked;
     }
     
     public function getSexe()

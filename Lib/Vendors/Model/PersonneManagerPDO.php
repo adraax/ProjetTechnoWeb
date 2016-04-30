@@ -8,7 +8,7 @@ class PersonneManagerPDO extends PersonneManager
 {
        public function getUnique($id)
        {
-           $requete = $this->dao->prepare('SELECT nom, prenom FROM personne WHERE id = :id');
+           $requete = $this->dao->prepare('SELECT id, nom, prenom, num_tel, email, adresse, date_naissance, sexe FROM personne WHERE id = :id');
            $requete->bindValue(':id', (int) $id, \PDO::PARAM_INT);
            $requete->execute();
            

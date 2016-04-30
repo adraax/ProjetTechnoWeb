@@ -5,6 +5,7 @@ use \GJLMFramework\BaseController;
 use \GJLMFramework\HTTPRequest;
 use \Entity\User;
 use \Entity\Licence;
+use \Entity\Personne;
 use \FormBuilder\UserFormBuilder;
 use \FormBuilder\LicenceFormBuilder;
 
@@ -59,18 +60,30 @@ class ConnectionController extends BaseController
         if($request->getMethod() == 'POST' && $form->isValid())
         {
             $licenceManager = $this->managers->getManagerOf('Licence');
-            $licence = $licenceManager->getUnique($request->getPostData('num'));
+            $licence2 = $licenceManager->getUnique($request->getPostData('num'));
             var_dump($licence);
             
-            if(!is_null($licence))
+            if(!is_null($licence2))
             {
-                $userManager = $this->managers->getManagerOf('User');
-                $user = $userManager->getByPersonneId($licence->getId_personne());
-                
-                if(is_null($user))
+                //vérification date de naissance
+                $personneManager = $this->managers->getManagerOf('Personne');
+                $personne = $personneManager->getUnique($licence2->getId_personne());
+                var_dump($personne);
+                if($licence->getDate() == $personne->getDate_naissance())
                 {
-                    $this->app->getUser()->setFlash("Aucun compte n'est lié à cette licence. <br/> Remplissez le formulaire suivant pour le créer.", 'alert-info');
-                }                
+                    $userManager = $this->managers->getManagerOf('User');
+                    $user = $userManager->getByPersonneId($licence->getId_personne());
+                    
+                    if(is_null($user))
+                    {
+                        $this->app->getUser()->setFlash("Aucun compte n'est lié à cette licence. <br/> Remplissez le formulaire suivant pour le créer.", 'alert-info');
+                    }
+                }
+                else
+                {
+                    $this->app->getUser()->setFlash('Vous ne pouvez pas vous inscrire avec cette licence', 'alert-danger');
+                    $this->app->getHttpResponse()->redirect('/inscription');
+                }
             }
             else
             {
