@@ -122,7 +122,16 @@ class ConnectionController extends BaseController
             
             if($request->getMethod() == 'POST' && $form->isValid())
             {
-                $this->app->getHttpResponse()->redirect('/');
+                if(password_verify($user->getConfirm_password(), $user->getPassword()))
+                {
+                    $this->app->getUser()->setFlash('Les deux mots de passes doivent être identiques.', 'alert-danger');
+                }
+                else
+                {
+                    $userManager = $this->managers->getManagerOf('User');
+                    $userManager->save($user);
+                    $this->app->getHttpResponse()->redirect('/');
+                }
             }
             
             $this->page->addVar('form', $form->createView());
