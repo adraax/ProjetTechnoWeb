@@ -27,7 +27,7 @@ class PersonneManagerPDO extends PersonneManager
            $requete = $this->dao->prepare('INSERT INTO personne SET nom = :nom, prenom = :prenom, num_tel = :num_tel, email = :email, adresse = :adresse, date_naissance = :date_naissance, sexe = :sexe');
            $requete->bindValue(':nom', $personne->getNom(), \PDO::PARAM_STR);
            $requete->bindValue(':prenom', $personne->getPrenom(), \PDO::PARAM_STR);
-           $requete->bindValue(':num_tel', $personne->getTel(), \PDO::PARAM_INT);
+           $requete->bindValue(':num_tel', $personne->getNum_tel(), \PDO::PARAM_INT);
            $requete->bindValue(':email', $personne->getEmail(), \PDO::PARAM_STR);
            $requete->bindValue(':adresse', $personne->getAdresse(), \PDO::PARAM_STR);
            $requete->bindValue(':date_naissance', $personne->getDate_naissance());
@@ -42,7 +42,7 @@ class PersonneManagerPDO extends PersonneManager
            $requete->bindValue(':id', $personne->getId(), \PDO::PARAM_INT);
            $requete->bindValue(':nom', $personne->getNom(), \PDO::PARAM_STR);
            $requete->bindValue(':prenom', $personne->getPrenom(), \PDO::PARAM_STR);
-           $requete->bindValue(':num_tel', $personne->getTel(), \PDO::PARAM_INT);
+           $requete->bindValue(':num_tel', $personne->getNum_tel(), \PDO::PARAM_INT);
            $requete->bindValue(':email', $personne->getEmail(), \PDO::PARAM_STR);
            $requete->bindValue(':adresse', $personne->getAdresse(), \PDO::PARAM_STR);
            $requete->bindValue(':date_naissance', $personne->getDate_naissance());

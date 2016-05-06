@@ -54,7 +54,7 @@ class LicenceFormBuilder extends FormBuilder
                 new NotNullValidator('Il faut choisir un type.')
             ]
 		]);
-		$type->addOption('Compétiteur', 'Compétiteur');
+		$type->addOption('Competiteur', 'Competiteur');
 		$type->addOption('Dirigeant', 'Dirigeant');
 		$type->addOption('Loisir', 'Loisir');
 		

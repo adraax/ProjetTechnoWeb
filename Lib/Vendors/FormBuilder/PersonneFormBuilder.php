@@ -3,6 +3,7 @@ namespace FormBuilder;
 
 use \GJLMFramework\FormBuilder;
 use \GJLMFramework\StringField;
+use \GJLMFramework\DatePickerField;
 use \GJLMFramework\TextField;
 use \GJLMFramework\RadioField;
 use \GJLMFramework\MaxLengthValidator;
@@ -38,6 +39,15 @@ class PersonneFormBuilder extends FormBuilder
             'validators' => [
                 new MaxLengthValidator('Le prénom d\'utilisateur est trop long.', 30),
                 new NotNullValidator('Il faut entrer un prénom.')
+            ]
+        ]))
+		->add(new DatePickerField([
+            'label' => 'Date de naissance : ',
+            'name' => 'date_naissance',
+            'maxLength' => 10,
+            'validators' => [
+                new MaxLengthValidator('La date de naissance ne doit pas dépasser 10 caractères.', 10),
+                new NotNullValidator('La date de naissance ne doit pas être vide.')
             ]
         ]))
 		->add(new TextField([

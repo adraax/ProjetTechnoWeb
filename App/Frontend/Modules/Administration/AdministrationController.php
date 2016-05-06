@@ -37,7 +37,8 @@ class AdministrationController extends BaseController
 		if($request->getMethod() == 'POST' && $form->isValid())
         {
             $personnemanager = $this->managers->getManagerOf('Personne');
-			$personnemanager->add($form->getEntity());
+			$personnemanager->save($form->getEntity());
+			$this->app->getUser()->setFlash('La personne '.$request->getPostData('nom').' '.$request->getPostData('prenom').' a bien été ajoutée.', 'alert-danger');
         }
         
         $this->page->addVar('form', $form->createView());
@@ -68,7 +69,8 @@ class AdministrationController extends BaseController
 		if($request->getMethod() == 'POST' && $form->isValid())
         {
             $licencemanager = $this->managers->getManagerOf('Licence');
-			$licencemanager->add($form->getEntity());
+			$licencemanager->save($form->getEntity());
+			$this->app->getUser()->setFlash('La licence '.$request->getPostData('num').' a bien été ajoutée.', 'alert-danger');
         }
 		
 		$this->page->addVar('form', $form->createView());

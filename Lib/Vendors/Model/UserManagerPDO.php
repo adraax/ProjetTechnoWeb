@@ -8,9 +8,9 @@ class UserManagerPDO extends UserManager
     protected function add(User $user)
     {
         $requete = $this->dao->prepare('INSERT INTO user SET id_personne = :id_personne, username = :username, password = :password, roles = :roles');
-        $requete->bindValue(':id_personne', $user->getId_personne(), \PDO::PARAM_INT);
+        $requete->bindValue(':id_personne', (int) $user->getId_personne(), \PDO::PARAM_INT); 
         $requete->bindValue(':username', $user->getUsername(), \PDO::PARAM_STR);
-        $requete->bindValue(':password', $user->getPassword(), \PDO::PARAM_STR);
+        $requete->bindValue(':password', password_hash($user->getPassword(), PASSWORD_DEFAULT) , \PDO::PARAM_STR); 
         $requete->bindValue(':roles', $user->getRoles(), \PDO::PARAM_STR);
         
         $requete->execute();

@@ -94,4 +94,31 @@ class User extends Entity
             return in_array($role, $this->roles);
         }
     }
+	
+	public function addRole($role)
+ 
+    {
+ 
+        if(!is_string($role))
+ 
+        {
+ 
+            throw new InvalidArgumentException("Le role doit être une chaine de caractère");
+ 
+        }
+ 
+        else
+ 
+        {  
+            if(!in_array($role, $this->roles))  
+            {  
+                $this->roles[] = $role;  
+            }  
+        }  
+    }  
+      
+    public function isValid()  
+    {  
+        return !(empty($this->username) || empty($this->password) || ($this->password !== $this->confirm_password));  
+    } 
 }

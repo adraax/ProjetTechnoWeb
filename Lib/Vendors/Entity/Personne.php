@@ -141,4 +141,9 @@ class Personne extends Entity
 			'Numéro de téléphone : '.$this->num_tel.'<br />'.
 			'</p>';
 	}
+	
+	public function isValid()
+	{
+		return !(empty($this->nom) || empty($this->prenom) || empty($this->adresse) || empty($this->date_naissance) || empty($this->email) || empty($this->num_tel) || empty($this->sexe));
+	}
 }
