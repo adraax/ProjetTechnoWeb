@@ -47,7 +47,19 @@ class LicenceFormBuilder extends FormBuilder
 			$option->addOption((int)$perso->getId(), $nom);
 		}
 		
+		$type = new ListField([
+			'label' => "Type de la licence :",
+			'name' => "type",
+			'validators' => [
+                new NotNullValidator('Il faut choisir un type.')
+            ]
+		]);
+		$type->addOption('Compétiteur', 'Compétiteur');
+		$type->addOption('Dirigeant', 'Dirigeant');
+		$type->addOption('Loisir', 'Loisir');
+		
 		$this->form->add($option)
+		->add($type)
 		->add(new StringField([
             'label' => 'Numéro de licence : ',
             'name' => 'num',
@@ -55,15 +67,6 @@ class LicenceFormBuilder extends FormBuilder
             'validators' => [
                 new MaxLengthValidator('Le numéro de licence ne doit pas dépasser 30 caractères.', 30),
                 new NotNullValidator('Le numéro de licence ne peut pas être vide.')
-            ]
-        ]))
-		->add(new StringField([
-            'label' => 'Type de licence : ',
-            'name' => 'type',
-            'maxLength' => 30,
-            'validators' => [
-                new MaxLengthValidator('Le type de licence ne doit pas dépasser 30 caractères.', 30),
-                new NotNullValidator('Le type de licence ne peut pas être vide.')
             ]
         ]));
 	}

@@ -9,13 +9,13 @@ class ListField extends Field
     /* ********** Setter ********** */
     public function addOption($option, $nom)
     {
-         if(is_int($option) && !empty($option) && is_string($nom) && !empty($nom))
+         if(!empty($option) && !empty($nom))
          {
              $this->options[$option] = $nom;
          }
          else
          {
-             throw new \InvalidArgumentException("Le nom de l'option doit être du texte et son numéro un nombre.");
+             throw new \InvalidArgumentException("L'option ne peut pas être vide.");
          }
     }
     
@@ -46,7 +46,7 @@ class ListField extends Field
 			
 			$widget .= '>'.$nom.'</option>';
         }
-        $widget .= '</select>';
+        $widget .= '</select><br />';
 		
         return $widget;
     }
