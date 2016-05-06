@@ -55,4 +55,19 @@ class PersonneManagerPDO extends PersonneManager
        {
            $this->dao->exec('DELETE FROM personne WHERE id = '.(int) $id);
        }
+	   
+	   //Permet d'obtenir la liste des personnes qui n'ont pas de licence
+	   public function getListSansLicence()
+	   {
+		   $personne = [];
+		   
+		   $requete = $this->dao->prepare('SELECT id, nom, prenom, num_tel, email, adresse, date_naissance, sexe FROM personne WHERE id NOT IN(
+			SELECT id_personne FROM licence WHERE id_personne IS NOT NULL)');
+           $requete->execute();
+           
+           $requete->setFetchMode(\PDO::FETCH_CLASS | \PDO::FETCH_PROPS_LATE, '\Entity\Personne');
+		   while($donnees = $requete->fetch())
+			   $personne[] = $donnees;
+		   return $personne;
+	   }
 }
