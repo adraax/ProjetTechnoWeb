@@ -73,13 +73,14 @@ class ConnectionController extends BaseController
                 if($licence->getDate() == $personne->getDate_naissance())
                 {
                     $userManager = $this->managers->getManagerOf('User');
-                    $user = $userManager->getByPersonneId($licence->getId_personne());
+                    $user = $userManager->getByPersonneId($licence2->getId_personne());
                     
                     if(is_null($user))
                     {
                         $this->app->getUser()->setFlash("Aucun compte n'est lié à cette licence. <br/> Remplissez le formulaire suivant pour le créer.", 'alert-info');
                         $this->app->getUser()->setAttribute('num_licence', $licence2->getNum());
                         $this->app->getUser()->setAttribute('type_licence', $licence2->getType());
+                        $this->app->getUser()->setAttribute('id_personne', $licence2->getId_personne());
                         $this->app->getHttpResponse()->redirect('/createuser');
                     }
                 }
@@ -107,7 +108,8 @@ class ConnectionController extends BaseController
             {
                 $user = new User([
                     'username' => $request->getPostData('username'),
-                    'password' => $request->getPostData('password')
+                    'password' => $request->getPostData('password'),
+                    'confirm_password' => $request->getPostData('confirm_password')
                 ]);
             }
             else
@@ -122,14 +124,25 @@ class ConnectionController extends BaseController
             
             if($request->getMethod() == 'POST' && $form->isValid())
             {
-                if(password_verify($user->getConfirm_password(), $user->getPassword()))
+                if($user->getConfirm_password() !== $user->getPassword())
                 {
                     $this->app->getUser()->setFlash('Les deux mots de passes doivent être identiques.', 'alert-danger');
                 }
                 else
                 {
+                    $user->setId_personne($this->app->getUser()->getAttribute('id_personne'));
+                    $user->addRole($this->app->getUser()->getAttribute('type_licence'));
+                    $this->app->getUser()->removeAttribute('id_personne');
+                    $this->app->getUser()->removeAttribute('type_licence');
                     $userManager = $this->managers->getManagerOf('User');
                     $userManager->save($user);
+                    
+                    $licenceManager = $this->managers->getManagerOf('Licence');
+                    $licence = $licenceManager->getUnique($this->app->getUser()->getAttribute('num_licence'));
+                    $licence->setActivated(true);
+                    $licence->setId(5);
+                    $licenceManager->save($licence);
+                    
                     $this->app->getHttpResponse()->redirect('/');
                 }
             }
