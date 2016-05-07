@@ -32,7 +32,7 @@
             </ul>
             <ul class="nav navbar-nav navbar-right">
             <?php if(!$user->isAuthenticated()) { ?>
-                <li><a href="/connection">Connexion</a></li>
+                <li><a href="" data-toggle="modal" data-target="#myModal">Connexion</a></li>
             <?php } else {?>
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Nom Utilisateur <span class="caret"></span></a>
@@ -47,6 +47,21 @@
         </div><!--/.navbar-collapse -->
       </div>
     </nav>
+
+<!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">Connexion</h4>
+      </div>
+      <div class="modal-body" id="mod">
+        ...
+      </div>
+    </div>
+  </div>
+</div>
 
     <div id="content" class="container">
         <?php
@@ -64,5 +79,10 @@
 
     <script src="<?php echo $path;?>js/jquery.js"></script>
     <script src="<?php echo $path;?>js/bootstrap.js"></script>
+    <?php if(isset($script))
+    {
+            echo '<script src="'.$path.'js/'.$script.'.js"></script>';
+    }
+    ?>
 </body>
 </html>

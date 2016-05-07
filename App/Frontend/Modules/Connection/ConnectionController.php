@@ -37,6 +37,7 @@ class ConnectionController extends BaseController
         }
         
         $this->page->addVar('form', $form->createView());
+        $this->page->addVar('script', 'test');
     }
     
     public function inscriptionAction(HTTPRequest $request)
@@ -180,5 +181,35 @@ class ConnectionController extends BaseController
         {
             $this->app->getHttpResponse()->redirect('/');
         }
+    }
+    
+    public function connectionAjaxAction(HTTPRequest $request)
+    {
+        if($request->getMethod() == 'POST')
+        {
+            $user = new User([
+                'username' => $request->getPostData('username'),
+                'password' => $request->getPostData('password')
+            ]);
+        }
+        else
+        {
+            $user = new User;
+        }
+        
+        $formBuilder = new UserFormBuilder($user);
+        $formBuilder->build();
+        
+        $form = $formBuilder->getForm();
+        
+        if($request->getMethod() == 'POST' && $form->isValid())
+        {
+            $this->app->getHttpResponse()->redirect('/');
+        }
+        
+       echo '<form method="post" action="/connection">'.$form->createView().'
+                <button type="submit" class="btn btn-default">Connexion</button></form>
+            <a href="/inscription">Pas de compte ? Cliquez ici pour vous inscrire</a>';
+        exit;
     }
 }
