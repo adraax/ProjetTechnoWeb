@@ -40,7 +40,7 @@ class AdministrationController extends BaseController
         {
             $personnemanager = $this->managers->getManagerOf('Personne');
 			$personnemanager->save($form->getEntity());
-			$this->app->getUser()->setFlash('La personne '.$request->getPostData('nom').' '.$request->getPostData('prenom').' a bien été ajoutée.', 'alert-danger');
+			$this->app->getUser()->setFlash('La personne '.$request->getPostData('nom').' '.$request->getPostData('prenom').' a bien été ajoutée.', 'alert-info');
         }
         
         $this->page->addVar('form', $form->createView());
@@ -72,7 +72,7 @@ class AdministrationController extends BaseController
         {
             $licencemanager = $this->managers->getManagerOf('Licence');
 			$licencemanager->save($form->getEntity());
-			$this->app->getUser()->setFlash('La licence '.$request->getPostData('num').' a bien été ajoutée.', 'alert-danger');
+			$this->app->getUser()->setFlash('La licence '.$request->getPostData('num').' a bien été ajoutée.', 'alert-info');
         }
 		
 		$this->page->addVar('form', $form->createView());
@@ -88,7 +88,7 @@ class AdministrationController extends BaseController
 			if($request->postExists('id'))
 			{
 				$user = $usermanager->getUnique($request->getPostData('id'));
-				$user->setRoles('');
+				$user->videRoles();
 				$user->setConfirm_password($user->getPassword());
 				if($request->postExists('roles'))
 					foreach($request->getPostData('roles') as $role)
@@ -110,7 +110,7 @@ class AdministrationController extends BaseController
 		if($request->getMethod() == 'POST' && $form->isValid())
         {
 			$usermanager->save($user);
-			$this->app->getUser()->setFlash('Les rôles '.$user->getRoles().' ont bien été ajoutés à '.$user->getUsername().'.', 'alert-danger');
+			$this->app->getUser()->setFlash($user->getUsername().' a le(s) rôle(s) '.$user->getRoles().'.', 'alert-info');
         }
 		
 		$this->page->addVar('form', $form->createView());

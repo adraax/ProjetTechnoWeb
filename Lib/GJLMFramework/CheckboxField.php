@@ -42,7 +42,7 @@ class CheckboxField extends Field
 			if(!empty($this->value) && substr_count($this->value, $bouton)>0)
 				$widget .= ' checked="checked"';
 			
-			$widget .= ' /><label for="'.$bouton.'">'.$bouton.$this->value.'</label><br />';
+			$widget .= ' /><label for="'.$bouton.'">'.$bouton.'</label><br />';
         }
 		$widget .= '</p>';
         

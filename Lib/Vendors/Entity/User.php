@@ -106,16 +106,27 @@ class User extends Entity
         }
         else
         {
-			if(substr_count($this->getRoles(), $role)==0)
+			if(!empty($role))
 			{
-				if(is_array($this->roles))
-					$this->roles[] = $role;
-				else
-					$this->setRoles($this->getRoles().','.$role);
+				if(substr_count($this->getRoles(), $role)==0)
+				{
+					if(is_array($this->roles) && !in_array($role, $this->roles))
+						$this->roles[] = $role;
+					else
+						if(!empty($this->roles))
+							$this->setRoles($this->getRoles().','.$role);
+						else
+							$this->setRoles($role);
+				}
 			}
         }  
     }  
-      
+    
+	public function videRoles()
+	{
+		$this->roles = [];
+	}
+	
     public function isValid()  
     {  
         return !(empty($this->username) || empty($this->password) || ($this->password !== $this->confirm_password));  
