@@ -1,8 +1,6 @@
 <?php
 namespace Entity;
-
 use \GJLMFramework\Entity;
-
 class Licence extends Entity
 {
     /* ********** Propriétés ********** */
@@ -97,9 +95,10 @@ class Licence extends Entity
     {
         $this->date = $date;
     }
-	
-	public function isValid()
-	{
-		return !(empty($this->num) || empty($this->type) || empty($this->id_personne));
-	}
+    
+    /* ********** Méthode ********** */
+    public function isValid()
+    {
+        return !(empty($this->num) || empty($this->type) || empty($this->id_personne) || empty($this->activated) || !empty($errors));
+    }
 }

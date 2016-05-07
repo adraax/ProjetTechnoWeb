@@ -4,6 +4,7 @@
     <route url="/connection" module="Connection" action="connection" auth="no"/>
     <route url="/inscription" module="Connection" action="inscription" auth="no"/>
     <route url="/createuser" module="Connection" action="createUser" auth="no"/>
+	<route url="/connectionajax" module="Connection" action="connectionAjax" auth="no"/>
 	
 	<route auth="yes" action="afficher" module="Profil" url="/afficherprofil"/>
 	<route auth="yes" action="modifier" module="Profil" url="/modifierprofil"/>

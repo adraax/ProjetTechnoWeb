@@ -10,8 +10,8 @@ class Competition extends Entity
                 $adresse, //L'adresse est séparée en 3 morceaux pour facilité les recherches (itinéraire...)
                 $code_postal,
 				$ville, 
-				$lien_map, //Lien vers une carte avec l'adresse de la compétition
-				$lien_itineraire, //Lien vers une carte avec l'itinéraire Dijon-compétition
+				$lien_map, //Lien vers une carte avec l'adresse de la compétition (https://www.google.fr/maps/search/ville)
+				$lien_itineraire, //Lien vers une carte avec l'itinéraire Dijon-compétition (https://www.google.fr/maps/dir/Dijon/ville)
 				$meteo,
 				$date, //Date de la compétition
 				$type_hebergement,

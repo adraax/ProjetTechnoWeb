@@ -3,15 +3,19 @@ namespace Entity;
 
 use \GJLMFramework\Entity;
 
-class Competiteur extends Personne
+class Competiteur extends Entity
 {
 	protected $categorie,
 				$specialite,
-				$objectif_saison;
+				$objectif_saison,
+				$num_personne,
+				$certif_med; //0 ou 1 dans la BD, mais gestion en boolean dans l'appli
                 
     const CATEGORIE_INV = 1;
     const SPECIALITE_INV = 2;
     const OBJECTIF_SAISON_INV = 3;
+	const NUM_PERSONNE_INV = 4;
+	const CERTIF_MED_INV = 5;
     
                 
     /* ********** Setter ********** */
@@ -44,6 +48,29 @@ class Competiteur extends Personne
         
         $this->objectif_saison = $objectif_saison;
     }
+	
+	public function setNum_personne($num_personne)
+    {
+        if(!is_int($num_personne) || empty($num_personne))
+        {
+            $this->errors[] = self::NUM_PERSONNE_INV;
+        }
+        
+        $this->num_personne = $num_personne;
+    }
+	
+	public function setCertif_med($certif_med)
+    {
+        if(!is_bool($certif_med) || empty($certif_med))
+        {
+            $this->errors[] = self::CERTIF_MED_INV;
+        }
+        else
+			if($certif_med)
+				$this->certif_med = 1;
+			else
+				$this->certif_med = 0;
+    }
     
     /* ********** Getter ********** */
     public function getCategorie()
@@ -60,4 +87,22 @@ class Competiteur extends Personne
     {
         return $this->objectif_saison;
     }
+	
+	public function getNum_personne()
+    {
+        return $this->num_personne;
+    }
+	
+	public function getCertif_med()
+    {
+		if($this->certif_med == 1)
+			return true;
+		else
+			return false;
+    }
+	
+	public function isValid()
+	{
+		return !(empty($this->specialite) || empty($this->categorie) || empty($this->num_personne) || empty($this->certif_med));
+	}
 }
