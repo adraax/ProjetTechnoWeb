@@ -81,7 +81,10 @@ class User extends Entity
         }
         else
         {
-            $this->roles = explode(",", $roles);
+			if(empty($roles))
+				$this->roles = [];
+			else
+				$this->roles = explode(",", $roles);
         }
     }
     
@@ -121,12 +124,7 @@ class User extends Entity
 			}
         }  
     }  
-    
-	public function videRoles()
-	{
-		$this->roles = [];
-	}
-	
+
     public function isValid()  
     {  
         return !(empty($this->username) || empty($this->password) || ($this->password !== $this->confirm_password));  

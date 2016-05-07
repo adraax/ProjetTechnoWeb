@@ -30,6 +30,7 @@ class RoleFormBuilder extends FormBuilder
 			$nom = $user->getUsername();
 			$option->addOption((int)$user->getId(), $nom);
 		}
+		$option->setOnchange('request(this);');
 		
 		$roles = new CheckboxField([
 			'label' => "Roles :",

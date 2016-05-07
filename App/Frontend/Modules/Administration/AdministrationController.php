@@ -88,7 +88,7 @@ class AdministrationController extends BaseController
 			if($request->postExists('id'))
 			{
 				$user = $usermanager->getUnique($request->getPostData('id'));
-				$user->videRoles();
+				$user->setRoles('');
 				$user->setConfirm_password($user->getPassword());
 				if($request->postExists('roles'))
 					foreach($request->getPostData('roles') as $role)
@@ -99,7 +99,7 @@ class AdministrationController extends BaseController
 		}
 		else
 		{
-			$user = new User;
+			$user = $users[0];
 		}
 		
 		$formBuilder = new RoleFormBuilder($user);
@@ -115,4 +115,27 @@ class AdministrationController extends BaseController
 		
 		$this->page->addVar('form', $form->createView());
     }
+	
+	//Pour l'ajax
+	public function returnrolesAction(HTTPRequest $request)
+	{
+		header("Content-Type: text/xml");
+		echo '<?xml version="1.0" encoding="utf-8"?>';
+		echo '<roles>';
+		$num = ($request->postExists('num')) ? $request->getPostData('num') : NULL;
+
+		if ($num) 
+		{
+			$usermanager = $this->managers->getManagerOf('User');
+			$user = $usermanager->getUnique($num);
+			$roles = explode(',',$user->getRoles());
+			foreach($roles as $role)
+			{
+				echo '<role name="' . $role . '" />';
+			}
+		}
+
+		echo '</roles>';
+		exit;
+	}
 }

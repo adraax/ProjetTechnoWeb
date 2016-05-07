@@ -5,6 +5,7 @@ class ListField extends Field
 {
     /* ********** Propréiétes *********** */
 	protected $options = [];
+	protected $onchange; //Pour pouvoir rajouter un script
     
     /* ********** Setter ********** */
     public function addOption($option, $nom)
@@ -19,6 +20,14 @@ class ListField extends Field
          }
     }
     
+	public function setOnchange($onchange)
+	{
+		if(is_string($onchange))
+		{
+			$this->onchange = $onchange;
+		}
+	}
+	
     /* ********** Méthodes ********** */	
     public function buildWidget()
     {        
@@ -35,7 +44,12 @@ class ListField extends Field
         }
         
         $widget .= '<label for="'.$this->name.'">'.$this->label.'</label><br />';
-		$widget .= '<select name="'.$this->name.'" id ="'.$this->name.' class="form-control">';
+		$widget .= '<select name="'.$this->name.'" id ="'.$this->name.'" ';
+		
+		if(!empty($this->onchange))
+			$widget .= 'onchange="'.$this->onchange.'" ';
+		
+		$widget .= 'class="form-control">';
 		foreach($this->options as $option => $nom)
 		{
 			$widget .= '<option';

@@ -11,4 +11,5 @@
 	<route url="/ajoutpersonne" module="Administration" action="ajoutpersonne" auth="no"/>
 	<route url="/ajoutadherent" module="Administration" action="ajoutadherent" auth="no"/>
 	<route url="/gestionroles" module="Administration" action="gestionroles" auth="no"/>
+	<route url="/returnroles" module="Administration" action="returnroles" auth="no"/>
 </routes>
