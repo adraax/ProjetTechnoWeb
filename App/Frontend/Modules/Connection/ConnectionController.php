@@ -61,34 +61,50 @@ class ConnectionController extends BaseController
         if($request->getMethod() == 'POST' && $form->isValid())
         {
             $licenceManager = $this->managers->getManagerOf('Licence');
-            $licence2 = $licenceManager->getUnique($request->getPostData('num'));
-            var_dump($licence);
+            $licence2 = $licenceManager->getUnique($request->getPostData('num'));        
             
             if(!is_null($licence2))
             {
-                //vérification date de naissance
-                $personneManager = $this->managers->getManagerOf('Personne');
-                $personne = $personneManager->getUnique($licence2->getId_personne());
-                var_dump($personne);
-                if($licence->getDate() == $personne->getDate_naissance())
-                {
-                    $userManager = $this->managers->getManagerOf('User');
-                    $user = $userManager->getByPersonneId($licence2->getId_personne());
-                    
-                    if(is_null($user))
+                if(!$licence2->getActivated()==true)
+                {//vérification date de naissance
+                    $personneManager = $this->managers->getManagerOf('Personne');
+                    $personne = $personneManager->getUnique($licence2->getId_personne());
+                    if($licence->getDate() == $personne->getDate_naissance())
                     {
-                        $this->app->getUser()->setFlash("Aucun compte n'est lié à cette licence. <br/> Remplissez le formulaire suivant pour le créer.", 'alert-info');
-                        $this->app->getUser()->setAttribute('num_licence', $licence2->getNum());
-                        $this->app->getUser()->setAttribute('type_licence', $licence2->getType());
-                        $this->app->getUser()->setAttribute('id_personne', $licence2->getId_personne());
-                        $this->app->getHttpResponse()->redirect('/createuser');
+                        $userManager = $this->managers->getManagerOf('User');
+                        $user = $userManager->getByPersonneId($licence2->getId_personne());
+                        
+                        if(is_null($user))
+                        {
+                            $this->app->getUser()->setFlash("Aucun compte n'est lié à cette licence. <br/> Remplissez le formulaire suivant pour le créer.", 'alert-info');
+                            $this->app->getUser()->setAttribute('num_licence', $licence2->getNum());
+                            $this->app->getUser()->setAttribute('type_licence', $licence2->getType());
+                            $this->app->getUser()->setAttribute('id_personne', $licence2->getId_personne());
+                            $this->app->getHttpResponse()->redirect('/createuser');
+                        }
+                        else
+                        {
+                            $licenceManager = $this->managers->getManagerOf('Licence');
+                            $licence2 = $licenceManager->getUnique($licence->getNum());
+                            $licence2->setActivated(1);
+                            $licence2->setId(5);
+                            $licenceManager->save($licence2);
+                        
+                            $this->app->getHttpResponse()->redirect('/');
+                        }
+                    }
+                    else
+                    {
+                        $this->app->getUser()->setFlash('Vous ne pouvez pas vous inscrire avec cette licence', 'alert-danger');
+                        $this->app->getHttpResponse()->redirect('/inscription');
                     }
                 }
                 else
                 {
-                    $this->app->getUser()->setFlash('Vous ne pouvez pas vous inscrire avec cette licence', 'alert-danger');
-                    $this->app->getHttpResponse()->redirect('/inscription');
+                    $this->app->getUser()->setFlash('Cette licence a déjà été activée', 'alert-warning');
+                    $this->app->getHttpResponse()->redirect('/');
                 }
+                
             }
             else
             {
@@ -124,25 +140,36 @@ class ConnectionController extends BaseController
             
             if($request->getMethod() == 'POST' && $form->isValid())
             {
-                if($user->getConfirm_password() !== $user->getPassword())
+                $userManager = $this->managers->getManagerOf('User');
+                $user2 = $userManager->getByName($user->getUsername);
+                
+                if(is_null($user2))
                 {
-                    $this->app->getUser()->setFlash('Les deux mots de passes doivent être identiques.', 'alert-danger');
+                    if($user->getConfirm_password() !== $user->getPassword())
+                    {
+                        $this->app->getUser()->setFlash('Les deux mots de passes doivent être identiques.', 'alert-danger');
+                    }
+                    else
+                    {
+                        $user->setId_personne($this->app->getUser()->getAttribute('id_personne'));
+                        $user->addRole($this->app->getUser()->getAttribute('type_licence'));
+                        $this->app->getUser()->removeAttribute('id_personne');
+                        $this->app->getUser()->removeAttribute('type_licence');
+                        $userManager = $this->managers->getManagerOf('User');
+                        $userManager->save($user);
+                        
+                        $licenceManager = $this->managers->getManagerOf('Licence');
+                        $licence = $licenceManager->getUnique($this->app->getUser()->getAttribute('num_licence'));
+                        $licence->setActivated(1);
+                        $licence->setId(5);
+                        $licenceManager->save($licence);
+                        
+                        $this->app->getHttpResponse()->redirect('/');
+                    }
                 }
                 else
                 {
-                    $user->setId_personne($this->app->getUser()->getAttribute('id_personne'));
-                    $user->addRole($this->app->getUser()->getAttribute('type_licence'));
-                    $this->app->getUser()->removeAttribute('id_personne');
-                    $this->app->getUser()->removeAttribute('type_licence');
-                    $userManager = $this->managers->getManagerOf('User');
-                    $userManager->save($user);
-                    
-                    $licenceManager = $this->managers->getManagerOf('Licence');
-                    $licence = $licenceManager->getUnique($this->app->getUser()->getAttribute('num_licence'));
-                    $licence->setActivated(true);
-                    $licence->setId(5);
-                    $licenceManager->save($licence);
-                    
+                    $this->app->getUser()->setFlash('Le nom d\'utilisateur est déjà utilisé.', 'alert-danger');
                     $this->app->getHttpResponse()->redirect('/');
                 }
             }

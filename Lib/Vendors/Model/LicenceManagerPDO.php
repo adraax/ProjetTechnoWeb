@@ -48,7 +48,7 @@ class LicenceManagerPDO extends LicenceManager
     
     protected function modify(Licence $licence)
     {
-        $requete = $this->dao->prepare('UPDATE licence SET id_personne = :id, type = :type, activated = :activated WHERE num = :num,');
+        $requete = $this->dao->prepare('UPDATE licence SET id_personne = :id, type = :type, activated = :activated WHERE num = :num');
         $requete->bindValue(':num', (int) $licence->getNum(), \PDO::PARAM_INT);
         $requete->bindValue(':id', (int) $licence->getId_personne(), \PDO::PARAM_INT);
         $requete->bindValue(':type', (string) $licence->getType(), \PDO::PARAM_STR);

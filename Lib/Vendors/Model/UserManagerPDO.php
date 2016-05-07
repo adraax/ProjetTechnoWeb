@@ -64,4 +64,21 @@ class UserManagerPDO extends UserManager
         
         return null;
     }
+    
+    public function getByName($name)
+    {
+        $requete = $this->dao->prepare('SELECT id, username FROM user WHERE username = :name');
+        
+        $requete->bindValue(':name', (string) $name, \PDO::PARAM_STR);
+        $requete->execute();
+        
+        $requete->setFetchMode(\PDO::FETCH_CLASS | \PDO::FETCH_PROPS_LATE, '\Entity\User');
+        
+        if($user = $requete->fetch())
+        {
+            return $user;
+        }
+        
+        return null;
+    }
 }

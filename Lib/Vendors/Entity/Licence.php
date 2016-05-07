@@ -97,4 +97,10 @@ class Licence extends Entity
     {
         $this->date = $date;
     }
+    
+    /* ********** Méthode ********** */
+    public function isValid()
+    {
+        return !(empty($this->num) || empty($this->type) || empty($this->id_personne) || empty($this->activated) || !empty($errors));
+    }
 }
