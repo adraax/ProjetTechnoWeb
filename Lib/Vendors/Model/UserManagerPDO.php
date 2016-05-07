@@ -35,7 +35,7 @@ class UserManagerPDO extends UserManager
     
     public function getUnique($id)
     {
-        $requete = $this->dao->prepare('SELECT username, password WHERE id = :id');
+        $requete = $this->dao->prepare('SELECT id, id_personne, username, password, roles FROM user WHERE id = :id');
         $requete->bindValue(':id', $id, \PDO::PARAM_INT);
         $requete->execute();
         
@@ -63,5 +63,19 @@ class UserManagerPDO extends UserManager
         }
         
         return null;
+    }
+	
+	//Permet de retourner tous les utilisateurs
+	public function getList()
+    {
+	    $users = [];
+	   
+	    $requete = $this->dao->prepare('SELECT id, id_personne, username, password, roles FROM user');
+	    $requete->execute();
+	   
+	    $requete->setFetchMode(\PDO::FETCH_CLASS | \PDO::FETCH_PROPS_LATE, '\Entity\User');
+	    while($donnees = $requete->fetch())
+		    $users[] = $donnees;
+	    return $users;
     }
 }

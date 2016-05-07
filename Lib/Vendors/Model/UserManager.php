@@ -12,6 +12,7 @@ abstract class UserManager extends Manager
     
     abstract public function getUnique($id);
     abstract public function getByPersonneId($id);
+	abstract public function getList();
     
     public function save(User $user)
     {

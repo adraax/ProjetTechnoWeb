@@ -6,8 +6,10 @@ use \GJLMFramework\BaseController;
 use \GJLMFramework\HTTPRequest;
 use \Entity\Personne;
 use \Entity\Licence;
+use \Entity\User;
 use \FormBuilder\PersonneFormBuilder;
 use \FormBuilder\LicenceFormBuilder;
+use \FormBuilder\RoleFormBuilder;
 
 class AdministrationController extends BaseController
 {
@@ -78,6 +80,39 @@ class AdministrationController extends BaseController
 	
 	public function gestionrolesAction(HTTPRequest $request)
     {
+		$usermanager = $this->managers->getManagerOf('User');
+		$users = $usermanager->getList();
 		
+		if($request->getMethod() == 'POST')
+		{
+			if($request->postExists('id'))
+			{
+				$user = $usermanager->getUnique($request->getPostData('id'));
+				$user->setRoles('');
+				$user->setConfirm_password($user->getPassword());
+				if($request->postExists('roles'))
+					foreach($request->getPostData('roles') as $role)
+						$user->addRole($role);
+			}
+			else
+				$user = new User;
+		}
+		else
+		{
+			$user = new User;
+		}
+		
+		$formBuilder = new RoleFormBuilder($user);
+		$formBuilder->setUsers($users);
+		$formBuilder->build();
+		
+		$form = $formBuilder->getForm();
+		if($request->getMethod() == 'POST' && $form->isValid())
+        {
+			$usermanager->save($user);
+			$this->app->getUser()->setFlash('Les rôles '.$user->getRoles().' ont bien été ajoutés à '.$user->getUsername().'.', 'alert-danger');
+        }
+		
+		$this->page->addVar('form', $form->createView());
     }
 }

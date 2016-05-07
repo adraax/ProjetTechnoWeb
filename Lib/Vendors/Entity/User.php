@@ -34,7 +34,10 @@ class User extends Entity
     
     public function getRoles()
     {
-        return implode(',', $this->roles);
+		if(is_string($this->roles))
+			return $this->roles;
+		else
+			return implode(',', $this->roles);
     }
     
     public function getId_personne()
@@ -78,7 +81,7 @@ class User extends Entity
         }
         else
         {
-            $this->roles[] = explode(",", $roles);
+            $this->roles = explode(",", $roles);
         }
     }
     
@@ -96,24 +99,20 @@ class User extends Entity
     }
 	
 	public function addRole($role)
- 
     {
- 
         if(!is_string($role))
- 
         {
- 
             throw new InvalidArgumentException("Le role doit être une chaine de caractère");
- 
         }
- 
         else
- 
-        {  
-            if(!in_array($role, $this->roles))  
-            {  
-                $this->roles[] = $role;  
-            }  
+        {
+			if(substr_count($this->getRoles(), $role)==0)
+			{
+				if(is_array($this->roles))
+					$this->roles[] = $role;
+				else
+					$this->setRoles($this->getRoles().','.$role);
+			}
         }  
     }  
       
