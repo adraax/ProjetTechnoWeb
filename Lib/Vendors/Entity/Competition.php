@@ -13,7 +13,7 @@ class Competition extends Entity
 				$lien_map, //Lien vers une carte avec l'adresse de la compétition (https://www.google.fr/maps/search/ville)
 				$lien_itineraire, //Lien vers une carte avec l'itinéraire Dijon-compétition (https://www.google.fr/maps/dir/Dijon/ville)
 				$meteo,
-				$date, //Date de la compétition
+				$date_competition, //Date de la compétition
 				$type_hebergement,
 				$mode_transport,
 				$club_organisateur;
@@ -25,7 +25,7 @@ class Competition extends Entity
 	const LIEN_MAP_INV = 5;
 	const LIEN_ITINERAIRE_INV = 6;
 	const METEO_INV = 7;
-	const DATE_INV = 8;
+	const DATE_COMPETITION_INV = 8;
 	const TYPE_HEBERGEMENT_INV = 9;
 	const MODE_TRANSPORT_INV = 10;
 	const CLUB_ORGANISATEUR_INV = 11;
@@ -66,9 +66,9 @@ class Competition extends Entity
 		return $this->meteo;
 	}
 	
-	public function getDate()
+	public function getDate_competition()
 	{
-		return $this->date;
+		return $this->date_competition;
 	}
 	
 	public function getType_hebergement()
@@ -83,7 +83,7 @@ class Competition extends Entity
 	
 	public function getClub_organisateur()
 	{
-		return $this->lien_itineraire;
+		return $this->club_organisateur;
 	}
     
     /* ********** Setter ********** */
@@ -125,6 +125,9 @@ class Competition extends Entity
         }
         
         $this->ville = $ville;
+		$this->lien_map = 'https://www.google.fr/maps/search/'.$this->ville;
+		$this->lien_itineraire = 'https://www.google.fr/maps/dir/Dijon/'.$this->ville;
+		
     }
 	
 	public function setLien_map($lien_map)
@@ -157,15 +160,9 @@ class Competition extends Entity
         $this->meteo = $meteo;
     }
 	
-	public function setDate($date)
+	public function setDate_competition($date)
     {
-		$d = DateTime::createFromFormat('d/m/Y', $date);
-        if($d->format($date) != $date || empty($date))
-        {
-            $this->errors[] = self::DATE_INV;
-        }
-        
-        $this->date = $d;
+        $this->date_competition = $date;
     }
 	
 	public function setType_hebergement($type_hebergement)
@@ -197,4 +194,10 @@ class Competition extends Entity
         
         $this->club_organisateur = $club_organisateur;
     }
+	
+	public function isValid()
+	{
+		return !(empty($this->niveau) || empty($this->adresse) || empty($this->code_postal) || empty($this->ville) || empty($this->date_competition)
+			 || empty($this->mode_transport) || empty($this->club_organisateur));
+	}
 }

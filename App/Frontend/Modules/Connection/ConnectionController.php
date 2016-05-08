@@ -1,5 +1,7 @@
 <?php
+
 namespace App\Frontend\Modules\Connection;
+
 use \GJLMFramework\BaseController;
 use \GJLMFramework\HTTPRequest;
 use \Entity\User;
@@ -8,6 +10,7 @@ use \Entity\Personne;
 use \FormBuilder\UserFormBuilder;
 use \FormBuilder\UserInscriptionFormBuilder;
 use \FormBuilder\LicenceFormBuilder;
+
 class ConnectionController extends BaseController
 {
     public function connectionAction(HTTPRequest $request)

@@ -11,6 +11,8 @@ abstract class CompetitionManager extends Manager
     abstract public function delete($id);
     
     abstract public function getUnique($id);
+	abstract public function getList();
+	abstract public function getListByNiveau($niveau);
     
     public function save(Competition $competition)
     {

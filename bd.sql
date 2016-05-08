@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Client :  127.0.0.1
--- Généré le :  Sam 07 Mai 2016 à 22:10
+-- Généré le :  Dim 08 Mai 2016 à 09:55
 -- Version du serveur :  5.7.9
 -- Version de PHP :  7.0.0
 
@@ -97,6 +97,7 @@ DROP TABLE IF EXISTS `competition`;
 CREATE TABLE IF NOT EXISTS `competition` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `niveau` varchar(30) NOT NULL,
+  `date` date NOT NULL,
   `adresse` text NOT NULL,
   `code_postal` int(5) NOT NULL,
   `ville` varchar(30) NOT NULL,

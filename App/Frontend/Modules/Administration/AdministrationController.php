@@ -40,7 +40,7 @@ class AdministrationController extends BaseController
         {
             $personnemanager = $this->managers->getManagerOf('Personne');
 			$personnemanager->save($form->getEntity());
-			$this->app->getUser()->setFlash('La personne '.$request->getPostData('nom').' '.$request->getPostData('prenom').' a bien été ajoutée.', 'alert-info');
+			$this->app->getUser()->setFlash('La personne '.$request->getPostData('nom').' '.$request->getPostData('prenom').' a bien été ajoutée.', 'alert-success');
         }
         
         $this->page->addVar('form', $form->createView());
@@ -72,7 +72,7 @@ class AdministrationController extends BaseController
         {
             $licencemanager = $this->managers->getManagerOf('Licence');
 			$licencemanager->save($form->getEntity());
-			$this->app->getUser()->setFlash('La licence '.$request->getPostData('num').' a bien été ajoutée.', 'alert-info');
+			$this->app->getUser()->setFlash('La licence '.$request->getPostData('num').' a bien été ajoutée.', 'alert-success');
         }
 		
 		$this->page->addVar('form', $form->createView());
@@ -110,7 +110,7 @@ class AdministrationController extends BaseController
 		if($request->getMethod() == 'POST' && $form->isValid())
         {
 			$usermanager->save($user);
-			$this->app->getUser()->setFlash($user->getUsername().' a le(s) rôle(s) '.$user->getRoles().'.', 'alert-info');
+			$this->app->getUser()->setFlash($user->getUsername().' a le(s) rôle(s) '.$user->getRoles().'.', 'alert-success');
         }
 		
 		$this->page->addVar('form', $form->createView());
