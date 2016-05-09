@@ -21,7 +21,7 @@ class Competiteur extends Entity
     /* ********** Setter ********** */
     public function setCategorie($categorie)
     {
-        if($categorie != 'Veteran' && $categorie != 'Senior' && $categorie != 'Junior' && $categorie != 'Cadet' && $categorie != 'Minime')
+        if($categorie != 'veteran' && $categorie != 'senior' && $categorie != 'junior' && $categorie != 'cadet' && $categorie != 'minime')
         {
             $this->errors[] = self::CATEGORIE_INV;
         }
@@ -31,7 +31,7 @@ class Competiteur extends Entity
     
     public function setSpecialite($specialite)
     {
-        if($specialite != 'Kayak' && $specialite != 'Canoe')
+        if($specialite != 'kayak' && $specialite != 'canoe')
         {
             $this->errors[] = self::SPECIALITE_INV;
         }

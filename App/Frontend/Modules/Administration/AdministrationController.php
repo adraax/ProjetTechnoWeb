@@ -114,28 +114,35 @@ class AdministrationController extends BaseController
         }
 		
 		$this->page->addVar('form', $form->createView());
+		//$this->page->addVar('script', 'XMLHttpRequest');
+		$this->page->addVar('script', 'returnroles');
     }
 	
 	//Pour l'ajax
 	public function returnrolesAction(HTTPRequest $request)
 	{
 		header("Content-Type: text/xml");
-		echo '<?xml version="1.0" encoding="utf-8"?>';
-		echo '<roles>';
-		$num = ($request->postExists('num')) ? $request->getPostData('num') : NULL;
-
-		if ($num) 
+		if($request->getMethod() == 'POST' && $request->postExists('num'))
 		{
-			$usermanager = $this->managers->getManagerOf('User');
-			$user = $usermanager->getUnique($num);
-			$roles = explode(',',$user->getRoles());
-			foreach($roles as $role)
-			{
-				echo '<role name="' . $role . '" />';
-			}
-		}
+			echo '<?xml version="1.0" encoding="utf-8"?>';
+			echo '<roles>';
+			$num = ($request->postExists('num')) ? $request->getPostData('num') : NULL;
 
-		echo '</roles>';
-		exit;
+			if ($num) 
+			{
+				$usermanager = $this->managers->getManagerOf('User');
+				$user = $usermanager->getUnique($num);
+				$roles = explode(',',$user->getRoles());
+				foreach($roles as $role)
+				{
+					echo '<role name="' . $role . '" />';
+				}
+			}
+
+			echo '</roles>';
+			exit;
+		}
+		else
+			$this->app->getHttpResponse()->redirect('/gestionroles');
 	}
 }

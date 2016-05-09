@@ -11,6 +11,7 @@ abstract class CompetiteurManager extends Manager
     abstract public function delete($id);
     
     abstract public function getUnique($id);
+	abstract public function getByPersonneId($id);
     
     public function save(Competiteur $competiteur)
     {

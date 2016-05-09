@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Client :  127.0.0.1
--- Généré le :  Dim 08 Mai 2016 à 09:55
+-- Généré le :  Lun 09 Mai 2016 à 09:31
 -- Version du serveur :  5.7.9
 -- Version de PHP :  7.0.0
 
@@ -90,6 +90,19 @@ CREATE TABLE IF NOT EXISTS `adherent_equipage` (
 -- --------------------------------------------------------
 
 --
+-- Structure de la table `adherent_transport`
+--
+
+DROP TABLE IF EXISTS `adherent_transport`;
+CREATE TABLE IF NOT EXISTS `adherent_transport` (
+  `id_competiteur` int(11) NOT NULL,
+  `id_competition` int(11) NOT NULL,
+  PRIMARY KEY (`id_competiteur`,`id_competition`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
 -- Structure de la table `competition`
 --
 
@@ -97,16 +110,27 @@ DROP TABLE IF EXISTS `competition`;
 CREATE TABLE IF NOT EXISTS `competition` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `niveau` varchar(30) NOT NULL,
-  `date` date NOT NULL,
+  `date_competition` date NOT NULL,
   `adresse` text NOT NULL,
   `code_postal` int(5) NOT NULL,
   `ville` varchar(30) NOT NULL,
   `meteo` varchar(30) NOT NULL,
   `type_hebergement` varchar(30) NOT NULL,
   `mode_transport` varchar(30) NOT NULL,
+  `nb_places_dispo` int(11) NOT NULL,
   `club_organisateur` varchar(30) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
+
+--
+-- Contenu de la table `competition`
+--
+
+INSERT INTO `competition` (`id`, `niveau`, `date_competition`, `adresse`, `code_postal`, `ville`, `meteo`, `type_hebergement`, `mode_transport`, `nb_places_dispo`, `club_organisateur`) VALUES
+(1, 'departemental', '2017-02-01', 'ici', 21000, 'Dijon', 'Soleil', 'particulier', 'Car', 0, 'Dijon Kayak'),
+(2, 'national', '2000-01-01', 'ici', 21000, 'Dijon', '', '', 'voiture', 0, 'club'),
+(3, 'international', '2000-01-30', 'ici', 21000, 'Dijon', '', '', 'Car', 0, 'Dijon Kayak'),
+(4, 'international', '2016-05-08', 'ici', 21000, 'Dijon', '', '', 'Car', 0, 'Dijon Kayak');
 
 -- --------------------------------------------------------
 

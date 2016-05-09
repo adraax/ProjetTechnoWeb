@@ -16,7 +16,8 @@ class Competition extends Entity
 				$date_competition, //Date de la compétition
 				$type_hebergement,
 				$mode_transport,
-				$club_organisateur;
+				$club_organisateur,
+				$nb_places_dispo; //Nombre de places disponibles pour le transport
                 
     const NIVEAU_INV = 1;
     const ADRESSE_INV = 2;
@@ -29,6 +30,7 @@ class Competition extends Entity
 	const TYPE_HEBERGEMENT_INV = 9;
 	const MODE_TRANSPORT_INV = 10;
 	const CLUB_ORGANISATEUR_INV = 11;
+	const NB_PLACES_DISPO_INV = 11;
     
     /* *********** Getter ********** */
     public function getNiveau()
@@ -53,11 +55,13 @@ class Competition extends Entity
 	
 	public function getLien_map()
 	{
+		$this->lien_map = 'https://www.google.fr/maps/search/'.$this->ville;
 		return $this->lien_map;
 	}
 	
 	public function getLien_itineraire()
 	{
+		$this->lien_itineraire = 'https://www.google.fr/maps/dir/Dijon/'.$this->ville;
 		return $this->lien_itineraire;
 	}
 	
@@ -84,6 +88,11 @@ class Competition extends Entity
 	public function getClub_organisateur()
 	{
 		return $this->club_organisateur;
+	}
+	
+	public function getNb_places_dispo()
+	{
+		return $this->nb_places_dispo;
 	}
     
     /* ********** Setter ********** */
@@ -126,8 +135,7 @@ class Competition extends Entity
         
         $this->ville = $ville;
 		$this->lien_map = 'https://www.google.fr/maps/search/'.$this->ville;
-		$this->lien_itineraire = 'https://www.google.fr/maps/dir/Dijon/'.$this->ville;
-		
+		$this->lien_itineraire = 'https://www.google.fr/maps/dir/Dijon/'.$this->ville;		
     }
 	
 	public function setLien_map($lien_map)
@@ -195,9 +203,35 @@ class Competition extends Entity
         $this->club_organisateur = $club_organisateur;
     }
 	
+	public function setNb_places_dispo($nb_places_dispo)
+    {
+        if(!is_int($nb_places_dispo) || empty($nb_places_dispo))
+        {
+            $this->errors[] = self::NB_PLACES_DISPO_INV;
+        }
+        
+        $this->nb_places_dispo = $nb_places_dispo;
+    }
+	
+	public function afficheCompetition()
+	{
+		$s = '<strong>Club organisateur :</strong> '.$this->club_organisateur.'<br />';
+		$s .= '<strong>Niveau :</strong> '.$this->niveau.'<br /><br />';
+		$s .= '<strong>Adresse :</strong><br /><address>'.$this->adresse.'<br />'.$this->ville.' '.$this->code_postal.'<br /></address>';
+		$s .= '<a href="'.$this->getLien_map().'">Carte</a><br />';
+		$s .= '<a href="'.$this->getLien_itineraire().'">Itinéraire</a><br /><br />';
+		if(!empty($this->meteo))
+			$s .= '<strong>Meteo prévue : </strong>'.$this->meteo.'<br />';
+		if(!empty($this->type_hebergement))
+			$s .= '<strong>Type d\'hébergement : </strong>'.$this->type_hebergement.'<br />';
+		$s .= '<strong>Mode de transport : </strong>'.$this->mode_transport.'<br />';
+		
+		return $s;
+	}
+	
 	public function isValid()
 	{
 		return !(empty($this->niveau) || empty($this->adresse) || empty($this->code_postal) || empty($this->ville) || empty($this->date_competition)
-			 || empty($this->mode_transport) || empty($this->club_organisateur));
+			 || empty($this->mode_transport) || empty($this->club_organisateur) || empty($this->nb_places_dispo));
 	}
 }

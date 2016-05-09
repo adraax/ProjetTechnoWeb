@@ -5,6 +5,8 @@ namespace App\Frontend\Modules\Competition;
 use \GJLMFramework\BaseController;
 use \GJLMFramework\HTTPRequest;
 use \Entity\Competition;
+use \Entity\User;
+use \Entity\Competiteur;
 use \FormBuilder\CompetitionFormBuilder;
 
 class CompetitionController extends BaseController
@@ -47,6 +49,7 @@ class CompetitionController extends BaseController
 	public function listecompetitionsAction(HTTPRequest $request)
 	{
 		//A faire : Afficher un bouton 'Ajouter compétition' si user = admin, secretaire et/ou entraineur
+		//A faire : Afficher un bouton 'Supprimer compétition' + 'Supprimer vieilles compétitions' si user = admin et/ou secretaire
 		
 		//Sélection des compétitions par niveau
 		$form = '<input type="checkbox" name="niveau[]" id="departemental" value="departemental"';
@@ -89,7 +92,7 @@ class CompetitionController extends BaseController
 		{
 			if($competition->getDate_competition()>date('Y-m-d'))
 			{
-				$listecompetitions .= '<div class="panel panel-info">';
+				$listecompetitions .= '<div class="panel panel-primary">';
 			}
 			else
 			{
@@ -98,7 +101,7 @@ class CompetitionController extends BaseController
 				else
 					$listecompetitions .= '<div class="panel panel-danger">';
 			}
-			$listecompetitions .= '<div class="panel-heading"><h3 class="panel-title">'.strftime("%d/%m/%Y",strtotime($competition->getDate_competition())).'</h3></div><div class="panel-body">';
+			$listecompetitions .= '<div class="panel-heading"><h3 class="panel-title">Compétition du '.strftime("%d/%m/%Y",strtotime($competition->getDate_competition())).'</h3></div><div class="panel-body">';
 			$listecompetitions .= 'Niveau : '.$competition->getNiveau().'<br />';
 			$listecompetitions .= 'Ville : '.$competition->getVille().' '.$competition->getCode_postal().'<br /><br />';
 			
@@ -114,11 +117,90 @@ class CompetitionController extends BaseController
 	
 	public function affichecompetitionAction(HTTPRequest $request)
 	{
-		if($request->getMethod() == 'POST')
+		if($request->getMethod() == 'POST' && $request->postExists('id_competition'))
 		{
-			echo $request->getPostData('id_competition');
+			//Affichage des infos de la compétition 
+			$competitionmanager = $this->managers->getManagerOf('Competition');
+			$competition = $competitionmanager->getUnique($request->getPostData('id_competition'));
+			$affichecompetition = '<div class="jumbotron"><h3>Compétition du '.strftime("%d/%m/%Y",strtotime($competition->getDate_competition())).'</h3>';
+			$affichecompetition .= $competition->afficheCompetition().'<br /><br />';
+			
+			//Lien pour inscrire un équipage
+			//Récupération du compétiteur
+			$id_user = $this->app->getUser()->getAttribute("id");
+			//pour le test
+			$id_user = 4;
+			$usermanager = $this->managers->getManagerOf('User');
+			$user = $usermanager->getUnique($id_user);
+			
+			$competiteurmanager = $this->managers->getManagerOf('Competiteur');
+			$competiteur = $competiteurmanager->getByPersonneId($user->getId_personne());
+			//Fin de récupération du compétiteur
+			
+			if(!empty($competiteur))
+			{
+				if($competitionmanager->isInscrit($competiteur->getId(), $competition->getId()))
+					$affichecompetition .= '<a class="btn btn-primary btn-lg" href="/afficheequipage" role="button">Voir l\'équipage</a>';
+				else
+					$affichecompetition .= '<a class="btn btn-primary btn-lg" href="/inscriptionequipage" role="button">Inscrire un équipage</a>';
+
+				//Lien pour inscription au transport (seulement si le compétiteur est inscrit)
+				if($competitionmanager->isTransport($competiteur->getId(), $competition->getId()))
+					$affichecompetition .= '<a id="bouton_transport" class="btn btn-primary btn-lg" href="#" onclick="modiftransport('.$competiteur->getId().', '.$competition->getId().')" role="button">Annuler l\'inscription au transport</a>';
+				else
+				{
+					//if($competitionmanager->isInscrit($competiteur->getId(), $competition->getId()))
+					{
+						//Vérification qu'il reste des places
+						$nb_places_prises = $competitionmanager->getNb_places_prises($competition->getId());
+						if($competition->getNb_places_dispo()>0)
+						{
+							if(($competition->getNb_places_dispo()-$nb_places_prises)>0)
+								$affichecompetition .= '<a id="bouton_transport" class="btn btn-primary btn-lg" href="#" onclick="modiftransport('.$competiteur->getId().', '.$competition->getId().')" role="button">S\'inscrire au transport</a>';
+							else
+								$affichecompetition .= '<a id="bouton_transport" class="btn btn-primary btn-lg" href="#" role="button">Plus de place disponible !</a>';
+						}
+					}
+				}
+			}
+			
+			$this->page->addVar('affichecompetition', $affichecompetition);
+			//$this->page->addVar('script', 'XMLHttpRequest');
+			$this->page->addVar('script', 'modiftransport');
 		}
-		else  echo 'coucou';
-			//$this->app->getHttpResponse()->redirect('/listecompetitions');
+		else
+			$this->app->getHttpResponse()->redirect('/listecompetitions');
+	}
+	
+	public function modiftransportAction(HTTPRequest $request)
+	{
+		header("Content-Type: text/xml");
+		if($request->getMethod() == 'POST' && $request->postExists('id_competition') && $request->postExists('id_competiteur'))
+		{
+			echo '<?xml version="1.0" encoding="utf-8"?>';
+			echo '<Reponses>';
+			$competitionmanager = $this->managers->getManagerOf('Competition');
+			$competition = $competitionmanager->getUnique($request->getPostData('id_competition'));
+			
+			//Vérification qu'il reste des places
+			$nb_places_prises = (int)$competitionmanager->getNb_places_prises($request->getPostData('id_competition'));
+			if($competitionmanager->isTransport($request->getPostData('id_competiteur'), $request->getPostData('id_competition')))
+				$nb_places_prises = 0;
+			
+			if(($competition->getNb_places_dispo()-$nb_places_prises)>0)
+			{
+				$competitionmanager->setTransport($request->getPostData('id_competiteur'), $request->getPostData('id_competition'));
+				if($competitionmanager->isTransport($request->getPostData('id_competiteur'), $request->getPostData('id_competition')))
+					echo '<Reponse name="false" />';
+				else
+					echo '<Reponse name="true" />';
+			}
+			else
+				echo '<Reponse name="pasplace" />';
+			echo '</Reponses>';
+			exit;
+		}
+		else
+			$this->app->getHttpResponse()->redirect('/listecompetitions');
 	}
 }

@@ -17,4 +17,5 @@
 	<route url="/ajoutcompetition" module="Competition" action="ajoutcompetition" auth="no"/>
 	<route url="/affichecompetition" module="Competition" action="affichecompetition" auth="no"/>
 	<route url="/listecompetitions" module="Competition" action="listecompetitions" auth="no"/>
+	<route url="/modiftransport" module="Competition" action="modiftransport" auth="no"/>
 </routes>

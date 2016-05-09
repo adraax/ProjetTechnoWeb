@@ -86,6 +86,15 @@ class CompetitionFormBuilder extends FormBuilder
             ]
         ]))
 		->add(new StringField([
+            'label' => "Nombre de places disponibles pour le transport :",
+            'name' => "nb_places_dispo",
+			'maxLength' => 11,
+            'validators' => [
+				new MaxLengthValidator('Le nombre de places disponibles est trop long.', 11),
+				new NotNullValidator('Le nombre de places disponibles ne doit pas être vide.')
+            ]
+        ]))
+		->add(new StringField([
             'label' => "Club organisateur :",
             'name' => "club_organisateur",
 			'maxLength' => 30,
