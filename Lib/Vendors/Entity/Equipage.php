@@ -11,14 +11,14 @@ class Equipage extends Entity
                 $nb_places,
 				$participants, //Tableau de compétiteurs participants
 				$invites, //Tableau de compétiteurs invités
-				$competition; //Compétition à laquelle l'équipage participe
+				$id_competition; //Compétition à laquelle l'équipage participe
                 
     const SPECIALITE_INV = 1;
     const CATEGORIE_INV = 2;
     const NB_PLACES_INV = 3;
 	const PARTICIPANTS_INV = 4;
 	const INVITES_INV = 5;
-	const COMPETITION_INV = 6;
+	const ID_COMPETITION_INV = 6;
     
     /* *********** Getter ********** */
     public function getSpecialite()
@@ -40,6 +40,11 @@ class Equipage extends Entity
     {
         return $this->participants;
     }
+	
+	public function getNb_participants()
+	{
+		return count($this->participants);
+	}
 	
 	public function getInvites()
 	{
@@ -64,7 +69,7 @@ class Equipage extends Entity
     
     public function setCategorie($categorie)
     {
-        if($categorie != 'Veteran' && $categorie != 'Senior' && $categorie != 'Junior' && $categorie != 'Cadet' && $categorie != 'Minime')
+        if($categorie != 'veteran' && $categorie != 'senior' && $categorie != 'junior' && $categorie != 'cadet' && $categorie != 'minime')
         {
             $this->errors[] = self::CATEGORIE_INV;
         }
@@ -102,12 +107,17 @@ class Equipage extends Entity
         $this->invites = $invites;
     }
 	
-	public function setCompetition($competition)
+	public function setId_ompetition($id_competition)
 	{
-		if(get_class($competion) != 'Competition' || empty($competition))
+		if(!is_int($id_competion) || empty($id_competition))
 		{
-			$this->errors[] = self::COMPETITION_INV;
+			$this->errors[] = self::ID_COMPETITION_INV;
 		}
-		$this->competition = $competition;
+		$this->id_competition = $id_competition;
+	}
+	
+	public function isValid()
+	{
+		return !(empty($this->id_competition) || empty($this->nb_places) || empty($this->specialite) || empty($this->categorie));
 	}
 }

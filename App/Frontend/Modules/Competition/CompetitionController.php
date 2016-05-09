@@ -139,10 +139,14 @@ class CompetitionController extends BaseController
 			
 			if(!empty($competiteur))
 			{
+				$affichecompetition .= '<form method="post" action="/voirequipage">';
+				$affichecompetition .= '<input type="hidden" name="id_competition" value="'.$competition->getId().'" />';
+				$affichecompetition .= '<button type="submit" class="btn btn-primary btn-lg">';
 				if($competitionmanager->isInscrit($competiteur->getId(), $competition->getId()))
-					$affichecompetition .= '<a class="btn btn-primary btn-lg" href="/afficheequipage" role="button">Voir l\'équipage</a>';
+					$affichecompetition .= 'Voir l\'équipage';
 				else
-					$affichecompetition .= '<a class="btn btn-primary btn-lg" href="/inscriptionequipage" role="button">Inscrire un équipage</a>';
+					$affichecompetition .= 'Inscrire un équipage';
+				$affichecompetition .= '</button></form><br />';
 
 				//Lien pour inscription au transport (seulement si le compétiteur est inscrit)
 				if($competitionmanager->isTransport($competiteur->getId(), $competition->getId()))
@@ -170,6 +174,16 @@ class CompetitionController extends BaseController
 		}
 		else
 			$this->app->getHttpResponse()->redirect('/listecompetitions');
+	}
+	
+	public function voirequipageAction(HTTPRequest $request)
+	{
+		
+	}
+	
+	public function ajoutequipageAction(HTTPRequest $request)
+	{
+		
 	}
 	
 	public function modiftransportAction(HTTPRequest $request)

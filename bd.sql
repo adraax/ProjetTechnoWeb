@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Client :  127.0.0.1
--- Généré le :  Lun 09 Mai 2016 à 09:31
+-- Généré le :  Lun 09 Mai 2016 à 17:18
 -- Version du serveur :  5.7.9
 -- Version de PHP :  7.0.0
 
@@ -70,7 +70,14 @@ CREATE TABLE IF NOT EXISTS `adherent` (
   `certif_med` tinyint(1) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `numeroPersonne` (`num_personne`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+
+--
+-- Contenu de la table `adherent`
+--
+
+INSERT INTO `adherent` (`id`, `num_personne`, `categorie`, `specialite`, `objectif_saison`, `certif_med`) VALUES
+(1, 1, 'senior', 'kayak', '', 1);
 
 -- --------------------------------------------------------
 
@@ -86,6 +93,19 @@ CREATE TABLE IF NOT EXISTS `adherent_equipage` (
   KEY `numeroAdherent` (`num_competiteur`),
   KEY `numeroEquipage` (`num_equipage`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `adherent_equipage_invite`
+--
+
+DROP TABLE IF EXISTS `adherent_equipage_invite`;
+CREATE TABLE IF NOT EXISTS `adherent_equipage_invite` (
+  `id_competiteur` int(11) NOT NULL,
+  `id_equipage` int(11) NOT NULL,
+  PRIMARY KEY (`id_competiteur`,`id_equipage`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -127,7 +147,7 @@ CREATE TABLE IF NOT EXISTS `competition` (
 --
 
 INSERT INTO `competition` (`id`, `niveau`, `date_competition`, `adresse`, `code_postal`, `ville`, `meteo`, `type_hebergement`, `mode_transport`, `nb_places_dispo`, `club_organisateur`) VALUES
-(1, 'departemental', '2017-02-01', 'ici', 21000, 'Dijon', 'Soleil', 'particulier', 'Car', 0, 'Dijon Kayak'),
+(1, 'departemental', '2017-02-01', 'ici', 21000, 'Dijon', 'Soleil', 'particulier', 'Car', 1, 'Dijon Kayak'),
 (2, 'national', '2000-01-01', 'ici', 21000, 'Dijon', '', '', 'voiture', 0, 'club'),
 (3, 'international', '2000-01-30', 'ici', 21000, 'Dijon', '', '', 'Car', 0, 'Dijon Kayak'),
 (4, 'international', '2016-05-08', 'ici', 21000, 'Dijon', '', '', 'Car', 0, 'Dijon Kayak');
@@ -144,7 +164,6 @@ CREATE TABLE IF NOT EXISTS `equipage` (
   `specialite` varchar(5) NOT NULL,
   `categorie` varchar(30) NOT NULL,
   `nb_places` int(11) NOT NULL,
-  `nb_participants` int(11) NOT NULL,
   `num_competition` int(11) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `numeroCompetition` (`num_competition`)
@@ -237,8 +256,8 @@ CREATE TABLE IF NOT EXISTS `user` (
 
 INSERT INTO `user` (`id`, `id_personne`, `username`, `password`, `roles`) VALUES
 (4, 1, 'admin', '$2y$10$i16peYiZ5kNj9qJE5l757OYVuqLEYm31xI.NDlsDUIUAWFtfMDrQe', 'admin'),
-(5, 1, 'test', 'osef', 'entraineur'),
-(6, 1, 'test', 'osef', 'secretaire,entraineur');
+(5, 2, 'test', 'osef', 'entraineur'),
+(6, 3, 'test', 'osef', 'secretaire,entraineur');
 
 --
 -- Contraintes pour les tables exportées
