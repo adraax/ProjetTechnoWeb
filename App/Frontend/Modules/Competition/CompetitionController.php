@@ -123,7 +123,9 @@ class CompetitionController extends BaseController
 			$competitionmanager = $this->managers->getManagerOf('Competition');
 			$competition = $competitionmanager->getUnique($request->getPostData('id_competition'));
 			$affichecompetition = '<div class="jumbotron"><h3>Compétition du '.strftime("%d/%m/%Y",strtotime($competition->getDate_competition())).'</h3>';
-			$affichecompetition .= $competition->afficheCompetition().'<br /><br />';
+			$affichecompetition .= $competition->afficheCompetition();	
+			$nb_places_prises = $competitionmanager->getNb_places_prises($competition->getId());
+			$affichecompetition .= '<strong>Nombre de places restantes (transport) : </strong><p id="nbPlaces">'.($competition->getNb_places_dispo()-$nb_places_prises).'</p><br /><br /><br />';
 			
 			//Lien pour inscrire un équipage
 			//Récupération du compétiteur
@@ -136,37 +138,40 @@ class CompetitionController extends BaseController
 			$competiteurmanager = $this->managers->getManagerOf('Competiteur');
 			$competiteur = $competiteurmanager->getByPersonneId($user->getId_personne());
 			//Fin de récupération du compétiteur
-			
-			if(!empty($competiteur))
+			if($competition->getDate_competition()>=date('Y-m-d'))
 			{
-				$affichecompetition .= '<form method="post" action="/voirequipage">';
-				$affichecompetition .= '<input type="hidden" name="id_competition" value="'.$competition->getId().'" />';
-				$affichecompetition .= '<button type="submit" class="btn btn-primary btn-lg">';
-				if($competitionmanager->isInscrit($competiteur->getId(), $competition->getId()))
-					$affichecompetition .= 'Voir l\'équipage';
-				else
-					$affichecompetition .= 'Inscrire un équipage';
-				$affichecompetition .= '</button></form><br />';
-
-				//Lien pour inscription au transport (seulement si le compétiteur est inscrit)
-				if($competitionmanager->isTransport($competiteur->getId(), $competition->getId()))
-					$affichecompetition .= '<a id="bouton_transport" class="btn btn-primary btn-lg" href="#" onclick="modiftransport('.$competiteur->getId().', '.$competition->getId().')" role="button">Annuler l\'inscription au transport</a>';
-				else
+				if(!empty($competiteur))
 				{
-					//if($competitionmanager->isInscrit($competiteur->getId(), $competition->getId()))
+					$affichecompetition .= '<form method="post" action="/voirequipage">';
+					$affichecompetition .= '<input type="hidden" name="id_competition" value="'.$competition->getId().'" />';
+					$affichecompetition .= '<button type="submit" class="btn btn-primary btn-lg">';
+					if($competitionmanager->isInscrit($competiteur->getId(), $competition->getId()))
+						$affichecompetition .= 'Voir l\'équipage';
+					else
+						$affichecompetition .= 'Inscrire un équipage';
+					$affichecompetition .= '</button></form><br />';
+					
+					//Lien pour inscription au transport (seulement si le compétiteur est inscrit)
+					if($competitionmanager->isTransport($competiteur->getId(), $competition->getId()))
+						$affichecompetition .= '<a id="bouton_transport" class="btn btn-primary btn-lg" href="#" onclick="modiftransport('.$competiteur->getId().', '.$competition->getId().')" role="button">Annuler l\'inscription au transport</a>';
+					else
 					{
-						//Vérification qu'il reste des places
-						$nb_places_prises = $competitionmanager->getNb_places_prises($competition->getId());
-						if($competition->getNb_places_dispo()>0)
+						if($competitionmanager->isInscrit($competiteur->getId(), $competition->getId()))
 						{
-							if(($competition->getNb_places_dispo()-$nb_places_prises)>0)
-								$affichecompetition .= '<a id="bouton_transport" class="btn btn-primary btn-lg" href="#" onclick="modiftransport('.$competiteur->getId().', '.$competition->getId().')" role="button">S\'inscrire au transport</a>';
-							else
-								$affichecompetition .= '<a id="bouton_transport" class="btn btn-primary btn-lg" href="#" role="button">Plus de place disponible !</a>';
+							//Vérification qu'il reste des places				
+							if($competition->getNb_places_dispo()>0)
+							{
+								if(($competition->getNb_places_dispo()-$nb_places_prises)>0)
+									$affichecompetition .= '<a id="bouton_transport" class="btn btn-primary btn-lg" href="#" onclick="modiftransport('.$competiteur->getId().', '.$competition->getId().')" role="button">S\'inscrire au transport</a>';
+								else
+									$affichecompetition .= '<a id="bouton_transport" class="btn btn-primary btn-lg" href="#" role="button">Plus de place disponible !</a>';
+							}
 						}
 					}
 				}
 			}
+			else
+					$affichecompetition .= '<p>Cette compétition est passée.</p>';
 			
 			$this->page->addVar('affichecompetition', $affichecompetition);
 			//$this->page->addVar('script', 'XMLHttpRequest');
@@ -211,6 +216,8 @@ class CompetitionController extends BaseController
 			}
 			else
 				echo '<Reponse name="pasplace" />';
+			$nb_places_prises = (int)$competitionmanager->getNb_places_prises($request->getPostData('id_competition'));
+			echo '<Reponse name="'.($competition->getNb_places_dispo()-$nb_places_prises).'" />';
 			echo '</Reponses>';
 			exit;
 		}

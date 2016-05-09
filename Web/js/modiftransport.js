@@ -53,4 +53,5 @@ function modif_bouton_transport(oData) {
 			document.getElementById("bouton_transport").innerHTML="Annuler l'inscription au transport";
 		else
 			document.getElementById("bouton_transport").innerHTML="Plus de place disponible !";
+	document.getElementById("nbPlaces").innerHTML=nodes[1].getAttribute("name");
 }
