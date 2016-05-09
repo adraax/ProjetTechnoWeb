@@ -24,6 +24,7 @@ class CompetitionController extends BaseController
 				'meteo' => $request->getPostData('meteo'),
 				'type_hebergement' => $request->getPostData('type_hebergement'),
 				'mode_transport' => $request->getPostData('mode_transport'),
+				'nb_places_dispo' => $request->getPostData('nb_places_dispo'),
 				'club_organisateur' => $request->getPostData('club_organisateur')
             ]);
         }
@@ -48,9 +49,6 @@ class CompetitionController extends BaseController
 	
 	public function listecompetitionsAction(HTTPRequest $request)
 	{
-		//A faire : Afficher un bouton 'Ajouter compétition' si user = admin, secretaire et/ou entraineur
-		//A faire : Afficher un bouton 'Supprimer compétition' + 'Supprimer vieilles compétitions' si user = admin et/ou secretaire
-		
 		//Sélection des compétitions par niveau
 		$form = '<input type="checkbox" name="niveau[]" id="departemental" value="departemental"';
 		if($request->postExists('niveau') && in_array('departemental', $request->getPostData('niveau')))
@@ -71,22 +69,65 @@ class CompetitionController extends BaseController
 		
 		$this->page->addVar('form', $form);
 		
+		//Récupération de l'user pour connaître son rôle
+		$id_user = $this->app->getUser()->getAttribute("id");
+		//pour le test
+		$id_user = 4;
+		$usermanager = $this->managers->getManagerOf('User');
+		$user = $usermanager->getUnique($id_user);
+		
 		$competitionmanager = $this->managers->getManagerOf('Competition');
 		$competitions = [];
 		
+		//Suppression unique
+		if($request->postExists('id_suppression'))
+			$competitionmanager->delete($request->getPostData('id_suppression'));
+		
+		//Récupération de la liste des compétitions
 		if($request->postExists('niveau'))
 		{
 			foreach($request->getPostData('niveau') as $niveau)
-			{
-				$competitions = array_merge($competitions, $competitionmanager->getListByNiveau($niveau));
-			}			
+				$competitions = array_merge($competitions, $competitionmanager->getListByNiveau($niveau));			
 		}
 		else
-		{
 			$competitions = $competitionmanager->getList();
+			
+		//Suppression des anciennes compétitions
+		if($request->postExists('supression_vieilles') && $request->getPostData('supression_vieilles')=='true')
+		{
+			foreach($competitions as $compet)
+			{
+				if($compet->getDate_competition()<date('Y-m-d'))
+					$competitionmanager->delete($compet->getId());	
+			}
+			//On récupère les compétitions restantes
+			if($request->postExists('niveau'))
+			{
+				foreach($request->getPostData('niveau') as $niveau)
+					$competitions = array_merge($competitions, $competitionmanager->getListByNiveau($niveau));			
+			}
+			else
+				$competitions = $competitionmanager->getList();
 		}
 		
 		$listecompetitions = '';
+		
+		//Bouton d'ajout d'une nouvelle compétition
+		if($user->hasRole('admin') || $user->hasRole('secretaire') || $user->hasRole('entraineur'))
+		{
+			$listecompetitions .= '<a class="btn btn-success" href="/ajoutcompetition" role="button">Ajouter une competition</a><br />';
+		}
+		
+		//Bouton de suppression des vieilles compétitions
+		if($user->hasRole('admin') || $user->hasRole('secretaire'))
+		{
+			$listecompetitions .= '<form method="post" action="/listecompetitions">';
+			$listecompetitions .= '<input type="hidden" name="supression_vieilles" value="true" />';
+			$listecompetitions .= '<button type="submit" class="btn btn-danger">Supprimer les compétitions déjà passées</button>';
+			$listecompetitions .= '</form>';
+		}
+		$listecompetitions .= '<br />';
+		
 		//Affichage des compétitions sélectionnées
 		foreach($competitions as $competition)
 		{
@@ -109,6 +150,15 @@ class CompetitionController extends BaseController
 			$listecompetitions .= '<input type="hidden" name="id_competition" value="'.$competition->getId().'" />';
 			$listecompetitions .= '<button type="submit" class="btn btn-default">Voir cette compétition</button>';
 			$listecompetitions .= '</form>';
+			
+			//Bouton de suppression de la compétition si user = admin ou secrétaire
+			if($user->hasRole('admin') || $user->hasRole('secretaire'))
+			{
+				$listecompetitions .= '<br /><form method="post" action="/listecompetitions">';
+				$listecompetitions .= '<input type="hidden" name="id_suppression" value="'.$competition->getId().'" />';
+				$listecompetitions .= '<button type="submit" class="btn btn-default">Supprimer cette compétition</button>';
+				$listecompetitions .= '</form>';
+			}
 			$listecompetitions .= '</div></div>';
 		}
 		
@@ -117,6 +167,9 @@ class CompetitionController extends BaseController
 	
 	public function affichecompetitionAction(HTTPRequest $request)
 	{
+		//A faire : ajouter bénévole (admin, secretaire, entraineur) + s'inscrire en bénévole => redirection sur formulaire avec choix du role
+		//A faire : voir bénévoles => liste des bénévoles avec leur role
+		
 		if($request->getMethod() == 'POST' && $request->postExists('id_competition'))
 		{
 			//Affichage des infos de la compétition 
@@ -183,12 +236,12 @@ class CompetitionController extends BaseController
 	
 	public function voirequipageAction(HTTPRequest $request)
 	{
-		
+		//A faire : voir l'équipage
 	}
 	
 	public function ajoutequipageAction(HTTPRequest $request)
 	{
-		
+		//A faire : formulaire ajout équipage
 	}
 	
 	public function modiftransportAction(HTTPRequest $request)
@@ -201,7 +254,7 @@ class CompetitionController extends BaseController
 			$competitionmanager = $this->managers->getManagerOf('Competition');
 			$competition = $competitionmanager->getUnique($request->getPostData('id_competition'));
 			
-			//Vérification qu'il reste des places
+			//Vérification des places restantes
 			$nb_places_prises = (int)$competitionmanager->getNb_places_prises($request->getPostData('id_competition'));
 			if($competitionmanager->isTransport($request->getPostData('id_competiteur'), $request->getPostData('id_competition')))
 				$nb_places_prises = 0;

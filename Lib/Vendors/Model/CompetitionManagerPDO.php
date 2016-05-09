@@ -60,7 +60,7 @@ class CompetitionManagerPDO extends CompetitionManager
    
 	public function delete($id)
 	{
-		$this->dao->exec('DELETE FROM competition WHERE id = '.(int) $id);
+		$this->dao->exec('DELETE FROM competition WHERE id = '.(int)$id);
 	}
 	   
 	public function getList()

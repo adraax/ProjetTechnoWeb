@@ -97,7 +97,10 @@ class User extends Entity
         }
         else
         {
-            return in_array($role, $this->roles);
+			if(is_string($this->roles))
+				return $role == $this->roles;
+			else
+				return in_array($role, $this->roles);
         }
     }
 	

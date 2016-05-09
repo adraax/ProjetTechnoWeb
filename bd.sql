@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Client :  127.0.0.1
--- Généré le :  Lun 09 Mai 2016 à 17:18
+-- Généré le :  Lun 09 Mai 2016 à 21:30
 -- Version du serveur :  5.7.9
 -- Version de PHP :  7.0.0
 
@@ -104,7 +104,8 @@ DROP TABLE IF EXISTS `adherent_equipage_invite`;
 CREATE TABLE IF NOT EXISTS `adherent_equipage_invite` (
   `id_competiteur` int(11) NOT NULL,
   `id_equipage` int(11) NOT NULL,
-  PRIMARY KEY (`id_competiteur`,`id_equipage`)
+  PRIMARY KEY (`id_competiteur`,`id_equipage`),
+  KEY `id_equipage` (`id_equipage`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
@@ -117,7 +118,8 @@ DROP TABLE IF EXISTS `adherent_transport`;
 CREATE TABLE IF NOT EXISTS `adherent_transport` (
   `id_competiteur` int(11) NOT NULL,
   `id_competition` int(11) NOT NULL,
-  PRIMARY KEY (`id_competiteur`,`id_competition`)
+  PRIMARY KEY (`id_competiteur`,`id_competition`),
+  KEY `adherent_transport_ibfk_2` (`id_competition`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
@@ -140,17 +142,14 @@ CREATE TABLE IF NOT EXISTS `competition` (
   `nb_places_dispo` int(11) NOT NULL,
   `club_organisateur` varchar(30) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
 
 --
 -- Contenu de la table `competition`
 --
 
 INSERT INTO `competition` (`id`, `niveau`, `date_competition`, `adresse`, `code_postal`, `ville`, `meteo`, `type_hebergement`, `mode_transport`, `nb_places_dispo`, `club_organisateur`) VALUES
-(1, 'departemental', '2017-02-01', 'ici', 21000, 'Dijon', 'Soleil', 'particulier', 'Car', 1, 'Dijon Kayak'),
-(2, 'national', '2000-01-01', 'ici', 21000, 'Dijon', '', '', 'voiture', 0, 'club'),
-(3, 'international', '2000-01-30', 'ici', 21000, 'Dijon', '', '', 'Car', 0, 'Dijon Kayak'),
-(4, 'international', '2016-05-08', 'ici', 21000, 'Dijon', '', '', 'Car', 0, 'Dijon Kayak');
+(1, 'departemental', '2017-02-01', 'ici', 21000, 'Dijon', 'Soleil', 'particulier', 'Car', 1, 'Dijon Kayak');
 
 -- --------------------------------------------------------
 
@@ -256,7 +255,7 @@ CREATE TABLE IF NOT EXISTS `user` (
 
 INSERT INTO `user` (`id`, `id_personne`, `username`, `password`, `roles`) VALUES
 (4, 1, 'admin', '$2y$10$i16peYiZ5kNj9qJE5l757OYVuqLEYm31xI.NDlsDUIUAWFtfMDrQe', 'admin'),
-(5, 2, 'test', 'osef', 'entraineur'),
+(5, 2, 'test', 'osef', 'competiteur'),
 (6, 3, 'test', 'osef', 'secretaire,entraineur');
 
 --
@@ -289,6 +288,20 @@ ALTER TABLE `adherent`
 ALTER TABLE `adherent_equipage`
   ADD CONSTRAINT `adherent_equipage_ibfk_1` FOREIGN KEY (`num_competiteur`) REFERENCES `adherent` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `adherent_equipage_ibfk_2` FOREIGN KEY (`num_equipage`) REFERENCES `equipage` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Contraintes pour la table `adherent_equipage_invite`
+--
+ALTER TABLE `adherent_equipage_invite`
+  ADD CONSTRAINT `adherent_equipage_invite_ibfk_1` FOREIGN KEY (`id_competiteur`) REFERENCES `adherent` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `adherent_equipage_invite_ibfk_2` FOREIGN KEY (`id_equipage`) REFERENCES `equipage` (`id`) ON DELETE CASCADE;
+
+--
+-- Contraintes pour la table `adherent_transport`
+--
+ALTER TABLE `adherent_transport`
+  ADD CONSTRAINT `adherent_transport_ibfk_1` FOREIGN KEY (`id_competiteur`) REFERENCES `adherent` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `adherent_transport_ibfk_2` FOREIGN KEY (`id_competition`) REFERENCES `competition` (`id`) ON DELETE CASCADE;
 
 --
 -- Contraintes pour la table `equipage`
