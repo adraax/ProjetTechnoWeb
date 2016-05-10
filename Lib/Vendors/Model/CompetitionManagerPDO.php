@@ -95,12 +95,12 @@ class CompetitionManagerPDO extends CompetitionManager
 	public function isInscrit($id_competiteur, $id_competition)
 	{
 		$requete = $this->dao->prepare('SELECT * FROM adherent_equipage WHERE num_competiteur = :id_competiteur AND 
-			num_equipage=(SELECT id FROM equipage WHERE num_competition = :id_competition)');
+			num_equipage IN(SELECT id FROM equipage WHERE id_competition = :id_competition)');
 		$requete->bindValue(':id_competiteur', $id_competiteur, \PDO::PARAM_INT);
 		$requete->bindValue(':id_competition', $id_competition, \PDO::PARAM_INT);
 		$requete->execute();
 	   
-		if($requete->fetch()==null)
+		if(empty($requete->fetch()))
 			return false;
 		else
 			return true;

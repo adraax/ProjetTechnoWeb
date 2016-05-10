@@ -36,77 +36,55 @@ class EquipageManagerPDO extends EquipageManager
        
 	protected function add(Equipage $equipage)
 	{
-		$requete = $this->dao->prepare('INSERT INTO equipage SET specialite = :specialite, categorie = :categorie, nb_places = :nb_places, num_competition = :id_competition');
+		$requete = $this->dao->prepare('INSERT INTO equipage SET specialite = :specialite, categorie = :categorie, nb_places = :nb_places, id_competition = :id_competition');
 		$requete->bindValue(':specialite', $equipage->getSpecialite(), \PDO::PARAM_STR);
 		$requete->bindValue(':categorie', $equipage->getCategorie(), \PDO::PARAM_STR);
 		$requete->bindValue(':nb_places', $equipage->getNb_places(), \PDO::PARAM_INT);
 		$requete->bindValue(':id_competition', $equipage->getId_competition(), \PDO::PARAM_INT);
 		
 		$requete->execute();
-		
-		$this->majParticipantsInvites($equipage);
+
+		$lastid = $this->dao->lastInsertId();
+
+		return (int)$lastid;
 	}
 	
-	protected function majParticipantsInvites(Equipage $equipage)
+	public function addParticipant($id_participant, $id_equipage)
 	{
-		//Ajout des participants
-		$requete = $this->dao->prepare('SELECT num_competiteur FROM adherent_equipage WHERE num_equipage = :id_equipage');
-		$requete->bindValue(':id_equipage', $equipage->getId(), \PDO::PARAM_INT);
+		echo 'ici'.$id_participant.', '.$id_equipage;
+		$requete = $this->dao->prepare('INSERT INTO adherent_equipage SET num_competiteur = :id_competiteur, num_equipage = :id_equipage');
+		$requete->bindValue(':id_equipage', $id_equipage, \PDO::PARAM_INT);
+		$requete->bindValue(':id_competiteur', $id_participant, \PDO::PARAM_INT);
 		$requete->execute();
-		$id_participants = $requete->fetchAll();
-		foreach($equipage->getParticipants() as $participant)
-		{
-			if(!in_array($participant, $id_participants);
-			{
-				$requete = $this->dao->prepare('INSERT INTO adherent_equipage SET num_competiteur = :id_competiteur, num_competition = :id_competition');
-				$requete->bindValue(':id_competition', $equipage->getId_competition(), \PDO::PARAM_INT);
-				$requete->bindValue(':id_competiteur', $participant, \PDO::PARAM_INT);
-				$requete->execute();
-			}
-		}
-		//Suppression des participants
-		foreach($id_participants as $participant)
-		{
-			if(!in_array($participant, $equipage->getParticipants());
-			{
-				$requete = $this->dao->prepare('DELETE FROM adherent_equipage WHERE num_competiteur = :id_competiteur AND num_competition = :id_competition');
-				$requete->bindValue(':id_competition', $equipage->getId_competition(), \PDO::PARAM_INT);
-				$requete->bindValue(':id_competiteur', $participant, \PDO::PARAM_INT);
-				$requete->execute();
-			}
-		}
-		
-		//Ajout des invités
-		$requete = $this->dao->prepare('SELECT id_competiteur FROM adherent_equipage_invite WHERE id_equipage = :id_equipage');
-		$requete->bindValue(':id_equipage', $equipage->getId(), \PDO::PARAM_INT);
+	}
+	
+	public function deleteParticipant($id_participant, $id_equipage)
+	{
+		$requete = $this->dao->prepare('DELETE FROM adherent_equipage WHERE num_competiteur = :id_competiteur AND num_equipage = :id_equipage');
+		$requete->bindValue(':id_equipage', $id_equipage, \PDO::PARAM_INT);
+		$requete->bindValue(':id_competiteur', $id_participant, \PDO::PARAM_INT);
 		$requete->execute();
-		$id_invites = $requete->fetchAll();
-		foreach($equipage->getInvites() as $invite)
-		{
-			if(!in_array($invite, $id_invites);
-			{
-				$requete = $this->dao->prepare('INSERT INTO adherent_equipage_invite SET id_competiteur = :id_competiteur, id_competition = :id_competition');
-				$requete->bindValue(':id_competition', $equipage->getId_competition(), \PDO::PARAM_INT);
-				$requete->bindValue(':id_competiteur', $participant, \PDO::PARAM_INT);
-				$requete->execute();
-			}
-		}
-		//Suppression des invites
-		foreach($id_invites as $invite)
-		{
-			if(!in_array($invite, $equipage->getInvites());
-			{
-				$requete = $this->dao->prepare('DELETE FROM adherent_equipage_invite WHERE id_competiteur = :id_competiteur AND id_competition = :id_competition');
-				$requete->bindValue(':id_competition', $equipage->getId_competition(), \PDO::PARAM_INT);
-				$requete->bindValue(':id_competiteur', $invite, \PDO::PARAM_INT);
-				$requete->execute();
-			}
-		}
+	}
+	
+	public function addInvite($id_invite, $id_equipage)
+	{
+		$requete = $this->dao->prepare('INSERT INTO adherent_equipage_invite SET id_competiteur = :id_competiteur, id_equipage = :id_equipage');
+		$requete->bindValue(':id_equipage', $id_equipage, \PDO::PARAM_INT);
+		$requete->bindValue(':id_competiteur', $id_invite, \PDO::PARAM_INT);
+		$requete->execute();
+	}
+	
+	public function deleteInvite($id_invite, $id_equipage)
+	{
+		$requete = $this->dao->prepare('DELETE FROM adherent_equipage_invite WHERE id_competiteur = :id_competiteur AND id_equipage = :id_equipage');
+		$requete->bindValue(':id_equipage', $id_equipage, \PDO::PARAM_INT);
+		$requete->bindValue(':id_competiteur', $id_invite, \PDO::PARAM_INT);
+		$requete->execute();
 	}
 	
 	protected function modify(Equipage $equipage)
 	{
-		$requete = $this->dao->prepare('UPDATE equipage SET specialite = :specialite, categorie = :categorie, nb_places = :nb_places, num_competition = :id_competition WHERE id = :id');
+		$requete = $this->dao->prepare('UPDATE equipage SET specialite = :specialite, categorie = :categorie, nb_places = :nb_places, id_competition = :id_competition WHERE id = :id');
 		$requete->bindValue(':id', $equipage->getId(), \PDO::PARAM_INT);
 		$requete->bindValue(':specialite', $equipage->getSpecialite(), \PDO::PARAM_STR);
 		$requete->bindValue(':categorie', $equipage->getCategorie(), \PDO::PARAM_STR);
@@ -114,8 +92,6 @@ class EquipageManagerPDO extends EquipageManager
 		$requete->bindValue(':id_competition', $equipage->getId_competition(), \PDO::PARAM_INT);
 	   
 		$requete->execute();
-		
-		$this->majParticipantsInvites($equipage);
 	}
    
 	public function delete($id)

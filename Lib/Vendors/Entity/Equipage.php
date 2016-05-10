@@ -51,9 +51,9 @@ class Equipage extends Entity
 		return $this->invites;
 	}
 	
-	public function getCompetition()
+	public function getId_competition()
 	{
-		return $this->competition;
+		return $this->id_competition;
 	}
     
     /* ********** Setter ********** */
@@ -107,13 +107,29 @@ class Equipage extends Entity
         $this->invites = $invites;
     }
 	
-	public function setId_ompetition($id_competition)
+	public function setId_competition($id_competition)
 	{
-		if(!is_int($id_competion) || empty($id_competition))
+		if(!is_int($id_competition) || empty($id_competition))
 		{
 			$this->errors[] = self::ID_COMPETITION_INV;
 		}
 		$this->id_competition = $id_competition;
+	}
+	
+	public function addParticipant($participant)
+	{
+		if(is_int($participant))
+		{
+			$this->participants[] = $participant;
+		}
+	}
+	
+	public function addInvite($invite)
+	{
+		if(is_int($invite))
+		{
+			$this->invites[] = $invite;
+		}
 	}
 	
 	public function isValid()

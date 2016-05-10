@@ -17,7 +17,10 @@
 	<route url="/ajoutcompetition" module="Competition" action="ajoutcompetition" auth="no"/>
 	<route url="/affichecompetition" module="Competition" action="affichecompetition" auth="no"/>
 	<route url="/listecompetitions" module="Competition" action="listecompetitions" auth="no"/>
-	<route url="/ajoutequipage" module="Competition" action="ajoutequipage" auth="no"/>
-	<route url="/voirequipage" module="Competition" action="voirequipage" auth="no"/>
 	<route url="/modiftransport" module="Competition" action="modiftransport" auth="no"/>
+	
+	<route url="/ajoutequipage" module="Equipage" action="ajoutequipage" auth="no"/>
+	<route url="/voirequipage" module="Equipage" action="voirequipage" auth="no"/>
+	<route url="/gestioninvites" module="Equipage" action="gestioninvites" auth="no"/>
+	<route url="/gestionparticipants" module="Equipage" action="gestionparticipants" auth="no"/>
 </routes>

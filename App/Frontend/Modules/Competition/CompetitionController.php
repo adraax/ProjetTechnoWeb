@@ -156,7 +156,7 @@ class CompetitionController extends BaseController
 			{
 				$listecompetitions .= '<br /><form method="post" action="/listecompetitions">';
 				$listecompetitions .= '<input type="hidden" name="id_suppression" value="'.$competition->getId().'" />';
-				$listecompetitions .= '<button type="submit" class="btn btn-default">Supprimer cette compétition</button>';
+				$listecompetitions .= '<button type="submit" class="btn btn-danger">Supprimer cette compétition</button>';
 				$listecompetitions .= '</form>';
 			}
 			$listecompetitions .= '</div></div>';
@@ -195,14 +195,19 @@ class CompetitionController extends BaseController
 			{
 				if(!empty($competiteur))
 				{
-					$affichecompetition .= '<form method="post" action="/voirequipage">';
-					$affichecompetition .= '<input type="hidden" name="id_competition" value="'.$competition->getId().'" />';
-					$affichecompetition .= '<button type="submit" class="btn btn-primary btn-lg">';
 					if($competitionmanager->isInscrit($competiteur->getId(), $competition->getId()))
+					{
+						$affichecompetition .= '<form method="post" action="/voirequipage">';
+						$affichecompetition .= '<button type="submit" class="btn btn-primary btn-lg">';
 						$affichecompetition .= 'Voir l\'équipage';
+					}
 					else
+					{
+						$affichecompetition .= '<form method="post" action="/ajoutequipage">';
+						$affichecompetition .= '<button type="submit" class="btn btn-primary btn-lg">';
 						$affichecompetition .= 'Inscrire un équipage';
-					$affichecompetition .= '</button></form><br />';
+					}
+					$affichecompetition .= '</button><input type="hidden" name="id_competition" value="'.$competition->getId().'" /></form><br />';
 					
 					//Lien pour inscription au transport (seulement si le compétiteur est inscrit)
 					if($competitionmanager->isTransport($competiteur->getId(), $competition->getId()))
@@ -232,16 +237,6 @@ class CompetitionController extends BaseController
 		}
 		else
 			$this->app->getHttpResponse()->redirect('/listecompetitions');
-	}
-	
-	public function voirequipageAction(HTTPRequest $request)
-	{
-		//A faire : voir l'équipage
-	}
-	
-	public function ajoutequipageAction(HTTPRequest $request)
-	{
-		//A faire : formulaire ajout équipage
 	}
 	
 	public function modiftransportAction(HTTPRequest $request)

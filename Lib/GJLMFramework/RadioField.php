@@ -34,18 +34,18 @@ class RadioField extends Field
             $widget = '<div class="form-group '.$class.'">';
         }
         
-        $widget .= '<label for="'.$this->name.'">'.$this->label.'</label><br />';
+        $widget .= '<label for="'.$this->name.'">'.$this->label.'</label>';
 		foreach($this->boutons as $bouton)
 		{
-			$widget .= '<input type="radio" id="'.$bouton.'" name="'.$this->name.'"';
+			$widget .= '<label class="radio-inline"><input type="radio" id="'.$bouton.'" name="'.$this->name.'"';
 			$widget .= ' value="'.htmlspecialchars(strip_tags($bouton)).'"';
 			
 			if(!empty($this->value) && $this->value==$bouton)
 				$widget .= ' checked="checked"';
 			
-			$widget .= ' /><label for="'.$bouton.'">'.$bouton.'</label><br />';
+			$widget .= ' />'.$bouton.'</label>';
         }
         
-        return $widget;
+        return $widget.'<br />';
     }
 }

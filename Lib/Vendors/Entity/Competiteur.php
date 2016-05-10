@@ -101,6 +101,44 @@ class Competiteur extends Entity
 			return false;
     }
 	
+	public function categorieValide($categorie)
+	{
+		if($categorie == 'minime')
+			return true;
+		
+		if($categorie == 'cadet')
+		{
+			if($this->categorie != 'minime')
+				return true;
+			else
+				return false;
+		}
+		
+		if($categorie == 'junior')
+		{
+			if($this->categorie != 'minime' && $this->categorie != 'cadet')
+				return true;
+			else
+				return false;
+		}
+			
+		if($categorie == 'senior')
+		{
+			if($this->categorie == 'senior' || $this->categorie == 'veteran')
+				return true;
+			else
+				return false;
+		}
+			
+		if($categorie == 'veteran')
+		{
+			if($this->categorie == 'veteran')
+				return true;
+			else
+				return false;
+		}
+	}
+	
 	public function isValid()
 	{
 		return !(empty($this->specialite) || empty($this->categorie) || empty($this->num_personne) || empty($this->certif_med));
