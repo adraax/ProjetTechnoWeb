@@ -105,7 +105,23 @@ class CompetitionManagerPDO extends CompetitionManager
 		else
 			return true;
 	}
-	   
+	
+	public function getId_equipage($id_competiteur, $id_competition)
+	{
+		$requete = $this->dao->prepare('SELECT num_equipage FROM adherent_equipage WHERE num_competiteur = :id_competiteur AND 
+			num_equipage IN(SELECT id FROM equipage WHERE id_competition = :id_competition)');
+		$requete->bindValue(':id_competiteur', $id_competiteur, \PDO::PARAM_INT);
+		$requete->bindValue(':id_competition', $id_competition, \PDO::PARAM_INT);
+		$requete->execute();
+		
+		$requete->setFetchMode(\PDO::FETCH_NUM);
+		
+		if($id = $requete->fetch())
+			return $id[0];
+		
+		return null;
+	}
+	
 	public function getNb_places_prises($id)
 	{
 		$requete = $this->dao->prepare('SELECT COUNT(id_competiteur) FROM adherent_transport WHERE id_competition = :id');

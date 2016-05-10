@@ -200,14 +200,15 @@ class CompetitionController extends BaseController
 						$affichecompetition .= '<form method="post" action="/voirequipage">';
 						$affichecompetition .= '<button type="submit" class="btn btn-primary btn-lg">';
 						$affichecompetition .= 'Voir l\'équipage';
+						$affichecompetition .= '</button><input type="hidden" name="id_equipage" value="'.$competitionmanager->getId_equipage($competiteur->getId(), $competition->getId()).'" /></form><br />';
 					}
 					else
 					{
 						$affichecompetition .= '<form method="post" action="/ajoutequipage">';
 						$affichecompetition .= '<button type="submit" class="btn btn-primary btn-lg">';
 						$affichecompetition .= 'Inscrire un équipage';
+						$affichecompetition .= '</button><input type="hidden" name="id_competition" value="'.$competition->getId().'" /></form><br />';
 					}
-					$affichecompetition .= '</button><input type="hidden" name="id_competition" value="'.$competition->getId().'" /></form><br />';
 					
 					//Lien pour inscription au transport (seulement si le compétiteur est inscrit)
 					if($competitionmanager->isTransport($competiteur->getId(), $competition->getId()))

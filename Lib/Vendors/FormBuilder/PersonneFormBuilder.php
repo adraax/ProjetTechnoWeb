@@ -5,6 +5,8 @@ use \GJLMFramework\FormBuilder;
 use \GJLMFramework\StringField;
 use \GJLMFramework\DatePickerField;
 use \GJLMFramework\TextField;
+use \GJLMFramework\EmailField;
+use \GJLMFramework\NumberField;
 use \GJLMFramework\RadioField;
 use \GJLMFramework\MaxLengthValidator;
 use \GJLMFramework\NotNullValidator;
@@ -57,7 +59,7 @@ class PersonneFormBuilder extends FormBuilder
                 new NotNullValidator('Il faut entrer une adresse.')
             ]
         ]))
-		->add(new StringField([
+		->add(new EmailField([
             'label' => "Email :",
             'name' => "email",
 			'maxLength' => 30,
@@ -66,7 +68,7 @@ class PersonneFormBuilder extends FormBuilder
                 new NotNullValidator('Il faut entrer un email.')
             ]
         ]))
-		->add(new StringField([
+		->add(new NumberField([
             'label' => "Numéro de téléphone :",
             'name' => "num_tel",
 			'maxLength' => 10,

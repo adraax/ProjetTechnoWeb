@@ -15,22 +15,30 @@ class EquipageManagerPDO extends EquipageManager
 	   
 		if($equipage = $requete->fetch())
 		{
+			$requete->setFetchMode(\PDO::FETCH_NUM);
+			
 			//Récupération des invités et des participants
-			$requete = $this->dao->prepare('SELECT num_competiteur FROM adherent_equipage WHERE num_competition = :id');
+			$requete = $this->dao->prepare('SELECT num_competiteur FROM adherent_equipage WHERE num_equipage = :id');
 			$requete->bindValue(':id', (int) $id, \PDO::PARAM_INT);
 			$requete->execute();
 			
-			$equipage->setParticipants($requete->fetchAll());
+			while($donnees = $requete->fetch())
+			{
+				$equipage->addParticipant((int)$donnees[0]);
+			}
 			
-			$requete = $this->dao->prepare('SELECT id_competiteur FROM adherent_equipage_invite WHERE id_competition = :id');
+			$requete = $this->dao->prepare('SELECT id_competiteur FROM adherent_equipage_invite WHERE id_equipage = :id');
 			$requete->bindValue(':id', (int) $id, \PDO::PARAM_INT);
 			$requete->execute();
 			
-			$equipage->setInvites($requete->fetchAll());
+			while($donnees = $requete->fetch())
+			{
+				$equipage->addInvite((int)$donnees[0]);
+			}
 			
 			return $equipage;
 		}
-	   
+
 		return null;
 	}
        

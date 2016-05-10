@@ -4,6 +4,7 @@ namespace FormBuilder;
 use \GJLMFramework\FormBuilder;
 use \GJLMFramework\DatePickerField;
 use \GJLMFramework\StringField;
+use \GJLMFramework\NumberField;
 use \GJLMFramework\ListField;
 use \GJLMFramework\MaxLengthValidator;
 use \GJLMFramework\NotNullValidator;
@@ -12,7 +13,7 @@ class LicenceFormBuilder extends FormBuilder
 {
     public function build()
     {
-        $this->form->add(new StringField([
+        $this->form->add(new NumberField([
             'label' => 'Numéro de licence : ',
             'name' => 'num',
             'maxLength' => 30,
@@ -60,7 +61,7 @@ class LicenceFormBuilder extends FormBuilder
 		
 		$this->form->add($option)
 		->add($type)
-		->add(new StringField([
+		->add(new NumberField([
             'label' => 'Numéro de licence : ',
             'name' => 'num',
             'maxLength' => 30,

@@ -68,4 +68,21 @@ class CompetiteurManagerPDO extends CompetiteurManager
 		
 		return null;
 	}
+	
+	public function getListDispo($id_competition)  
+    {  
+		$competiteurs = [];  
+       
+		$requete = $this->dao->prepare('SELECT * FROM adherent WHERE id NOT IN(
+			SELECT num_competiteur FROM adherent_equipage WHERE num_equipage IN(
+			SELECT id FROM equipage WHERE id_competition = :id_competition))');
+		$requete->bindValue(':id_competition',(int) $id_competition, \PDO::PARAM_INT);		
+		$requete->execute();  
+       
+		$requete->setFetchMode(\PDO::FETCH_CLASS | \PDO::FETCH_PROPS_LATE, '\Entity\Competiteur');  
+		while($donnees = $requete->fetch())  
+			$competiteurs[] = $donnees;
+	
+		return $competiteurs;  
+    } 
 }

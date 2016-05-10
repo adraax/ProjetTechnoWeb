@@ -132,6 +132,33 @@ class Equipage extends Entity
 		}
 	}
 	
+	public function deleteParticipant($participant)
+	{
+		if(in_array($participant, $this->participants))
+		{
+			$key = array_search($participant, $this->participants);
+			unset($this->participants[$key]);
+		}
+	}
+	
+	public function deleteInvite($invite)
+	{
+		if(in_array($invite, $this->invites))
+		{
+			$key = array_search($invite, $this->invites);
+			unset($this->invites[$key]);
+		}
+	}
+	
+	public function afficheEquipage()
+	{
+		$s = '<strong>Spécialité :</strong> '.$this->specialite.'<br />';
+		$s .= '<strong>Catégorie :</strong> '.$this->categorie.'<br />';
+		$s .= '<strong>Nombre de places :</strong> '.$this->nb_places.'<br />';
+
+		return $s;
+	}
+	
 	public function isValid()
 	{
 		return !(empty($this->id_competition) || empty($this->nb_places) || empty($this->specialite) || empty($this->categorie));

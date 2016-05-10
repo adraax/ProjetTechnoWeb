@@ -103,36 +103,36 @@ class Competiteur extends Entity
 	
 	public function categorieValide($categorie)
 	{
-		if($categorie == 'minime')
+		if($this->categorie == 'minime')
 			return true;
 		
-		if($categorie == 'cadet')
+		if($this->categorie == 'cadet')
 		{
-			if($this->categorie != 'minime')
+			if($categorie != 'minime')
 				return true;
 			else
 				return false;
 		}
 		
-		if($categorie == 'junior')
+		if($this->categorie == 'junior')
 		{
-			if($this->categorie != 'minime' && $this->categorie != 'cadet')
+			if($categorie != 'minime' && $categorie != 'cadet')
 				return true;
 			else
 				return false;
 		}
 			
-		if($categorie == 'senior')
+		if($this->categorie == 'senior')
 		{
-			if($this->categorie == 'senior' || $this->categorie == 'veteran')
+			if($categorie == 'senior' || $categorie == 'veteran')
 				return true;
 			else
 				return false;
 		}
 			
-		if($categorie == 'veteran')
+		if($this->categorie == 'veteran')
 		{
-			if($this->categorie == 'veteran')
+			if($categorie == 'veteran')
 				return true;
 			else
 				return false;

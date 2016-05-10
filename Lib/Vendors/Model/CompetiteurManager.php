@@ -12,6 +12,7 @@ abstract class CompetiteurManager extends Manager
     
     abstract public function getUnique($id);
 	abstract public function getByPersonneId($id);
+	abstract public function getListDispo($id_competition);
     
     public function save(Competiteur $competiteur)
     {

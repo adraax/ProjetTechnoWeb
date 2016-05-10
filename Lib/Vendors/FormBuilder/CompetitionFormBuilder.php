@@ -3,6 +3,7 @@ namespace FormBuilder;
 
 use \GJLMFramework\FormBuilder;
 use \GJLMFramework\StringField;
+use \GJLMFramework\NumberField;
 use \GJLMFramework\DatePickerField;
 use \GJLMFramework\TextField;
 use \GJLMFramework\RadioField;
@@ -33,7 +34,7 @@ class CompetitionFormBuilder extends FormBuilder
                 new NotNullValidator('Il faut entrer une adresse.')
             ]
         ]))
-		->add(new StringField([
+		->add(new NumberField([
             'label' => "Code postal :",
             'name' => "code_postal",
             'maxLength' => 5,
@@ -85,7 +86,7 @@ class CompetitionFormBuilder extends FormBuilder
 				new NotNullValidator('Le mode de transport ne doit pas être vide.')
             ]
         ]))
-		->add(new StringField([
+		->add(new NumberField([
             'label' => "Nombre de places disponibles pour le transport :",
             'name' => "nb_places_dispo",
 			'maxLength' => 11,
