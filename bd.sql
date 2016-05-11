@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Client :  127.0.0.1
--- Généré le :  Lun 09 Mai 2016 à 21:30
+-- Généré le :  Mer 11 Mai 2016 à 18:23
 -- Version du serveur :  5.7.9
 -- Version de PHP :  7.0.0
 
@@ -70,14 +70,15 @@ CREATE TABLE IF NOT EXISTS `adherent` (
   `certif_med` tinyint(1) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `numeroPersonne` (`num_personne`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 
 --
 -- Contenu de la table `adherent`
 --
 
 INSERT INTO `adherent` (`id`, `num_personne`, `categorie`, `specialite`, `objectif_saison`, `certif_med`) VALUES
-(1, 1, 'senior', 'kayak', '', 1);
+(1, 1, 'senior', 'kayak', '', 1),
+(2, 2, 'junior', 'kayak', '', 1);
 
 -- --------------------------------------------------------
 
@@ -89,10 +90,18 @@ DROP TABLE IF EXISTS `adherent_equipage`;
 CREATE TABLE IF NOT EXISTS `adherent_equipage` (
   `num_competiteur` int(11) NOT NULL,
   `num_equipage` int(11) NOT NULL,
+  `valide` tinyint(1) NOT NULL,
   PRIMARY KEY (`num_competiteur`,`num_equipage`),
   KEY `numeroAdherent` (`num_competiteur`),
   KEY `numeroEquipage` (`num_equipage`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Contenu de la table `adherent_equipage`
+--
+
+INSERT INTO `adherent_equipage` (`num_competiteur`, `num_equipage`, `valide`) VALUES
+(1, 47, 0);
 
 -- --------------------------------------------------------
 
@@ -107,6 +116,13 @@ CREATE TABLE IF NOT EXISTS `adherent_equipage_invite` (
   PRIMARY KEY (`id_competiteur`,`id_equipage`),
   KEY `id_equipage` (`id_equipage`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Contenu de la table `adherent_equipage_invite`
+--
+
+INSERT INTO `adherent_equipage_invite` (`id_competiteur`, `id_equipage`) VALUES
+(2, 47);
 
 -- --------------------------------------------------------
 
@@ -142,7 +158,7 @@ CREATE TABLE IF NOT EXISTS `competition` (
   `nb_places_dispo` int(11) NOT NULL,
   `club_organisateur` varchar(30) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 
 --
 -- Contenu de la table `competition`
@@ -163,10 +179,17 @@ CREATE TABLE IF NOT EXISTS `equipage` (
   `specialite` varchar(5) NOT NULL,
   `categorie` varchar(30) NOT NULL,
   `nb_places` int(11) NOT NULL,
-  `num_competition` int(11) NOT NULL,
+  `id_competition` int(11) NOT NULL,
   PRIMARY KEY (`id`),
-  KEY `numeroCompetition` (`num_competition`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+  KEY `numeroCompetition` (`id_competition`)
+) ENGINE=InnoDB AUTO_INCREMENT=48 DEFAULT CHARSET=utf8;
+
+--
+-- Contenu de la table `equipage`
+--
+
+INSERT INTO `equipage` (`id`, `specialite`, `categorie`, `nb_places`, `id_competition`) VALUES
+(47, 'kayak', 'senior', 4, 1);
 
 -- --------------------------------------------------------
 
@@ -224,14 +247,15 @@ CREATE TABLE IF NOT EXISTS `personne` (
   `sexe` varchar(1) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `numero` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 
 --
 -- Contenu de la table `personne`
 --
 
 INSERT INTO `personne` (`id`, `nom`, `prenom`, `num_tel`, `email`, `adresse`, `date_naissance`, `sexe`) VALUES
-(1, 'nomadmin', 'prenomadmin', '0102030405', 'coucou@lalala.fr', 'ici', '2016-04-01', 'F');
+(1, 'nomadmin', 'prenomadmin', '0102030405', 'coucou@lalala.fr', 'ici', '1998-05-12', 'F'),
+(2, 'Yolo', 'Lalala', '0123456789', 'blabla', 'là', '2016-05-11', 'H');
 
 -- --------------------------------------------------------
 
@@ -286,8 +310,8 @@ ALTER TABLE `adherent`
 -- Contraintes pour la table `adherent_equipage`
 --
 ALTER TABLE `adherent_equipage`
-  ADD CONSTRAINT `adherent_equipage_ibfk_1` FOREIGN KEY (`num_competiteur`) REFERENCES `adherent` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `adherent_equipage_ibfk_2` FOREIGN KEY (`num_equipage`) REFERENCES `equipage` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+  ADD CONSTRAINT `adherent_equipage_ibfk_1` FOREIGN KEY (`num_competiteur`) REFERENCES `adherent` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `adherent_equipage_ibfk_2` FOREIGN KEY (`num_equipage`) REFERENCES `equipage` (`id`) ON DELETE CASCADE;
 
 --
 -- Contraintes pour la table `adherent_equipage_invite`
@@ -307,7 +331,7 @@ ALTER TABLE `adherent_transport`
 -- Contraintes pour la table `equipage`
 --
 ALTER TABLE `equipage`
-  ADD CONSTRAINT `equipage_ibfk_1` FOREIGN KEY (`num_competition`) REFERENCES `competition` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+  ADD CONSTRAINT `equipage_ibfk_1` FOREIGN KEY (`id_competition`) REFERENCES `competition` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Contraintes pour la table `parent`

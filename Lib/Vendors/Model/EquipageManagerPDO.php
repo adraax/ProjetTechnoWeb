@@ -57,12 +57,43 @@ class EquipageManagerPDO extends EquipageManager
 		return (int)$lastid;
 	}
 	
-	public function addParticipant($id_participant, $id_equipage)
+	public function participantValide($id_participant, $id_equipage)
 	{
-		echo 'ici'.$id_participant.', '.$id_equipage;
-		$requete = $this->dao->prepare('INSERT INTO adherent_equipage SET num_competiteur = :id_competiteur, num_equipage = :id_equipage');
+		$requete = $this->dao->prepare('SELECT * FROM adherent_equipage WHERE num_competiteur = :id_competiteur AND 
+			num_equipage = :id_equipage AND valide = 1');
+		$requete->bindValue(':id_competiteur', $id_participant, \PDO::PARAM_INT);
+		$requete->bindValue(':id_equipage', $id_equipage, \PDO::PARAM_INT);
+		$requete->execute();
+	   
+		if(empty($requete->fetch()))
+			return false;
+		else
+			return true;
+	}
+	
+	public function nbParticipantsValides($id_equipage)
+	{
+		$requete = $this->dao->prepare('SELECT * FROM adherent_equipage WHERE num_equipage = :id_equipage AND valide = 1');
+		$requete->bindValue(':id_equipage', $id_equipage, \PDO::PARAM_INT);
+		$requete->execute();
+		
+		$nb = 0;
+		while($donnees = $requete->fetch)
+			$nb++;
+		
+		return nb;
+	}
+	
+	public function addParticipant($id_participant, $id_equipage, $valide)
+	{
+		$requete = $this->dao->prepare('INSERT INTO adherent_equipage SET num_competiteur = :id_competiteur, num_equipage = :id_equipage, valide = :valide');
 		$requete->bindValue(':id_equipage', $id_equipage, \PDO::PARAM_INT);
 		$requete->bindValue(':id_competiteur', $id_participant, \PDO::PARAM_INT);
+		if($valide)
+			$requete->bindValue(':valide', 1, \PDO::PARAM_INT);
+		else
+			$requete->bindValue(':valide', 0, \PDO::PARAM_INT);
+		
 		$requete->execute();
 	}
 	
@@ -74,11 +105,26 @@ class EquipageManagerPDO extends EquipageManager
 		$requete->execute();
 	}
 	
+	public function isInvite($id_participant, $id_equipage)
+	{
+		$requete = $this->dao->prepare('SELECT * FROM adherent_equipage_invite WHERE id_competiteur = :id_competiteur AND 
+			id_equipage = :id_equipage');
+		$requete->bindValue(':id_competiteur', $id_participant, \PDO::PARAM_INT);
+		$requete->bindValue(':id_equipage', $id_equipage, \PDO::PARAM_INT);
+		$requete->execute();
+	   
+		if(empty($requete->fetch()))
+			return false;
+		else
+			return true;
+	}
+	
 	public function addInvite($id_invite, $id_equipage)
 	{
 		$requete = $this->dao->prepare('INSERT INTO adherent_equipage_invite SET id_competiteur = :id_competiteur, id_equipage = :id_equipage');
 		$requete->bindValue(':id_equipage', $id_equipage, \PDO::PARAM_INT);
 		$requete->bindValue(':id_competiteur', $id_invite, \PDO::PARAM_INT);
+		
 		$requete->execute();
 	}
 	

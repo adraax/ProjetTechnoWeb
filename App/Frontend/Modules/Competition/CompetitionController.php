@@ -203,12 +203,16 @@ class CompetitionController extends BaseController
 						$affichecompetition .= '</button><input type="hidden" name="id_equipage" value="'.$competitionmanager->getId_equipage($competiteur->getId(), $competition->getId()).'" /></form><br />';
 					}
 					else
-					{
-						$affichecompetition .= '<form method="post" action="/ajoutequipage">';
-						$affichecompetition .= '<button type="submit" class="btn btn-primary btn-lg">';
-						$affichecompetition .= 'Inscrire un équipage';
-						$affichecompetition .= '</button><input type="hidden" name="id_competition" value="'.$competition->getId().'" /></form><br />';
-					}
+						if($competiteur->getCertif_med())
+						{
+							//On vérifie que le compétiteur a bien son certificat médical
+							$affichecompetition .= '<form method="post" action="/ajoutequipage">';
+							$affichecompetition .= '<button type="submit" class="btn btn-primary btn-lg">';
+							$affichecompetition .= 'Inscrire un équipage';
+							$affichecompetition .= '</button><input type="hidden" name="id_competition" value="'.$competition->getId().'" /></form><br />';
+						}
+						else
+							$affichecompetition .= '<p>Vous n\'avez pas de certificat médical, vous ne pouvez pas vous inscrire.</p>';
 					
 					//Lien pour inscription au transport (seulement si le compétiteur est inscrit)
 					if($competitionmanager->isTransport($competiteur->getId(), $competition->getId()))
