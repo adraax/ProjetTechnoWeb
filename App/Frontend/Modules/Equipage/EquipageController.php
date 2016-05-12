@@ -15,8 +15,70 @@ class EquipageController extends BaseController
 {
 	public function voirequipageAction(HTTPRequest $request)
 	{
-		//A faire : voir l'équipage + si équipage valide (nb_participants_valides > nb_places)
-		//A faire : pour bouton voir invités : l'utilisateur doit être participant, sinon si invité : bouton accepter/refuser invitation
+		//Gestion invitation refusée
+		if($request->getMethod() == 'POST' && $request->postExists('id_invite_refuse'))
+		{
+			//Récupération du compétiteur
+			$id_user = $this->app->getUser()->getAttribute("id");
+			//pour le test
+			$id_user = 5;
+			$usermanager = $this->managers->getManagerOf('User');
+			$user = $usermanager->getUnique($id_user);
+			
+			$competiteurmanager = $this->managers->getManagerOf('Competiteur');
+			$competiteur = $competiteurmanager->getByPersonneId($user->getId_personne());
+			//Fin de récupération du compétiteur
+			
+			$equipagemanager = $this->managers->getManagerOf('Equipage');
+			$equipagemanager->deleteInvite($request->getPostData('id_invite_refuse'), $request->getPostData('id_equipage'));
+			
+			$this->app->getUser()->setFlash('Vous avez refusé cette invitation.', 'alert-danger');
+			$this->app->getHttpResponse()->redirect('/listecompetitions');
+		}
+		
+		//Gestion invitation acceptée
+		if($request->getMethod() == 'POST' && $request->postExists('id_invite_accepte'))
+		{
+			//Récupération du compétiteur
+			$id_user = $this->app->getUser()->getAttribute("id");
+			//pour le test
+			$id_user = 5;
+			$usermanager = $this->managers->getManagerOf('User');
+			$user = $usermanager->getUnique($id_user);
+			
+			$competiteurmanager = $this->managers->getManagerOf('Competiteur');
+			$competiteur = $competiteurmanager->getByPersonneId($user->getId_personne());
+			//Fin de récupération du compétiteur
+			
+			$equipagemanager = $this->managers->getManagerOf('Equipage');
+			$equipagemanager->deleteInvite($request->getPostData('id_invite_accepte'), $request->getPostData('id_equipage'));
+			
+			//Si le compétiteur est majeur, sa participation est directement validée, autrement un entraîneur devra le faire
+			$personnemanager = $this->managers->getManagerOf('Personne');
+			$personne = $personnemanager->getUnique($user->getId_personne());
+			$date_nais = $personne->getDate_naissance();
+			$date_nais = \DateTime::createFromFormat('Y-m-d',$date_nais);
+			$aujourdhui = new \DateTime();
+			$interv = new \DateInterval('P18Y');
+			if($date_nais->add($interv) > $aujourdhui)
+				$valide = false;
+			else
+				$valide = true;
+			
+			$equipagemanager->addParticipant($competiteur->getId(), $request->getPostData('id_equipage'), $valide);
+			
+			$this->app->getUser()->setFlash('Vous avez accepté cette invitation.', 'alert-success');
+		}
+		
+		//Gestion de la désinscription de l'équipage
+		if($request->getMethod() == 'POST' && $request->postExists('id_equipage_suppr'))
+		{
+			$equipagemanager = $this->managers->getManagerOf('Equipage');
+			$equipagemanager->delete($request->getPostData('id_equipage_suppr'));
+			$this->app->getUser()->setFlash('L\'équipage a bien été supprimé.', 'alert-success');
+			$this->app->getHttpResponse()->redirect('/listecompetitions');
+		}
+		
 		if(($request->getMethod() == 'POST' && $request->postExists('id_equipage')) || $this->app->getUser()->getAttribute('id_equipage') != null)
 		{
 			if($this->app->getUser()->getAttribute('id_equipage') != null)
@@ -28,10 +90,21 @@ class EquipageController extends BaseController
 				$id_equipage = $request->getPostData('id_equipage');
 			$equipagemanager = $this->managers->getManagerOf('Equipage');
 			$equipage = $equipagemanager->getUnique($id_equipage);
-			/*
+			
+			//Récupération du compétiteur
+			$id_user = $this->app->getUser()->getAttribute("id");
+			//pour le test
+			$id_user = 5;
+			$usermanager = $this->managers->getManagerOf('User');
+			$user = $usermanager->getUnique($id_user);
+			
+			$competiteurmanager = $this->managers->getManagerOf('Competiteur');
+			$competiteur = $competiteurmanager->getByPersonneId($user->getId_personne());
+			//Fin de récupération du compétiteur
+			
 			//Affichage du récap de la compétition
 			$competitionmanager = $this->managers->getManagerOf('Competition');
-			$competition = $competitionmanager->getUnique($request->getPostData('id_competition'));
+			$competition = $competitionmanager->getUnique($equipage->getId_competition());
 			
 			$infocompet = '<div class="panel panel-primary">';
 			$infocompet .= '<div class="panel-heading"><h3 class="panel-title">Compétition du '.strftime("%d/%m/%Y",strtotime($competition->getDate_competition())).'</h3></div><div class="panel-body">';
@@ -42,21 +115,74 @@ class EquipageController extends BaseController
 			$infocompet .= '<button type="submit" class="btn btn-default">Voir cette compétition</button>';
 			$infocompet .= '</form>';
 			$infocompet .= '</div></div>';
-			*/
-			//Pour le test
-			$form = '<form method="post" action="/gestioninvites">';
-			$form .= '<input type="hidden" name="id_equipage" value="'.$id_equipage.'" />';
-			$form .= '<button type="submit" class="btn btn-default">Voir les invites</button>';
-			$form .= '</form>';
-			echo $form;
-			$form = '<form method="post" action="/gestionparticipants">';
-			$form .= '<input type="hidden" name="id_equipage" value="'.$id_equipage.'" />';
-			$form .= '<button type="submit" class="btn btn-default">Voir les participants</button>';
-			$form .= '</form>';
-			echo $form;
-			//Fin pour le test
+			
+			//Affichage validité équipage
+			$infoequipage = '<div class="jumbotron"><h3>Equipage pour la compétition du '.strftime("%d/%m/%Y",strtotime($competition->getDate_competition())).'</h3>';
+
+			if($equipage->getNb_places()<=$equipagemanager->nbParticipantsValides($equipage->getId()))
+				$infoequipage .= '<div class="panel panel-success"><div class="panel-heading">L\'équipage est valide</div></div>';
+			else
+				$infoequipage .= '<div class="panel panel-danger"><div class="panel-heading">L\'équipage n\'est pas valide : il manque des participants</div></div>';
+			
+			//Affichage informations de l'équipage
+			$infoequipage .= $equipage->afficheEquipage();
+			$infoequipage .= '<strong>Nombre de participants validés :</strong> '.$equipagemanager->nbParticipantsValides($equipage->getId()).'<br />';
+			
+			//Si l'équipage est mono-place, on affiche le compétiteur et un bouton pour désinscrire l'équipage, sinon un bouton pour voir les participants et les invités
+			if($equipage->getNb_places()>1)
+			{
+				if($equipagemanager->isParticipant($competiteur->getId(), $equipage->getId()))
+				{
+					//Bouton de gestion des invités
+					$infoequipage .= '<br /><form method="post" action="/gestioninvites">';
+					$infoequipage .= '<input type="hidden" name="id_equipage" value="'.$id_equipage.'" />';
+					$infoequipage .= '<button type="submit" class="btn btn-default">Voir les invites</button>';
+					$infoequipage .= '</form><br />';
+				}
+				else
+					if($equipagemanager->isInvite($competiteur->getId(), $equipage->getId()))
+					{
+						//Bouton pour accepter l'invitation
+						$infoequipage .= '<br /><form method="post" action="/voirequipage">';
+						$infoequipage .= '<input type="hidden" name="id_equipage" value="'.$equipage->getId().'" />';
+						$infoequipage .= '<input type="hidden" name="id_invite_accepte" value="'.$competiteur->getId().'" />';
+						$infoequipage .= '<button type="submit" class="btn btn-default">Accepter l\'invitation</button>';
+						$infoequipage .= '</form>';
+						//Bouton pour refuser l'invitation
+						$infoequipage .= '<form method="post" action="/voirequipage">';
+						$infoequipage .= '<input type="hidden" name="id_equipage" value="'.$equipage->getId().'" />';
+						$infoequipage .= '<input type="hidden" name="id_invite_refuse" value="'.$competiteur->getId().'" />';
+						$infoequipage .= '<button type="submit" class="btn btn-default">Refuser l\'invitation</button>';
+						$infoequipage .= '</form><br />';
+					}
+				
+				//Bouton de gestion des participants
+				$infoequipage .= '<form method="post" action="/gestionparticipants">';
+				$infoequipage .= '<input type="hidden" name="id_equipage" value="'.$equipage->getId().'" />';
+				$infoequipage .= '<button type="submit" class="btn btn-default">Voir les participants</button>';
+				$infoequipage .= '</form></div>';
+			}
+			else
+			{
+				//Information sur le compétiteur
+				$competiteurParticipant = $competiteurmanager->getUnique($equipage->getParticipants()[0]);
+				$personnemanager = $this->managers->getManagerOf('Personne');
+				$personne = $personnemanager->getUnique($competiteurParticipant->getNum_personne());
+				
+				$infoequipage .= '<strong>Compétiteur :</strong> '.$personne->getNom().' '.$personne->getPrenom().' '.$competiteurParticipant->getCategorie().'<br /><br />';
+				
+				//Bouton de désinscription (uniquement si le compétiteur est participant de l'équipage)
+				if($equipagemanager->isParticipant($competiteur->getId(), $equipage->getId()))
+				{
+					$infoequipage .= '<form method="post" action="/voirequipage">';
+					$infoequipage .= '<input type="hidden" name="id_equipage_suppr" value="'.$equipage->getId().'" />';
+					$infoequipage .= '<button type="submit" class="btn btn-danger">Désinscrire l\'équipage</button>';
+					$infoequipage .= '</form></div>';
+				}
+			}
 			
 			$this->page->addVar('infocompet', $infocompet);
+			$this->page->addVar('infoequipage', $infoequipage);
 		}
 		else
 			$this->app->getHttpResponse()->redirect('/listecompetitions');
@@ -213,6 +339,11 @@ class EquipageController extends BaseController
 				$infocompet .= '<form method="post" action="/affichecompetition">';
 				$infocompet .= '<input type="hidden" name="id_competition" value="'.$competition->getId().'" />';
 				$infocompet .= '<button type="submit" class="btn btn-default">Voir cette compétition</button>';
+				$infocompet .= '</form><br />';
+				//Bouton retour à l'équipage
+				$infocompet .= '<form method="post" action="/voirequipage">';
+				$infocompet .= '<input type="hidden" name="id_equipage" value="'.$equipage->getId().'" />';
+				$infocompet .= '<button type="submit" class="btn btn-default">Retour à l\'équipage</button>';
 				$infocompet .= '</form>';
 				$infocompet .= '</div></div>';
 				
@@ -283,6 +414,7 @@ class EquipageController extends BaseController
 			if($equipage->getNb_participants()<1)
 			{
 				$equipagemanager->delete($equipage->getId());
+				$this->app->getUser()->setFlash('L\'équipage a été supprimé car il n\'y a plus de participant.', 'alert-danger');
 				$this->app->getHttpResponse()->redirect('/listecompetitions');
 			}
 		}
@@ -316,6 +448,11 @@ class EquipageController extends BaseController
 				$infocompet .= '<form method="post" action="/affichecompetition">';
 				$infocompet .= '<input type="hidden" name="id_competition" value="'.$competition->getId().'" />';
 				$infocompet .= '<button type="submit" class="btn btn-default">Voir cette compétition</button>';
+				$infocompet .= '</form><br />';
+				//Bouton retour à l'équipage
+				$infocompet .= '<form method="post" action="/voirequipage">';
+				$infocompet .= '<input type="hidden" name="id_equipage" value="'.$equipage->getId().'" />';
+				$infocompet .= '<button type="submit" class="btn btn-default">Retour à l\'équipage</button>';
 				$infocompet .= '</form>';
 				$infocompet .= '</div></div>';
 				

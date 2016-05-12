@@ -77,11 +77,21 @@ class EquipageManagerPDO extends EquipageManager
 		$requete->bindValue(':id_equipage', $id_equipage, \PDO::PARAM_INT);
 		$requete->execute();
 		
-		$nb = 0;
-		while($donnees = $requete->fetch)
-			$nb++;
-		
-		return nb;
+		return count($requete->fetchAll());
+	}
+	
+	public function isParticipant($id_participant, $id_equipage)
+	{
+		$requete = $this->dao->prepare('SELECT * FROM adherent_equipage WHERE num_competiteur = :id_competiteur AND 
+			num_equipage = :id_equipage');
+		$requete->bindValue(':id_competiteur', $id_participant, \PDO::PARAM_INT);
+		$requete->bindValue(':id_equipage', $id_equipage, \PDO::PARAM_INT);
+		$requete->execute();
+	   
+		if(empty($requete->fetch()))
+			return false;
+		else
+			return true;
 	}
 	
 	public function addParticipant($id_participant, $id_equipage, $valide)
