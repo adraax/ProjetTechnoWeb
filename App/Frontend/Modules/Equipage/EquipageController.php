@@ -20,8 +20,6 @@ class EquipageController extends BaseController
 		{
 			//Récupération du compétiteur
 			$id_user = $this->app->getUser()->getAttribute("id");
-			//pour le test
-			$id_user = 5;
 			$usermanager = $this->managers->getManagerOf('User');
 			$user = $usermanager->getUnique($id_user);
 			
@@ -41,8 +39,6 @@ class EquipageController extends BaseController
 		{
 			//Récupération du compétiteur
 			$id_user = $this->app->getUser()->getAttribute("id");
-			//pour le test
-			$id_user = 5;
 			$usermanager = $this->managers->getManagerOf('User');
 			$user = $usermanager->getUnique($id_user);
 			
@@ -93,8 +89,8 @@ class EquipageController extends BaseController
 			
 			//Récupération du compétiteur
 			$id_user = $this->app->getUser()->getAttribute("id");
-			//pour le test
-			$id_user = 5;
+	//Pour le test
+	$id_user = 4;
 			$usermanager = $this->managers->getManagerOf('User');
 			$user = $usermanager->getUnique($id_user);
 			
@@ -194,8 +190,6 @@ class EquipageController extends BaseController
 		{
 			//Récupération du compétiteur
 			$id_user = $this->app->getUser()->getAttribute("id");
-			//pour le test
-			$id_user = 4;
 			$usermanager = $this->managers->getManagerOf('User');
 			$user = $usermanager->getUnique($id_user);
 			
@@ -240,7 +234,7 @@ class EquipageController extends BaseController
 			
 			$form = $formBuilder->getForm();
 
-			if($request->getMethod() == 'POST' && $form->isValid())
+			if($request->getMethod() == 'POST' && $form->isValid() && $request->postExists('envoi'))
 			{
 				//On vérifie si le compétiteur n'est pas déjà inscrit à la compétition
 				if(!$competitionmanager->isInscrit($competiteur->getId(), $request->getPostData('id_competition')))
@@ -284,9 +278,11 @@ class EquipageController extends BaseController
 				else
 					$this->app->getUser()->setFlash('Vous ne pouvez vous inscrire qu\'une seule fois à une compétition.', 'alert-danger');
 			}
-			//Ajout d'un champ caché pour récupérer l'id_competition à chaque fois
+			//Ajout d'un champ caché pour récupérer l'id_competition à chaque fois et pour vérifier si c'est la première fois que l'on soumet le formulaire
 			$form = $form->createView();
 			$form .= '<input type="hidden" name="id_competition" value="'.$request->getPostData('id_competition').'" />';
+			$form .= '<input type="hidden" name="envoi" value="true" />';
+			
 			$this->page->addVar('form', $form);
 			$this->page->addVar('infocompet', $infocompet);
 		}
@@ -419,6 +415,13 @@ class EquipageController extends BaseController
 			}
 		}
 		
+		if($request->getMethod() == 'POST' && $request->postExists('id_participant_valide'))
+		{
+			//Validation de la participation d'un compétiteur mineur par l'entraineur
+			$equipagemanager = $this->managers->getManagerOf('Equipage');
+			$equipagemanager->setParticipantValide($request->getPostData('id_participant_valide'), $request->getPostData('id_equipage'));
+		}
+		
 		if(($request->getMethod() == 'POST' && $request->postExists('id_equipage')) || $this->app->getUser()->getAttribute('id_equipage') != null)
 		{
 			if($this->app->getUser()->getAttribute('id_equipage') != null)
@@ -462,8 +465,8 @@ class EquipageController extends BaseController
 				
 				//Récupération du compétiteur
 				$id_user = $this->app->getUser()->getAttribute("id");
-				//pour le test
-				$id_user = 4;
+		//Pour le test
+		$id_user = 4;
 				$usermanager = $this->managers->getManagerOf('User');
 				$user = $usermanager->getUnique($id_user);		
 				$id_user_competiteur = $competiteurmanager->getByPersonneId($user->getId_personne())->getId();
@@ -491,6 +494,20 @@ class EquipageController extends BaseController
 						$tabparticipants .= '<input type="hidden" name="id_equipage" value="'.$equipage->getId().'" />';
 						$tabparticipants .= '<input type="hidden" name="id_participant_suppr" value="'.$participant.'" />';
 						$tabparticipants .= '<button type="submit" class="btn btn-danger">Se désinscrire de l\'équipage</button></form>';
+					}
+					else
+					{
+						//Si l'utilisateur est entraîneur, il peut valider les mineurs
+						if($user->hasRole('entraineur'))
+						{
+							if(!$equipagemanager->participantValide($participant, $equipage->getId()))
+							{
+								$tabparticipants .= '<form method="post" action="/gestionparticipants">';
+								$tabparticipants .= '<input type="hidden" name="id_equipage" value="'.$equipage->getId().'" />';
+								$tabparticipants .= '<input type="hidden" name="id_participant_valide" value="'.$participant.'" />';
+								$tabparticipants .= '<button type="submit" class="btn btn-success">Valider l\'inscription</button></form>';
+							}
+						}
 					}
 				}
 				$tabparticipants .= '</td></tr></table></div>';

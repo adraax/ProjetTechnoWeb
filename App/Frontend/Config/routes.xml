@@ -23,4 +23,8 @@
 	<route url="/voirequipage" module="Equipage" action="voirequipage" auth="no"/>
 	<route url="/gestioninvites" module="Equipage" action="gestioninvites" auth="no"/>
 	<route url="/gestionparticipants" module="Equipage" action="gestionparticipants" auth="no"/>
+	
+	<route url="/ajoutbenevole" module="Benevole" action="ajoutbenevole" auth="no"/>
+	<route url="/ajoutbenevoleofficiel" module="Benevole" action="ajoutbenevoleofficiel" auth="no"/>
+	<route url="/listebenevoles" module="Benevole" action="listebenevoles" auth="no"/>
 </routes>

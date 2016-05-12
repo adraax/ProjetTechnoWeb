@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Client :  127.0.0.1
--- Généré le :  Mer 11 Mai 2016 à 18:23
+-- Généré le :  Jeu 12 Mai 2016 à 13:35
 -- Version du serveur :  5.7.9
 -- Version de PHP :  7.0.0
 
@@ -29,12 +29,12 @@ SET time_zone = "+00:00";
 DROP TABLE IF EXISTS `accompagnateur_benevole`;
 CREATE TABLE IF NOT EXISTS `accompagnateur_benevole` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `num_personne` int(11) NOT NULL,
-  `num_competition` int(11) NOT NULL,
+  `id_personne` int(11) NOT NULL,
+  `id_competition` int(11) NOT NULL,
   `role` varchar(30) NOT NULL,
   PRIMARY KEY (`id`),
-  KEY `numeroPersonne` (`num_personne`),
-  KEY `numeroCompetition` (`num_competition`)
+  KEY `numeroPersonne` (`id_personne`),
+  KEY `numeroCompetition` (`id_competition`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -46,12 +46,12 @@ CREATE TABLE IF NOT EXISTS `accompagnateur_benevole` (
 DROP TABLE IF EXISTS `accompagnateur_officiel`;
 CREATE TABLE IF NOT EXISTS `accompagnateur_officiel` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `num_competiteur` int(11) NOT NULL,
-  `num_competition` int(11) NOT NULL,
+  `id_licence` int(11) NOT NULL,
+  `id_competition` int(11) NOT NULL,
   `role` varchar(30) NOT NULL,
   PRIMARY KEY (`id`),
-  KEY `numero_adherent` (`num_competiteur`),
-  KEY `numeroCompetition` (`num_competition`)
+  KEY `numero_adherent` (`id_licence`),
+  KEY `numeroCompetition` (`id_competition`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -101,7 +101,8 @@ CREATE TABLE IF NOT EXISTS `adherent_equipage` (
 --
 
 INSERT INTO `adherent_equipage` (`num_competiteur`, `num_equipage`, `valide`) VALUES
-(1, 47, 0);
+(1, 49, 1),
+(2, 49, 0);
 
 -- --------------------------------------------------------
 
@@ -116,13 +117,6 @@ CREATE TABLE IF NOT EXISTS `adherent_equipage_invite` (
   PRIMARY KEY (`id_competiteur`,`id_equipage`),
   KEY `id_equipage` (`id_equipage`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
---
--- Contenu de la table `adherent_equipage_invite`
---
-
-INSERT INTO `adherent_equipage_invite` (`id_competiteur`, `id_equipage`) VALUES
-(2, 47);
 
 -- --------------------------------------------------------
 
@@ -182,14 +176,14 @@ CREATE TABLE IF NOT EXISTS `equipage` (
   `id_competition` int(11) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `numeroCompetition` (`id_competition`)
-) ENGINE=InnoDB AUTO_INCREMENT=48 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=50 DEFAULT CHARSET=utf8;
 
 --
 -- Contenu de la table `equipage`
 --
 
 INSERT INTO `equipage` (`id`, `specialite`, `categorie`, `nb_places`, `id_competition`) VALUES
-(47, 'kayak', 'senior', 4, 1);
+(49, 'kayak', 'senior', 2, 1);
 
 -- --------------------------------------------------------
 
@@ -290,15 +284,15 @@ INSERT INTO `user` (`id`, `id_personne`, `username`, `password`, `roles`) VALUES
 -- Contraintes pour la table `accompagnateur_benevole`
 --
 ALTER TABLE `accompagnateur_benevole`
-  ADD CONSTRAINT `accompagnateurbenevole_ibfk_1` FOREIGN KEY (`num_personne`) REFERENCES `personne` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `accompagnateurbenevole_ibfk_2` FOREIGN KEY (`num_competition`) REFERENCES `competition` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+  ADD CONSTRAINT `accompagnateurbenevole_ibfk_1` FOREIGN KEY (`id_personne`) REFERENCES `personne` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `accompagnateurbenevole_ibfk_2` FOREIGN KEY (`id_competition`) REFERENCES `competition` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Contraintes pour la table `accompagnateur_officiel`
 --
 ALTER TABLE `accompagnateur_officiel`
-  ADD CONSTRAINT `accompagnateur_officiel_ibfk_1` FOREIGN KEY (`num_competiteur`) REFERENCES `adherent` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `accompagnateur_officiel_ibfk_2` FOREIGN KEY (`num_competition`) REFERENCES `competition` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+  ADD CONSTRAINT `accompagnateur_officiel_ibfk_1` FOREIGN KEY (`id_licence`) REFERENCES `licence` (`num`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `accompagnateur_officiel_ibfk_2` FOREIGN KEY (`id_competition`) REFERENCES `competition` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Contraintes pour la table `adherent`

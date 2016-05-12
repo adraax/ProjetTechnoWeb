@@ -28,7 +28,7 @@ class UserManagerPDO extends UserManager
     
     public function delete($id)
     {
-        $this->dao-exec('DELETE FROM user WHERE id = '.(int) $id);
+        $this->dao->exec('DELETE FROM user WHERE id = '.(int) $id);
     }
     
     public function getUnique($id)

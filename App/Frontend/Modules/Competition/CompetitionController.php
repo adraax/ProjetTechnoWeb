@@ -11,6 +11,7 @@ use \FormBuilder\CompetitionFormBuilder;
 
 class CompetitionController extends BaseController
 {
+	//id_user = 4 à enlever à la fin des tests
 	public function ajoutcompetitionAction(HTTPRequest $request)
 	{
 		if($request->getMethod() == 'POST')
@@ -166,10 +167,7 @@ class CompetitionController extends BaseController
 	}
 	
 	public function affichecompetitionAction(HTTPRequest $request)
-	{
-		//A faire : ajouter bénévole (admin, secretaire, entraineur) + s'inscrire en bénévole => redirection sur formulaire avec choix du role
-		//A faire : voir bénévoles => liste des bénévoles avec leur role
-		
+	{		
 		if($request->getMethod() == 'POST' && $request->postExists('id_competition'))
 		{
 			//Affichage des infos de la compétition 
@@ -225,13 +223,33 @@ class CompetitionController extends BaseController
 							if($competition->getNb_places_dispo()>0)
 							{
 								if(($competition->getNb_places_dispo()-$nb_places_prises)>0)
-									$affichecompetition .= '<a id="bouton_transport" class="btn btn-primary btn-lg" href="#" onclick="modiftransport('.$competiteur->getId().', '.$competition->getId().')" role="button">S\'inscrire au transport</a>';
+									$affichecompetition .= '<a id="bouton_transport" class="btn btn-primary btn-lg" href="#" onclick="modiftransport('.$competiteur->getId().', '.$competition->getId().')" role="button">S\'inscrire au transport</a><br />';
 								else
-									$affichecompetition .= '<a id="bouton_transport" class="btn btn-primary btn-lg" href="#" role="button">Plus de place disponible !</a>';
+									$affichecompetition .= '<a id="bouton_transport" class="btn btn-primary btn-lg" href="#" role="button">Plus de place disponible !</a><br />';
 							}
 						}
 					}
 				}
+				//Si user = admin ou secrétaire, inscrire un bénévole
+				if($user->hasRole('admin') || $user->hasRole('secretaire'))
+				{
+					$affichecompetition .= '<br /><form method="post" action="/ajoutbenevole">';
+					$affichecompetition .= '<button type="submit" class="btn btn-info btn-lg">';
+					$affichecompetition .= 'Inscrire un bénévole';
+					$affichecompetition .= '</button><input type="hidden" name="id_competition" value="'.$competition->getId().'" /></form>';
+				}
+				
+				//Bouton s'inscrire comme bénévole
+				$affichecompetition .= '<br /><form method="post" action="/ajoutbenevoleofficiel">';
+				$affichecompetition .= '<button type="submit" class="btn btn-info btn-lg">';
+				$affichecompetition .= 'S\'inscrire comme bénévole';
+				$affichecompetition .= '</button><input type="hidden" name="id_competition" value="'.$competition->getId().'" /></form>';
+				
+				//Bouton voir les bénévoles
+				$affichecompetition .= '<br /><form method="post" action="/listebenevoles">';
+				$affichecompetition .= '<button type="submit" class="btn btn-info btn-lg">';
+				$affichecompetition .= 'Voir les bénévoles';
+				$affichecompetition .= '</button><input type="hidden" name="id_competition" value="'.$competition->getId().'" /></form>';
 			}
 			else
 					$affichecompetition .= '<p>Cette compétition est passée.</p>';

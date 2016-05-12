@@ -71,6 +71,15 @@ class EquipageManagerPDO extends EquipageManager
 			return true;
 	}
 	
+	public function setParticipantValide($id_participant, $id_equipage)
+	{
+		$requete = $this->dao->prepare('UPDATE adherent_equipage SET valide = 1 WHERE num_equipage = :id_equipage AND num_competiteur = :id_competiteur');
+		$requete->bindValue(':id_equipage', $id_equipage, \PDO::PARAM_INT);
+		$requete->bindValue(':id_competiteur', $id_participant, \PDO::PARAM_INT);
+	   
+		$requete->execute();
+	}
+	
 	public function nbParticipantsValides($id_equipage)
 	{
 		$requete = $this->dao->prepare('SELECT * FROM adherent_equipage WHERE num_equipage = :id_equipage AND valide = 1');

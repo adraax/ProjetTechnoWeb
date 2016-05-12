@@ -19,6 +19,7 @@ abstract class EquipageManager extends Manager
 	abstract public function deleteInvite($id_invite, $id_equipage);
 	abstract public function participantValide($id_participant, $id_equipage);
 	abstract public function nbParticipantsValides($id_equipage);
+	abstract public function setParticipantValide($id_participant, $id_equipage);
     
     public function save(Equipage $equipage)
     {
