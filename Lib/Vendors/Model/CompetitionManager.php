@@ -13,11 +13,13 @@ abstract class CompetitionManager extends Manager
     abstract public function getUnique($id);
 	abstract public function getList();
 	abstract public function getListByNiveau($niveau);
-	abstract public function isInscrit($id_competiteur, $id_competition);
 	abstract public function getNb_places_prises($id);
+	
+	abstract public function isInscrit($id_competiteur, $id_competition);
 	abstract public function isTransport($id_competiteur, $id_competition);
 	abstract public function setTransport($id_competiteur, $id_competition);
 	abstract public function getId_equipage($id_competiteur, $id_competition);
+	abstract public function getByCompetiteurId($id_competiteur);
     
     public function save(Competition $competition)
     {

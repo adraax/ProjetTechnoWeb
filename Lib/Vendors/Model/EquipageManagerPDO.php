@@ -132,6 +132,18 @@ class EquipageManagerPDO extends EquipageManager
 		$requete->execute();
 	}
 	
+	public function getInvitesByCompetiteurId($id_competiteur)
+	{
+		$requete = $this->dao->prepare('SELECT * FROM equipage WHERE id IN(
+			SELECT id_equipage FROM adherent_equipage_invite WHERE id_competiteur = :id_competiteur)');
+		$requete->bindValue(':id_competiteur', $id_competiteur, \PDO::PARAM_INT);
+		$requete->execute();
+		
+		$requete->setFetchMode(\PDO::FETCH_CLASS | \PDO::FETCH_PROPS_LATE, '\Entity\Equipage');
+		
+		return $requete->fetchAll();
+	}
+	
 	public function isInvite($id_participant, $id_equipage)
 	{
 		$requete = $this->dao->prepare('SELECT * FROM adherent_equipage_invite WHERE id_competiteur = :id_competiteur AND 

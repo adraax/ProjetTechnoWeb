@@ -132,14 +132,13 @@ class Personne extends Entity
 	//Affichage
 	public function affichePersonne()
 	{
-		return '<p class="personne">Nom : '.$this->nom.'<br />'.
-			'Prenom : '.$this->prenom.'<br />'.
-			'Adresse : '.$this->adresse.'<br />'.
-			'Date de naissance : '.date('d/m/Y', strtotime($this->date_naissance)).'<br />'.
-			'Sexe : '.$this->sexe.'<br />'.
-			'Email : '.$this->email.'<br />'.
-			'Numéro de téléphone : '.$this->num_tel.'<br />'.
-			'</p>';
+		return '<strong>Nom :</strong> '.$this->nom.'<br />'.
+			'<strong>Prenom :</strong> '.$this->prenom.'<br />'.
+			'<strong>Adresse :</strong><br />'.$this->adresse.'<br />'.
+			'<strong>Date de naissance :</strong> '.date('d/m/Y', strtotime($this->date_naissance)).'<br />'.
+			'<strong>Sexe :</strong> '.$this->sexe.'<br />'.
+			'<strong>Email :</strong> '.$this->email.'<br />'.
+			'<strong>Numéro de téléphone :</strong> '.$this->num_tel.'<br />';
 	}
 	
 	public function isValid()

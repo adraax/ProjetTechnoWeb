@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Client :  127.0.0.1
--- Généré le :  Jeu 12 Mai 2016 à 13:35
+-- Généré le :  Ven 13 Mai 2016 à 13:34
 -- Version du serveur :  5.7.9
 -- Version de PHP :  7.0.0
 
@@ -35,7 +35,14 @@ CREATE TABLE IF NOT EXISTS `accompagnateur_benevole` (
   PRIMARY KEY (`id`),
   KEY `numeroPersonne` (`id_personne`),
   KEY `numeroCompetition` (`id_competition`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8;
+
+--
+-- Contenu de la table `accompagnateur_benevole`
+--
+
+INSERT INTO `accompagnateur_benevole` (`id`, `id_personne`, `id_competition`, `role`) VALUES
+(11, 3, 1, 'Buvette');
 
 -- --------------------------------------------------------
 
@@ -52,7 +59,14 @@ CREATE TABLE IF NOT EXISTS `accompagnateur_officiel` (
   PRIMARY KEY (`id`),
   KEY `numero_adherent` (`id_licence`),
   KEY `numeroCompetition` (`id_competition`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+
+--
+-- Contenu de la table `accompagnateur_officiel`
+--
+
+INSERT INTO `accompagnateur_officiel` (`id`, `id_licence`, `id_competition`, `role`) VALUES
+(2, 12345, 1, 'coucou');
 
 -- --------------------------------------------------------
 
@@ -77,8 +91,8 @@ CREATE TABLE IF NOT EXISTS `adherent` (
 --
 
 INSERT INTO `adherent` (`id`, `num_personne`, `categorie`, `specialite`, `objectif_saison`, `certif_med`) VALUES
-(1, 1, 'senior', 'kayak', '', 1),
-(2, 2, 'junior', 'kayak', '', 1);
+(1, 1, 'cadet', 'kayak', 'Objectif !', 1),
+(2, 2, 'senior', 'kayak', '', 1);
 
 -- --------------------------------------------------------
 
@@ -102,7 +116,7 @@ CREATE TABLE IF NOT EXISTS `adherent_equipage` (
 
 INSERT INTO `adherent_equipage` (`num_competiteur`, `num_equipage`, `valide`) VALUES
 (1, 49, 1),
-(2, 49, 0);
+(2, 49, 1);
 
 -- --------------------------------------------------------
 
@@ -152,14 +166,15 @@ CREATE TABLE IF NOT EXISTS `competition` (
   `nb_places_dispo` int(11) NOT NULL,
   `club_organisateur` varchar(30) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 
 --
 -- Contenu de la table `competition`
 --
 
 INSERT INTO `competition` (`id`, `niveau`, `date_competition`, `adresse`, `code_postal`, `ville`, `meteo`, `type_hebergement`, `mode_transport`, `nb_places_dispo`, `club_organisateur`) VALUES
-(1, 'departemental', '2017-02-01', 'ici', 21000, 'Dijon', 'Soleil', 'particulier', 'Car', 1, 'Dijon Kayak');
+(1, 'departemental', '2017-02-01', 'ici', 21000, 'Dijon', 'Soleil', 'particulier', 'Car', 1, 'Dijon Kayak'),
+(2, 'national', '2018-01-01', 'une adresse\r\nsur deux ligne', 55000, 'Jesaispas', 'Beau', '', 'Car', 10, 'Dijon Kayak');
 
 -- --------------------------------------------------------
 
@@ -241,7 +256,7 @@ CREATE TABLE IF NOT EXISTS `personne` (
   `sexe` varchar(1) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `numero` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
 
 --
 -- Contenu de la table `personne`
@@ -249,7 +264,8 @@ CREATE TABLE IF NOT EXISTS `personne` (
 
 INSERT INTO `personne` (`id`, `nom`, `prenom`, `num_tel`, `email`, `adresse`, `date_naissance`, `sexe`) VALUES
 (1, 'nomadmin', 'prenomadmin', '0102030405', 'coucou@lalala.fr', 'ici', '1998-05-12', 'F'),
-(2, 'Yolo', 'Lalala', '0123456789', 'blabla', 'là', '2016-05-11', 'H');
+(2, 'Yolo', 'Lalala', '0123456789', 'blabla', 'là', '2016-05-11', 'H'),
+(3, 'Test', 'Idem', '0123456789', 'email', 'dgjqkl', '2000-01-01', 'H');
 
 -- --------------------------------------------------------
 
@@ -272,7 +288,7 @@ CREATE TABLE IF NOT EXISTS `user` (
 --
 
 INSERT INTO `user` (`id`, `id_personne`, `username`, `password`, `roles`) VALUES
-(4, 1, 'admin', '$2y$10$i16peYiZ5kNj9qJE5l757OYVuqLEYm31xI.NDlsDUIUAWFtfMDrQe', 'admin'),
+(4, 1, 'admin', '$2y$10$i16peYiZ5kNj9qJE5l757OYVuqLEYm31xI.NDlsDUIUAWFtfMDrQe', 'entraineur,competiteur'),
 (5, 2, 'test', 'osef', 'competiteur'),
 (6, 3, 'test', 'osef', 'secretaire,entraineur');
 

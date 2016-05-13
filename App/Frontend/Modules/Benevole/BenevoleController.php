@@ -4,10 +4,6 @@ namespace App\Frontend\Modules\Benevole;
 
 use \GJLMFramework\BaseController;
 use \GJLMFramework\HTTPRequest;
-use \Entity\Competition;
-use \Entity\User;
-use \Entity\Licence;
-use \Entity\Personne;
 use \Entity\Benevole;
 use \Entity\BenevoleOfficiel;
 use \FormBuilder\BenevoleFormBuilder;

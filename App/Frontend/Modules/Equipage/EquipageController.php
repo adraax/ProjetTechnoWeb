@@ -4,10 +4,6 @@ namespace App\Frontend\Modules\Equipage;
 
 use \GJLMFramework\BaseController;
 use \GJLMFramework\HTTPRequest;
-use \Entity\Competition;
-use \Entity\User;
-use \Entity\Competiteur;
-use \Entity\Personne;
 use \Entity\Equipage;
 use \FormBuilder\EquipageFormBuilder;
 
@@ -190,6 +186,8 @@ class EquipageController extends BaseController
 		{
 			//Récupération du compétiteur
 			$id_user = $this->app->getUser()->getAttribute("id");
+	//Pour le test
+	$id_user = 4;
 			$usermanager = $this->managers->getManagerOf('User');
 			$user = $usermanager->getUnique($id_user);
 			
@@ -211,7 +209,7 @@ class EquipageController extends BaseController
 			$infocompet .= '</form>';
 			$infocompet .= '</div></div>';
 			
-			if($request->postExists('nb_places'))
+			if($request->postExists('envoi'))
 			{
 				$equipage = new Equipage([
 					'id_competition' => (int)$request->getPostData('id_competition'),
@@ -222,11 +220,7 @@ class EquipageController extends BaseController
 			}
 			else
 			{
-				$equipage = new Equipage([
-					'id_competition' => (int)$request->getPostData('id_competition'),
-					'specialite' => $competiteur->getSpecialite(),
-					'categorie' => $competiteur->getCategorie()
-				]);
+				$equipage = new Equipage;
 			}
 			
 			$formBuilder = new EquipageFormBuilder($equipage);
@@ -234,50 +228,68 @@ class EquipageController extends BaseController
 			
 			$form = $formBuilder->getForm();
 
-			if($request->getMethod() == 'POST' && $form->isValid() && $request->postExists('envoi'))
+			if($request->postExists('envoi'))
 			{
-				//On vérifie si le compétiteur n'est pas déjà inscrit à la compétition
-				if(!$competitionmanager->isInscrit($competiteur->getId(), $request->getPostData('id_competition')))
+				if($request->getMethod() == 'POST' && $form->isValid())
 				{
-					//On vérifie que le compétiteur s'inscrit dans sa catégorie (ou supérieure)
-					if($competiteur->categorieValide($request->getPostData('categorie')))
+					//On vérifie si le compétiteur n'est pas déjà inscrit à la compétition
+					if(!$competitionmanager->isInscrit($competiteur->getId(), $request->getPostData('id_competition')))
 					{
-						$equipagemanager = $this->managers->getManagerOf('Equipage');
-						$id_equipage = $equipagemanager->save($equipage);
-						
-						//Si le compétiteur est majeur, sa participation est directement validée, autrement un entraîneur devra le faire
-						$personnemanager = $this->managers->getManagerOf('Personne');
-						$personne = $personnemanager->getUnique($user->getId_personne());
-						$date_nais = $personne->getDate_naissance();
-						$date_nais = \DateTime::createFromFormat('Y-m-d',$date_nais);
-						$aujourdhui = new \DateTime();
-						$interv = new \DateInterval('P18Y');
-						if($date_nais->add($interv) > $aujourdhui)
-							$valide = false;
-						else
-							$valide = true;
-						
-						$equipagemanager->addParticipant((int)$competiteur->getId(), $id_equipage, $valide);
-						
-						$this->app->getUser()->setFlash('L\'équipage a bien été ajouté.', 'alert-success');
-						
-						if($equipage->getNb_places()>1)
+						//On vérifie que le compétiteur s'inscrit dans sa catégorie (ou supérieure)
+						if($competiteur->categorieValide($request->getPostData('categorie')))
 						{
-							$this->app->getUser()->setAttribute('id_equipage', $id_equipage);
-							$this->app->getHttpResponse()->redirect('/gestioninvites');
+							$equipagemanager = $this->managers->getManagerOf('Equipage');
+							$id_equipage = $equipagemanager->save($equipage);
+							
+							//Si le compétiteur est majeur, sa participation est directement validée, autrement un entraîneur devra le faire
+							$personnemanager = $this->managers->getManagerOf('Personne');
+							$personne = $personnemanager->getUnique($user->getId_personne());
+							$date_nais = $personne->getDate_naissance();
+							$date_nais = \DateTime::createFromFormat('Y-m-d',$date_nais);
+							$aujourdhui = new \DateTime();
+							$interv = new \DateInterval('P18Y');
+							if($date_nais->add($interv) > $aujourdhui)
+								$valide = false;
+							else
+								$valide = true;
+							
+							$equipagemanager->addParticipant((int)$competiteur->getId(), $id_equipage, $valide);
+							
+							$this->app->getUser()->setFlash('L\'équipage a bien été ajouté.', 'alert-success');
+							
+							if($equipage->getNb_places()>1)
+							{
+								$this->app->getUser()->setAttribute('id_equipage', $id_equipage);
+								$this->app->getHttpResponse()->redirect('/gestioninvites');
+							}
+							else
+							{
+								$this->app->getUser()->setAttribute('id_equipage', $id_equipage);
+								$this->app->getHttpResponse()->redirect('/voirequipage');
+							}
 						}
 						else
-						{
-							$this->app->getUser()->setAttribute('id_equipage', $id_equipage);
-							$this->app->getHttpResponse()->redirect('/voirequipage');
-						}
+							$this->app->getUser()->setFlash('Vous ne pouvez vous inscrire dans une catégorie inférieure à la votre.', 'alert-danger');
 					}
 					else
-						$this->app->getUser()->setFlash('Vous ne pouvez vous inscrire dans une catégorie inférieure à la votre.', 'alert-danger');
+						$this->app->getUser()->setFlash('Vous ne pouvez vous inscrire qu\'une seule fois à une compétition.', 'alert-danger');
 				}
-				else
-					$this->app->getUser()->setFlash('Vous ne pouvez vous inscrire qu\'une seule fois à une compétition.', 'alert-danger');
 			}
+			else
+			{
+				//Recréation du formulaire avec les infos de bases si c'est le 1er envoi
+				//(pour que le formulaire n'affiche pas les validators vu que des infos sont pré-remplies)
+				$equipage = new Equipage([
+					'id_competition' => (int)$request->getPostData('id_competition'),
+					'specialite' => $competiteur->getSpecialite(),
+					'categorie' => $competiteur->getCategorie()
+				]);
+				$formBuilder = new EquipageFormBuilder($equipage);
+				$formBuilder->build();
+				
+				$form = $formBuilder->getForm();
+			}
+			
 			//Ajout d'un champ caché pour récupérer l'id_competition à chaque fois et pour vérifier si c'est la première fois que l'on soumet le formulaire
 			$form = $form->createView();
 			$form .= '<input type="hidden" name="id_competition" value="'.$request->getPostData('id_competition').'" />';

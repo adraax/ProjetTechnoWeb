@@ -159,4 +159,14 @@ class CompetitionManagerPDO extends CompetitionManager
 			$this->dao->exec('DELETE FROM adherent_transport WHERE id_competiteur = '.(int)$id_competiteur.' AND id_competition = '.(int)$id_competition);
 		}
 	}
+	
+	public function getByCompetiteurId($id_competiteur)
+	{
+		$requete = $this->dao->prepare('SELECT id_competition FROM equipage WHERE id IN(
+			SELECT num_equipage FROM adherent_equipage WHERE num_competiteur = :id_competiteur)');
+		$requete->bindValue(':id_competiteur', $id_competiteur, \PDO::PARAM_INT);
+		$requete->execute();
+		
+		return $requete->fetchAll();
+	}
 }

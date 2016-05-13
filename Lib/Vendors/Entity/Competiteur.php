@@ -139,6 +139,20 @@ class Competiteur extends Entity
 		}
 	}
 	
+	public function afficheCompetiteur()
+	{
+		$s = '<strong>Catégorie :</strong> '.$this->categorie.'<br />';
+		$s .= '<strong>Spécialité :</strong> '.$this->specialite.'<br />';
+		$s .= '<strong>Objectif de la saison :</strong> '.$this->objectif_saison.'<br />';
+		$s .= '<strong>Certificat médical :</strong> ';
+		if($this->getCertif_med())
+			$s .= 'Valide<br />';
+		else
+			$s .= 'Non valide<br />';
+		
+		return $s;
+	}
+	
 	public function isValid()
 	{
 		return !(empty($this->specialite) || empty($this->categorie) || empty($this->num_personne) || empty($this->certif_med));

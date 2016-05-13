@@ -1,3 +1,4 @@
+<h3>Ajouter un &eacute;quipage :</h3>
 <?php echo $infocompet; ?>
 <form method="post" action="/ajoutequipage">
     <?php echo $form; ?>

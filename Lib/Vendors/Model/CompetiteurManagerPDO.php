@@ -38,7 +38,7 @@ class CompetiteurManagerPDO extends CompetiteurManager
 	protected function modify(Competiteur $competiteur)
 	{
 		$requete = $this->dao->prepare('UPDATE adherent SET num_personne = :num_personne, categorie = :categorie, specialite = :specialite, objectif_saison = :objectif_saison, certif_med = :certif_med WHERE id = :id');
-		$requete->bindValue(':id', $competition->getId(), \PDO::PARAM_INT);
+		$requete->bindValue(':id', $competiteur->getId(), \PDO::PARAM_INT);
 		$requete->bindValue(':num_personne', $competiteur->getNum_personne(), \PDO::PARAM_INT);
 		$requete->bindValue(':categorie', $competiteur->getCategorie(), \PDO::PARAM_STR);
 		$requete->bindValue(':specialite', $competiteur->getSpecialite(), \PDO::PARAM_STR);
@@ -69,10 +69,18 @@ class CompetiteurManagerPDO extends CompetiteurManager
 		return null;
 	}
 	
+	public function getList()
+	{
+		$requete = $this->dao->prepare('SELECT * FROM adherent');		
+		$requete->execute();  
+       
+		$requete->setFetchMode(\PDO::FETCH_CLASS | \PDO::FETCH_PROPS_LATE, '\Entity\Competiteur');  
+		
+		return $requete->fetchAll();
+	}
+	
 	public function getListDispo($id_competition)  
     {  
-		$competiteurs = [];  
-       
 		$requete = $this->dao->prepare('SELECT * FROM adherent WHERE id NOT IN(
 			SELECT num_competiteur FROM adherent_equipage WHERE num_equipage IN(
 			SELECT id FROM equipage WHERE id_competition = :id_competition))');
@@ -80,9 +88,7 @@ class CompetiteurManagerPDO extends CompetiteurManager
 		$requete->execute();  
        
 		$requete->setFetchMode(\PDO::FETCH_CLASS | \PDO::FETCH_PROPS_LATE, '\Entity\Competiteur');  
-		while($donnees = $requete->fetch())  
-			$competiteurs[] = $donnees;
 	
-		return $competiteurs;  
+		return $requete->fetchAll();  
     } 
 }

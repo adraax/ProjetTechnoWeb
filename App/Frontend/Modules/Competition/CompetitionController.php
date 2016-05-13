@@ -5,8 +5,6 @@ namespace App\Frontend\Modules\Competition;
 use \GJLMFramework\BaseController;
 use \GJLMFramework\HTTPRequest;
 use \Entity\Competition;
-use \Entity\User;
-use \Entity\Competiteur;
 use \FormBuilder\CompetitionFormBuilder;
 
 class CompetitionController extends BaseController
@@ -72,8 +70,8 @@ class CompetitionController extends BaseController
 		
 		//Récupération de l'user pour connaître son rôle
 		$id_user = $this->app->getUser()->getAttribute("id");
-		//pour le test
-		$id_user = 4;
+	//pour le test
+	$id_user = 4;
 		$usermanager = $this->managers->getManagerOf('User');
 		$user = $usermanager->getUnique($id_user);
 		

@@ -34,7 +34,7 @@ class RadioField extends Field
             $widget = '<div class="form-group '.$class.'">';
         }
         
-        $widget .= '<label for="'.$this->name.'">'.$this->label.'</label>';
+        $widget .= '<label for="'.$this->name.'">'.$this->label.'</label><br />';
 		foreach($this->boutons as $bouton)
 		{
 			$widget .= '<label class="radio-inline"><input type="radio" id="'.$bouton.'" name="'.$this->name.'"';

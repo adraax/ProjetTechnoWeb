@@ -7,10 +7,11 @@ use \GJLMFramework\HTTPRequest;
 use \Entity\Personne;
 use \Entity\Licence;
 use \Entity\User;
-use \Entiy\Equipage;
+use \Entiy\Competiteur;
 use \FormBuilder\PersonneFormBuilder;
 use \FormBuilder\LicenceFormBuilder;
 use \FormBuilder\RoleFormBuilder;
+use \FormBuilder\CategorieFormBuilder;
 
 class AdministrationController extends BaseController
 {
@@ -59,6 +60,53 @@ class AdministrationController extends BaseController
 		
 		$this->page->addVar('tabparticipants', $tabparticipants);
 	}
+	
+	//Pour le secrétaire
+	public function gestioncategoriesAction(HTTPRequest $request)
+    {
+		$competiteurmanager = $this->managers->getManagerOf('Competiteur');
+		$personnemanager = $this->managers->getManagerOf('Personne');
+		$competiteurs = $competiteurmanager->getList();
+		
+		if($request->getMethod() == 'POST')
+		{
+			if($request->postExists('id'))
+			{
+				$competiteur = $competiteurmanager->getByPersonneId($request->getPostData('id'));
+				if($request->postExists('categorie'))
+					$competiteur->setCategorie($request->getPostData('categorie'));
+			}
+			else
+				$competiteur = new Competiteur;
+		}
+		else
+		{
+			$competiteur = $competiteurs[0];
+		}
+		
+		$formBuilder = new CategorieFormBuilder($competiteur);
+		foreach($competiteurs as $competiteur)
+		{
+			$personne = $personnemanager->getUnique($competiteur->getNum_personne());
+			$formBuilder->addPersonne($personne);
+		}
+		$formBuilder->build();
+		
+		$form = $formBuilder->getForm();
+		if($request->getMethod() == 'POST' && $form->isValid())
+        {
+			$competiteur = $competiteurmanager->getByPersonneId($request->getPostData('id'));
+			if($request->postExists('categorie'))
+				$competiteur->setCategorie($request->getPostData('categorie'));
+
+			$competiteurmanager->save($competiteur);
+			$this->app->getUser()->setFlash('Ce compétiteur est maintenant dans la catégorie '.$competiteur->getCategorie().'.', 'alert-success');
+        }
+		
+		$this->page->addVar('form', $form->createView());
+		//$this->page->addVar('script', 'XMLHttpRequest');
+		$this->page->addVar('script', 'returncategorie');
+    }
 	
 	//Pour l'administrateur
 	public function ajoutpersonneAction(HTTPRequest $request)
@@ -192,5 +240,29 @@ class AdministrationController extends BaseController
 		}
 		else
 			$this->app->getHttpResponse()->redirect('/gestionroles');
+	}
+	
+	public function returncategorieAction(HTTPRequest $request)
+	{
+		header("Content-Type: text/xml");
+		if($request->getMethod() == 'POST' && $request->postExists('num'))
+		{
+			echo '<?xml version="1.0" encoding="utf-8"?>';
+			echo '<categories>';
+			$num = ($request->postExists('num')) ? $request->getPostData('num') : NULL;
+
+			if ($num) 
+			{
+				$competiteurmanager = $this->managers->getManagerOf('Competiteur');
+				$competiteur = $competiteurmanager->getByPersonneId($num);
+				
+				echo '<categorie name="' . $competiteur->getCategorie() . '" />';
+			}
+
+			echo '</categories>';
+			exit;
+		}
+		else
+			$this->app->getHttpResponse()->redirect('/gestioncategories');
 	}
 }
