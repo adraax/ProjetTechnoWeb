@@ -83,7 +83,7 @@ class ProfilController extends BaseController
 		
 		$form = $form->createView();
 		
-		//Si compétiteur, ajout définir un objectif pour la saison
+		//Si compétiteur, ajout définir un objectif pour la saison + choix de la spécialité
 		if($user->hasRole('competiteur'))
 		{
 			$is_competiteur = true;
@@ -104,6 +104,23 @@ class ProfilController extends BaseController
 			
 			$form .= '<label for="objectif_saison">Objectif pour la saison : </label>';
 			$form .= '<input type="text" id="objectif_saison" name="objectif_saison" class="form-control" value="'.$competiteur->getObjectif_saison().'" /><br />';
+			
+			if($request->getMethod() == 'POST' && $request->postExists('specialite'))
+			{
+				$competiteur->setSpecialite($request->getPostData('specialite'));
+				$competiteurManager->save($competiteur);
+			}
+			
+			$form .= '<label for="specialite">Choix de la spécialité :</label><br />';
+			$form .= '<label class="radio-inline"><input type="radio" id="canoe" name="specialite" value="canoe"';	
+			if($competiteur->getSpecialite()=='canoe')
+				$form .= ' checked';
+			$form .= '/>Canoë</label>';
+			
+			$form .= '<label class="radio-inline"><input type="radio" id="kayak" name="specialite" value="kayak"';		
+			if($competiteur->getSpecialite()=='kayak')
+				$form .= ' checked';
+			$form .= '/>Kayak</label><br />';
 		}
 		
 		$this->page->addVar('form', $form);
