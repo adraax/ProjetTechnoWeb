@@ -11,6 +11,7 @@ abstract class EquipageManager extends Manager
     abstract public function delete($id);
     
     abstract public function getUnique($id);
+	abstract public function getNonValides();
 	abstract public function isParticipant($id_participant, $id_equipage);
 	abstract public function addParticipant($id_participant, $id_equipage, $valide);
 	abstract public function deleteParticipant($id_participant, $id_equipage);

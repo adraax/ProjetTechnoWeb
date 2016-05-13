@@ -7,12 +7,60 @@ use \GJLMFramework\HTTPRequest;
 use \Entity\Personne;
 use \Entity\Licence;
 use \Entity\User;
+use \Entiy\Equipage;
 use \FormBuilder\PersonneFormBuilder;
 use \FormBuilder\LicenceFormBuilder;
 use \FormBuilder\RoleFormBuilder;
 
 class AdministrationController extends BaseController
 {
+	//Pour l'entraîneur
+	public function valideparticipantsAction(HTTPRequest $request)
+	{
+		//Validation du participant si cela a été demandé
+		if($request->getMethod() == 'POST' && $request->postExists('id_competiteur') && $request->postExists('id_equipage'))
+		{
+			$equipagemanager = $this->managers->getManagerOf('Equipage');
+			$equipagemanager->setParticipantValide($request->getPostData('id_competiteur'), $request->getPostData('id_equipage'));
+			$this->app->getUser()->setFlash('Cette inscription a bien été validée.', 'alert-success');
+		}
+		
+		//Affichage du tableau des bénévoles non licenciés
+		$tabparticipants = '<div class="panel panel-default"><div class="panel-heading">Inscriptions à valider</div><table class="table">';
+		$tabparticipants .= '<tr><th>Nom</th><th>Prénom</th><th>Equipage</th><th></th></tr>';
+		
+		$competiteurmanager = $this->managers->getManagerOf('Competiteur');
+		$personnemanager = $this->managers->getManagerOf('Personne');
+		
+		//Récupération des participants non valides
+		$equipagemanager = $this->managers->getManagerOf('Equipage');
+		$nonvalides = $equipagemanager->getNonValides();
+		
+		foreach($nonvalides as $nonvalide)
+		{
+			$competiteur = $competiteurmanager->getUnique($nonvalide['num_competiteur']);
+			$personne = $personnemanager->getUnique($competiteur->getNum_personne());
+			
+			$tabparticipants .= '<tr><td>'.$personne->getNom().'</td><td>'.$personne->getPrenom().'</td>';
+			
+			//Ajout du bouton voir l'équipage
+			$tabparticipants .= '<td><form method="post" action="/gestionparticipants">';
+			$tabparticipants .= '<input type="hidden" name="id_equipage" value="'.$nonvalide['num_equipage'].'" />';
+			$tabparticipants .= '<button type="submit" class="btn btn-default">Voir l\'équipage</button></form></td>';
+			
+			//Ajout bouton valider l'inscription
+			$tabparticipants .= '<td><form method="post" action="/valideparticipants">';
+			$tabparticipants .= '<input type="hidden" name="id_equipage" value="'.$nonvalide['num_equipage'].'" />';
+			$tabparticipants .= '<input type="hidden" name="id_competiteur" value="'.$nonvalide['num_competiteur'].'" />';
+			$tabparticipants .= '<button type="submit" class="btn btn-success">Valider l\'inscription</button></form></td>';		
+		}
+		
+		$tabparticipants .= '</table></div>';
+		
+		$this->page->addVar('tabparticipants', $tabparticipants);
+	}
+	
+	//Pour l'administrateur
 	public function ajoutpersonneAction(HTTPRequest $request)
 	{
 		if($request->getMethod() == 'POST')

@@ -14,6 +14,8 @@
 	<route url="/gestionroles" module="Administration" action="gestionroles" auth="no"/>
 	<route url="/returnroles" module="Administration" action="returnroles" auth="no"/>
 	
+	<route url="/valideparticipants" module="Administration" action="valideparticipants" auth="no"/>
+	
 	<route url="/ajoutcompetition" module="Competition" action="ajoutcompetition" auth="no"/>
 	<route url="/affichecompetition" module="Competition" action="affichecompetition" auth="no"/>
 	<route url="/listecompetitions" module="Competition" action="listecompetitions" auth="no"/>

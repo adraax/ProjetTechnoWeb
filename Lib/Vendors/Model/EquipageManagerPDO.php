@@ -71,6 +71,14 @@ class EquipageManagerPDO extends EquipageManager
 			return true;
 	}
 	
+	public function getNonValides()
+	{
+		$requete = $this->dao->prepare('SELECT * FROM adherent_equipage WHERE valide = 0');
+		$requete->execute();
+		
+		return $requete->fetchAll();
+	}
+	
 	public function setParticipantValide($id_participant, $id_equipage)
 	{
 		$requete = $this->dao->prepare('UPDATE adherent_equipage SET valide = 1 WHERE num_equipage = :id_equipage AND num_competiteur = :id_competiteur');
