@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Client :  127.0.0.1
--- Généré le :  Ven 13 Mai 2016 à 13:34
+-- Généré le :  Ven 13 Mai 2016 à 13:50
 -- Version du serveur :  5.7.9
 -- Version de PHP :  7.0.0
 
@@ -226,21 +226,6 @@ INSERT INTO `licence` (`num`, `id_personne`, `type`, `activated`) VALUES
 -- --------------------------------------------------------
 
 --
--- Structure de la table `parent`
---
-
-DROP TABLE IF EXISTS `parent`;
-CREATE TABLE IF NOT EXISTS `parent` (
-  `numeroAdherent` int(11) NOT NULL,
-  `numeroPersonne` int(11) NOT NULL,
-  PRIMARY KEY (`numeroAdherent`,`numeroPersonne`),
-  KEY `numeroAdherent` (`numeroAdherent`),
-  KEY `numeroPersonne` (`numeroPersonne`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
--- --------------------------------------------------------
-
---
 -- Structure de la table `personne`
 --
 
@@ -342,13 +327,6 @@ ALTER TABLE `adherent_transport`
 --
 ALTER TABLE `equipage`
   ADD CONSTRAINT `equipage_ibfk_1` FOREIGN KEY (`id_competition`) REFERENCES `competition` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
-
---
--- Contraintes pour la table `parent`
---
-ALTER TABLE `parent`
-  ADD CONSTRAINT `parent_ibfk_1` FOREIGN KEY (`numeroAdherent`) REFERENCES `adherent` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `parent_ibfk_2` FOREIGN KEY (`numeroPersonne`) REFERENCES `personne` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
