@@ -65,7 +65,7 @@ class UserManagerPDO extends UserManager
     
     public function getByName($name)
     {
-        $requete = $this->dao->prepare('SELECT id, username FROM user WHERE username = :name');
+        $requete = $this->dao->prepare('SELECT id, username, password, roles FROM user WHERE username = :name');
         
         $requete->bindValue(':name', (string) $name, \PDO::PARAM_STR);
         $requete->execute();

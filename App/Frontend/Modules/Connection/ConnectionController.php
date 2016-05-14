@@ -15,6 +15,11 @@ class ConnectionController extends BaseController
 {
     public function connectionAction(HTTPRequest $request)
     {
+        if($this->app->getUser()->isAuthenticated())
+        {
+            $this->app->getHttpResponse()->redirect('/');
+        }
+        
         if($request->getMethod() == 'POST')
         {
             $user = new User([
@@ -211,11 +216,24 @@ class ConnectionController extends BaseController
             
             if(is_null($user2))
             {
-                $this->app->getUser()->setFlash('Utilisateur inexistant', 'alert-danger');
+                $this->app->getUser()->setFlash('Utilisateur inexistant.', 'alert-warning');
             }
             else
             {
-                
+                if(password_verify($user->getPassword(), $user2->getPassword()))
+                {
+                    echo 'ok';
+                    $this->app->getUser()->setAuthenticated(true);
+                    $this->app->getUser()->setAttribute('roles', $user2->getRoles());
+                    $this->app->getUser()->setAttribute('user_id', $user2->getId());
+                    
+                    exit;
+                }
+                else
+                {
+                    echo var_dump($user2);
+                    $this->app->getUser()->setFlash('Identifiants incorrects.', 'alert-danger');
+                }
             }
         }
         

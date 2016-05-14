@@ -81,6 +81,7 @@
 
     <script src="<?php echo $path;?>js/jquery.js"></script>
     <script src="<?php echo $path;?>js/bootstrap.js"></script>
+    <script src="js/connexion.js"></script>
     <?php if(isset($script))
     {
             echo '<script src="'.$path.'js/'.$script.'.js"></script>';
