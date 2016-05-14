@@ -59,29 +59,36 @@ class Roles extends ApplicationComponent
     /* ********** Méthode ********** */
     public function hasRoles($roles)
     {
-        if(!is_null($this->roles))
+        if(!is_null($roles))
         {
-            if(is_array($roles))
+            if(!is_null($this->roles))
             {
-                foreach ($roles as $role)
+                if(is_array($roles))
                 {
-                    if(!in_array($role, $this->roles))
+                    foreach ($roles as $role)
                     {
-                        return false;
+                        if(!in_array($role, $this->roles))
+                        {
+                            return false;
+                        }
                     }
+                    
+                    return true;
                 }
-                
-                return true;
-            }
-            else if(is_string($roles))
-            {
-                if(!in_array($roles, $this->roles))
-                    return false;
-                return true;
+                else if(is_string($roles))
+                {
+                    if(!in_array($roles, $this->roles))
+                        return false;
+                    return true;
+                }
+                else
+                {
+                    throw new \InvalidArgumentException('Le paramètre doit être une string ou un tableau de string.');
+                }
             }
             else
             {
-                throw new InvalidArgumentException('Le paramètre doit être une string ou un tableau de string.');
+                return true;
             }
         }
         else
