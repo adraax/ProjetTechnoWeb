@@ -58,7 +58,7 @@ class User extends Entity
     {
         if(is_string($password) && !empty($password))
         {
-            $this->password = password_hash($password, PASSWORD_DEFAULT);
+            $this->password = $password;
         }
     }
     
