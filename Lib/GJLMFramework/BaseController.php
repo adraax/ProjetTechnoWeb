@@ -16,6 +16,7 @@ abstract class BaseController extends ApplicationComponent
         parent::__construct($app);
         $this->page = new Page($app);
 
+        $this->managers = new Managers('PDO', PDOFactory::getMysqlConnection());
         $this->setModule($module);
         $this->setAction($action);
         $this->setView($action);

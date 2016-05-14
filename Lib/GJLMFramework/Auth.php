@@ -44,12 +44,10 @@ class Auth extends ApplicationComponent
                     if((string)$route['auth'] === "no")
                     {
                         $this->auth = false;
-                        echo 'true';
                     }
                     else
                     {
                         $this->auth = true;
-                        echo 'false';
                     }
                 }
             }

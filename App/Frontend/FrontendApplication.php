@@ -17,24 +17,14 @@ class FrontendApplication extends Application
     {
         $auth = new Auth($this, $this->httpRequest->getRequestURI());
         
-        if($auth->getAuth())
+        if($auth->getAuth() && !$this->user->isAuthenticated())
         {
             $controller = new Modules\Connection\ConnectionController($this, 'Connection', 'connection');
-            echo 'bleu';
         }  
         else
         {
             $controller = $this->getController();
         }
-        
-        /*if($this->getUser()->isAuthenticated() || $_SERVER['REQUEST_URI'] == "/inscription")
-        {
-            $controller = $this->getController();
-        }
-        else
-        {
-             $controller = new Modules\Connection\ConnectionController($this, 'Connection', 'connection');
-        }*/
         
         $controller->execute();
 

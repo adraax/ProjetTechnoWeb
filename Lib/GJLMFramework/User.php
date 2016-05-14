@@ -15,7 +15,7 @@ class User
     {
         $flash = $_SESSION['flash'];
         unset($_SESSION['flash']);
-
+        
         return $flash;
     }
 
@@ -25,9 +25,10 @@ class User
         $_SESSION[$attr] = $value;
     }
 
-    public function setFlash($value)
+    public function setFlash($value, $type)
     {
         $_SESSION['flash'] = $value;
+        $_SESSION['flash_type'] = $type;
     }
 
     public function setAuthenticated($authenticated = true)
@@ -49,5 +50,10 @@ class User
     public function isAuthenticated()
     {
         return isset($_SESSION['auth']) && $_SESSION['auth'] === true;
+    }
+    
+    public function removeAttribute($attr)
+    {
+        unset($_SESSION[$attr]);
     }
 }

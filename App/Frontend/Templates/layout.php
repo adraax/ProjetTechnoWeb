@@ -24,7 +24,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="/"><span class="glyphicon glyphicon-star"> </span> Projet TechnoWeb</a>
+          <a class="navbar-brand" href="/"> Projet TechnoWeb</a>
         </div>
         <div id="navbar" class="navbar-collapse collapse">
             <ul class="nav navbar-nav">
@@ -32,7 +32,7 @@
             </ul>
             <ul class="nav navbar-nav navbar-right">
             <?php if(!$user->isAuthenticated()) { ?>
-                <li><a href="/connection">Connexion</a></li>
+                <li><a href="" data-toggle="modal" data-target="#myModal">Connexion</a></li>
             <?php } else {?>
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Nom Utilisateur <span class="caret"></span></a>
@@ -48,11 +48,41 @@
       </div>
     </nav>
 
+<!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">Connexion</h4>
+      </div>
+      <div class="modal-body" id="mod">
+        ...
+      </div>
+    </div>
+  </div>
+</div>
+
     <div id="content" class="container">
-        <?php echo $content;?>
+        <?php
+        if($user->hasFlash())
+        {
+            $type = $user->getAttribute('flash_type');
+            $flash = $user->getFlash();
+            
+            echo '<div class="alert alert-dismissible '.$type.'" role="alert">
+              <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            '.$flash.'</div>';
+        }
+        echo $content;?>
     </div>
 
     <script src="<?php echo $path;?>js/jquery.js"></script>
     <script src="<?php echo $path;?>js/bootstrap.js"></script>
+    <?php if(isset($script))
+    {
+            echo '<script src="'.$path.'js/'.$script.'.js"></script>';
+    }
+    ?>
 </body>
 </html>
