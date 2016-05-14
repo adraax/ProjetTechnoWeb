@@ -116,6 +116,7 @@ class ConnectionController extends BaseController
         }
         
         $this->page->addVar('form', $form->createView());
+        $this->page->addVar('script', 'test');
     }
     
     public function createUserAction(HTTPRequest $request)
@@ -208,10 +209,6 @@ class ConnectionController extends BaseController
             $this->app->getHttpResponse()->redirect('/');
         }
         
-       echo '<form method="post" action="/connectionajax">'.$form->createView().'
-                <button type="submit" class="btn btn-default" id="connexion">Connexion</button></form>
-            <a href="/inscription">Pas de compte ? Cliquez ici pour vous inscrire</a>';
-            
         if($request->getMethod() == 'POST' && $form->isValid())
         {
             $userManager = $this->managers->getManagerOf('User');
@@ -223,6 +220,11 @@ class ConnectionController extends BaseController
             }
         }
         
+        
+        echo $request->getMethod().'<form method="post" action="/connectionajax">'.$form->createView().'
+                <button type="submit" class="btn btn-default" id="connexion">Connexion</button></form>
+            <a href="/inscription">Pas de compte ? Cliquez ici pour vous inscrire</a>';
+            
         exit;
     }
 }
