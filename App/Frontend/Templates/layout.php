@@ -31,6 +31,13 @@
                 <li><a href="/">Accueil</a></li>
 				<li><a href="/afficherprofil">Profil</a></li>
 				<li><a href="/listecompetitions">Comp&eacute;titions</a></li>
+				<?php if(!empty($user->getAttribute('roles')) && in_array('admin', $user->getAttribute('roles'))) { ?>
+				<li><a href="/ajoutpersonne">Administration</a></li>
+				<?php } if(!empty($user->getAttribute('roles')) && in_array('secretaire', $user->getAttribute('roles'))) { ?>
+				<li><a href="/gestioncategories">Gestion des cat&eacute; des adh&eacute;rents</a></li>
+				<?php } if(!empty($user->getAttribute('roles')) && in_array('entraineur', $user->getAttribute('roles'))) { ?>
+				<li><a href="/gestioncategories">Valider les inscriptions des mineurs</a></li>
+				<?php } ?>
             </ul>
             <ul class="nav navbar-nav navbar-right">
             <?php if(!$user->isAuthenticated()) { ?>
