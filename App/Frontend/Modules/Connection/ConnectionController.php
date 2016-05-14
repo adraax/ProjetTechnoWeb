@@ -208,9 +208,21 @@ class ConnectionController extends BaseController
             $this->app->getHttpResponse()->redirect('/');
         }
         
-       echo '<form method="post" action="/connection">'.$form->createView().'
-                <button type="submit" class="btn btn-default">Connexion</button></form>
+       echo '<form method="post" action="/connectionajax">'.$form->createView().'
+                <button type="submit" class="btn btn-default" id="connexion">Connexion</button></form>
             <a href="/inscription">Pas de compte ? Cliquez ici pour vous inscrire</a>';
+            
+        if($request->getMethod() == 'POST' && $form->isValid())
+        {
+            $userManager = $this->managers->getManagerOf('User');
+            $user2 = $userManager->getByName($user->getUsername());
+            
+            if(is_null($user2))
+            {
+                $this->app->getUser()->setFlash('Utilisateur inexistant', 'alert-danger');
+            }
+        }
+        
         exit;
     }
 }
