@@ -1,9 +1,6 @@
 <?php
-
 namespace Model;
-
 use \Entity\Licence;
-
 class LicenceManagerPDO extends LicenceManager
 {
     public function getUnique($num)
@@ -24,7 +21,7 @@ class LicenceManagerPDO extends LicenceManager
     
     public function getByPersonneId($id)
     {
-        $requete = $this->dao->prepare('SELECT nuù, id_personne, type, activated FROM licence WHERE id_personne = :id');
+        $requete = $this->dao->prepare('SELECT num, id_personne, type, activated FROM licence WHERE id_personne = :id');
         $requete->bindValue(':id', (int) $id, \PDO::PARAM_INT);
         $requete->execute();
         

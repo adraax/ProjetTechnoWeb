@@ -4,6 +4,8 @@ namespace FormBuilder;
 use \GJLMFramework\FormBuilder;
 use \GJLMFramework\DatePickerField;
 use \GJLMFramework\StringField;
+use \GJLMFramework\NumberField;
+use \GJLMFramework\ListField;
 use \GJLMFramework\MaxLengthValidator;
 use \GJLMFramework\NotNullValidator;
 
@@ -11,7 +13,7 @@ class LicenceFormBuilder extends FormBuilder
 {
     public function build()
     {
-        $this->form->add(new StringField([
+        $this->form->add(new NumberField([
             'label' => 'Numéro de licence : ',
             'name' => 'num',
             'maxLength' => 30,
@@ -30,4 +32,43 @@ class LicenceFormBuilder extends FormBuilder
             ]
         ]));
     }
+	
+	public function buildAdmin($personne)
+	{
+		$option = new ListField([
+			'label' => "Liste des personnes n'ayant pas de licence :",
+			'name' => "id_personne",
+			'validators' => [
+                new NotNullValidator('Il faut choisir une personne.')
+            ]
+		]);
+		foreach($personne as $perso)
+		{
+			$nom = $perso->getNom().' '.$perso->getPrenom();
+			$option->addOption((int)$perso->getId(), $nom);
+		}
+		
+		$type = new ListField([
+			'label' => "Type de la licence :",
+			'name' => "type",
+			'validators' => [
+                new NotNullValidator('Il faut choisir un type.')
+            ]
+		]);
+		$type->addOption('Competiteur', 'Competiteur');
+		$type->addOption('Dirigeant', 'Dirigeant');
+		$type->addOption('Loisir', 'Loisir');
+		
+		$this->form->add($option)
+		->add($type)
+		->add(new NumberField([
+            'label' => 'Numéro de licence : ',
+            'name' => 'num',
+            'maxLength' => 30,
+            'validators' => [
+                new MaxLengthValidator('Le numéro de licence ne doit pas dépasser 30 caractères.', 30),
+                new NotNullValidator('Le numéro de licence ne peut pas être vide.')
+            ]
+        ]));
+	}
 }

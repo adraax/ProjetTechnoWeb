@@ -1,8 +1,6 @@
 <?php
 namespace Model;
-
 use \Entity\User;
-
 class UserManagerPDO extends UserManager
 {
     protected function add(User $user)
@@ -30,12 +28,12 @@ class UserManagerPDO extends UserManager
     
     public function delete($id)
     {
-        $this->dao-exec('DELETE FROM user WHERE id = '.(int) $id);
+        $this->dao->exec('DELETE FROM user WHERE id = '.(int) $id);
     }
     
     public function getUnique($id)
     {
-        $requete = $this->dao->prepare('SELECT username, password WHERE id = :id');
+        $requete = $this->dao->prepare('SELECT * FROM user WHERE id = :id');
         $requete->bindValue(':id', $id, \PDO::PARAM_INT);
         $requete->execute();
         
@@ -81,4 +79,18 @@ class UserManagerPDO extends UserManager
         
         return null;
     }
+	
+	//Permet de retourner tous les utilisateurs  
+	public function getList()  
+    {  
+      $users = [];  
+       
+      $requete = $this->dao->prepare('SELECT id, id_personne, username, password, roles FROM user');  
+      $requete->execute();  
+       
+      $requete->setFetchMode(\PDO::FETCH_CLASS | \PDO::FETCH_PROPS_LATE, '\Entity\User');  
+      while($donnees = $requete->fetch())  
+        $users[] = $donnees;  
+      return $users;  
+    } 
 }

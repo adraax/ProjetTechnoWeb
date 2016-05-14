@@ -34,7 +34,10 @@ class User extends Entity
     
     public function getRoles()
     {
-        return implode(',', $this->roles);
+		if(is_string($this->roles))
+			return $this->roles;
+		else
+			return implode(',', $this->roles);
     }
     
     public function getId_personne()
@@ -78,7 +81,10 @@ class User extends Entity
         }
         else
         {
-            $this->roles[] = explode(",", $roles);
+			if(empty($roles))
+				$this->roles = [];
+			else
+				$this->roles = explode(",", $roles);
         }
     }
     
@@ -91,11 +97,15 @@ class User extends Entity
         }
         else
         {
-            return in_array($role, $this->roles);
+			$roles = explode(",", $this->roles);
+			if(is_string($roles))
+				return $role == $this->roles;
+			else
+				return in_array($role, $roles);
         }
     }
-    
-    public function addRole($role)
+	
+	public function addRole($role)
     {
         if(!is_string($role))
         {
@@ -103,15 +113,24 @@ class User extends Entity
         }
         else
         {
-            if(!in_array($role, $this->roles))
-            {
-                $this->roles[] = $role;
-            }
-        }
-    }
-    
-    public function isValid()
-    {
-        return !(empty($this->username) || empty($this->password) || ($this->password !== $this->confirm_password));
-    }
+			if(!empty($role))
+			{
+				if(substr_count($this->getRoles(), $role)==0)
+				{
+					if(is_array($this->roles) && !in_array($role, $this->roles))
+						$this->roles[] = $role;
+					else
+						if(!empty($this->roles))
+							$this->setRoles($this->getRoles().','.$role);
+						else
+							$this->setRoles($role);
+				}
+			}
+        }  
+    }  
+
+    public function isValid()  
+    {  
+        return !(empty($this->username) || empty($this->password) || ($this->password !== $this->confirm_password));  
+    } 
 }

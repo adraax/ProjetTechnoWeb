@@ -80,7 +80,7 @@ class Personne extends Entity
             $this->errors[] = self::TEL_INV;
         }
         
-        $this->tel = $tel;
+        $this->num_tel = $tel;
     }
     
     public function setSexe($sexe)
@@ -119,13 +119,30 @@ class Personne extends Entity
         return $this->email;
     }
     
-    public function getTel()
+    public function getNum_tel()
     {
-        return $this->tel;
+        return $this->num_tel;
     }
     
     public function getSexe()
     {
         return $this->sexe;
     }
+	
+	//Affichage
+	public function affichePersonne()
+	{
+		return '<strong>Nom :</strong> '.$this->nom.'<br />'.
+			'<strong>Prenom :</strong> '.$this->prenom.'<br />'.
+			'<strong>Adresse :</strong><br />'.$this->adresse.'<br />'.
+			'<strong>Date de naissance :</strong> '.date('d/m/Y', strtotime($this->date_naissance)).'<br />'.
+			'<strong>Sexe :</strong> '.$this->sexe.'<br />'.
+			'<strong>Email :</strong> '.$this->email.'<br />'.
+			'<strong>Numéro de téléphone :</strong> '.$this->num_tel.'<br />';
+	}
+	
+	public function isValid()
+	{
+		return !(empty($this->nom) || empty($this->prenom) || empty($this->adresse) || empty($this->date_naissance) || empty($this->email) || empty($this->num_tel) || empty($this->sexe));
+	}
 }

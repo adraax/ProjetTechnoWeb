@@ -11,6 +11,8 @@ abstract class PersonneManager extends Manager
     abstract public function delete($id);
     
     abstract public function getUnique($id);
+	abstract public function getListSansLicence();
+	abstract public function getListBenevolesDispos($id_competition);
     
     public function save(Personne $personne)
     {

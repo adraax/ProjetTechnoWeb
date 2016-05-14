@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Frontend\Modules\Connection;
 
 use \GJLMFramework\BaseController;

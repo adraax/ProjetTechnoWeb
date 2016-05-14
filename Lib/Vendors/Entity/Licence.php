@@ -1,8 +1,6 @@
 <?php
 namespace Entity;
-
 use \GJLMFramework\Entity;
-
 class Licence extends Entity
 {
     /* ********** Propriétés ********** */

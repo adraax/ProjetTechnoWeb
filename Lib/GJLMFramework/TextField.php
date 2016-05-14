@@ -51,8 +51,8 @@ class TextField extends Field
             $widget = '<div class="form-group '.$class.'">';
         }
         
-        $widget .= '<label for="'.$this->name.'">'.$this->label.'</label>';
-        $widget .= '<textarea id="'.$this->name.'" name="'.$this->name.'class="form-control"';
+        $widget .= '<label for="'.$this->name.'">'.$this->label.'</label><br />';
+        $widget .= '<textarea id="'.$this->name.'" name="'.$this->name.'" class="form-control"';
         
         if(!empty($this->cols))
         {
