@@ -3,6 +3,8 @@ Connexion seulement depuis la fenêtre modale, actualisation manuelle nécessair
 Page d'accueil à faire
 Voir l'affichage quand accès à une page sans les rôles correspondants
 Si la personne qui s'inscrit est compétiteur, il n'a pas sa table adherent remplie... Est-ce qu'à l'ajout de licence, on fait apparaitre un champ pour la catégorie si type = compétiteur (et spé ?)
+-->Définition de la catégorie par rapport à l'âge à l'inscription, par défaut spé = kayak (il se démerde s'il veut changer).
+(Ca posera sûrement un problème si au début l'user n'a pas le rôle compétiteur et qu'il est rajouté après, au pire on le passe ous silence il en saura rien \o/)
 
 Faits :
 changement des 'id' en 'user_id' (c'est pour ça que la modification marchait pas, enfin ça et le fait que la personne était toujours remise dans le même état...)
