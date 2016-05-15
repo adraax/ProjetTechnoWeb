@@ -75,12 +75,12 @@ class Roles extends ApplicationComponent
                 $roles = explode(',', $roles);
                 foreach ($this->roles as $role)
                 {
-                    if(!in_array($role, $roles))
+                    if(in_array($role, $roles))
                     {
-                        return false;
+                        return true;
                     }
                 }
-                return true;
+                return false;
             }
         }
     }

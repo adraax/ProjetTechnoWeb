@@ -90,5 +90,15 @@ class CompetiteurManagerPDO extends CompetiteurManager
 		$requete->setFetchMode(\PDO::FETCH_CLASS | \PDO::FETCH_PROPS_LATE, '\Entity\Competiteur');  
 	
 		return $requete->fetchAll();  
-    } 
+    }
+	
+	public function getSansCertif()
+	{  
+		$requete = $this->dao->prepare('SELECT * FROM adherent WHERE certif_med = 0');		
+		$requete->execute();  
+       
+		$requete->setFetchMode(\PDO::FETCH_CLASS | \PDO::FETCH_PROPS_LATE, '\Entity\Competiteur');  
+	
+		return $requete->fetchAll();  
+    }
 }

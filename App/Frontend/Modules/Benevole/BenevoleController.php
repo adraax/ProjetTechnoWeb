@@ -40,9 +40,7 @@ class BenevoleController extends BaseController
 				$id_competition = $request->getPostData('id_competition');
 			
 			//Récupération de la licence
-			$id_user = $this->app->getUser()->getAttribute("id");
-	//pour le test
-	$id_user = 4;
+			$id_user = $this->app->getUser()->getAttribute('user_id');
 			$usermanager = $this->managers->getManagerOf('User');
 			$user = $usermanager->getUnique($id_user);
 			
@@ -113,8 +111,8 @@ class BenevoleController extends BaseController
 				
 				$tabbenevoles .= '<tr><td>'.$personne->getNom().'</td><td>'.$personne->getPrenom().'</td><td>'.$benevole->getRole().'</td><td>';
 				
-				//Si l'utilisateur secrétaire, il peut supprimer un bénévole
-				if($user->hasRole('secretaire'))
+				//Si l'utilisateur est admin ou secrétaire, il peut supprimer un bénévole
+				if($user->hasRole('secretaire') || $user->hasRole('admin'))
 				{
 					$tabbenevoles .= '<form method="post" action="/listebenevoles">';
 					$tabbenevoles .= '<input type="hidden" name="id_competition" value="'.$competition->getId().'" />';
@@ -242,9 +240,7 @@ class BenevoleController extends BaseController
 			$benevolemanager = $this->managers->getManagerOf('BenevoleOfficiel');
 			
 			//Récupération de la licence
-			$id_user = $this->app->getUser()->getAttribute("id");
-	//pour le test
-	$id_user = 4;
+			$id_user = $this->app->getUser()->getAttribute('user_id');
 			$usermanager = $this->managers->getManagerOf('User');
 			$user = $usermanager->getUnique($id_user);
 			

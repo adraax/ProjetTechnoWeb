@@ -62,6 +62,46 @@ class AdministrationController extends BaseController
 	}
 	
 	//Pour le secrétaire
+	public function gestioncertificatsAction(HTTPRequest $request)
+	{
+		//Validation du certificat si cela a été demandé
+		if($request->getMethod() == 'POST' && $request->postExists('id_competiteur'))
+		{
+			$competiteurmanager = $this->managers->getManagerOf('Competiteur');
+			$competiteur = $competiteurmanager->getUnique($request->getPostData('id_competiteur'));
+			$competiteur->setCertif_med(true);
+			
+			$competiteurmanager->save($competiteur);
+			$this->app->getUser()->setFlash('Le certificat médical a bien été enregistré.', 'alert-success');
+		}
+		
+		//Affichage du tableau des compétiteurs sans certificat médical
+		$tabcertificats = '<div class="panel panel-default"><div class="panel-heading">Cartificats médicaux</div><table class="table">';
+		$tabcertificats .= '<tr><th>Nom</th><th>Prénom</th><th>Validation</th></tr>';
+		
+		$competiteurmanager = $this->managers->getManagerOf('Competiteur');
+		$personnemanager = $this->managers->getManagerOf('Personne');
+		
+		//Récupération des compétiteurs sans certificat médical
+		$sanscertifs = $competiteurmanager->getSansCertif();
+		
+		foreach($sanscertifs as $sanscertif)
+		{
+			$personne = $personnemanager->getUnique($sanscertif->getNum_personne());
+			
+			$tabcertificats .= '<tr><td>'.$personne->getNom().'</td><td>'.$personne->getPrenom().'</td>';
+			
+			//Ajout bouton valider le certificat
+			$tabcertificats .= '<td><form method="post" action="/gestioncertificats">';
+			$tabcertificats .= '<input type="hidden" name="id_competiteur" value="'.$sanscertif->getId().'" />';
+			$tabcertificats .= '<button type="submit" class="btn btn-success">Valider le certificat</button></form></td>';		
+		}
+		
+		$tabcertificats .= '</table></div>';
+		
+		$this->page->addVar('tabcertificats', $tabcertificats);
+	}
+	
 	public function gestioncategoriesAction(HTTPRequest $request)
     {
 		$competiteurmanager = $this->managers->getManagerOf('Competiteur');
@@ -167,8 +207,17 @@ class AdministrationController extends BaseController
 		if($request->getMethod() == 'POST' && $form->isValid())
         {
             $licencemanager = $this->managers->getManagerOf('Licence');
-			$licencemanager->save($form->getEntity());
-			$this->app->getUser()->setFlash('La licence '.$request->getPostData('num').' a bien été ajoutée.', 'alert-success');
+			$licence = $form->getEntity();
+			$licence->setActivated(0);
+
+			if($licencemanager->existe($licence->getNum()))
+				$this->app->getUser()->setFlash('Ce numéro de licence existe déjà.', 'alert-danger');
+			else
+			{
+				$licencemanager->save($licence);
+				$this->app->getUser()->setFlash('La licence '.$request->getPostData('num').' a bien été ajoutée.', 'alert-success');
+				$this->app->getHttpResponse()->redirect('/ajoutadherent');
+			}
         }
 		
 		$this->page->addVar('form', $form->createView());
@@ -205,6 +254,9 @@ class AdministrationController extends BaseController
 		$form = $formBuilder->getForm();
 		if($request->getMethod() == 'POST' && $form->isValid())
         {
+			//Si les modifications sont faites sur l'administrateur, ses rôles sont modifiés
+			if($user->getId() == $this->app->getUser()->getAttribute("user_id"))
+				$this->app->getUser()->setAttribute('roles', $user->getRoles());
 			$usermanager->save($user);
 			$this->app->getUser()->setFlash($user->getUsername().' a le(s) rôle(s) '.$user->getRoles().'.', 'alert-success');
         }

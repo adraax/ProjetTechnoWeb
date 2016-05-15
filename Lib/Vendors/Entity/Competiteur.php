@@ -155,6 +155,6 @@ class Competiteur extends Entity
 	
 	public function isValid()
 	{
-		return !(empty($this->specialite) || empty($this->categorie) || empty($this->num_personne) || empty($this->certif_med));
+		return !(empty($this->specialite) || empty($this->categorie) || empty($this->num_personne) || ($this->certif_med!=true && $this->certif_med!=false));
 	}
 }

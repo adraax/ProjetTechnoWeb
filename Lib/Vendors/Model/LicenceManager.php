@@ -12,6 +12,7 @@ abstract class LicenceManager extends Manager
     
     abstract public function getByPersonneId($id);
     abstract public function getUnique($num);
+	abstract public function existe($num);
     
     public function save(Licence $licence)
     {

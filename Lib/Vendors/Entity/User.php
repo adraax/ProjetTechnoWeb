@@ -97,6 +97,8 @@ class User extends Entity
         }
         else
         {
+			if(empty($this->roles))
+				return false;
 			$roles = explode(",", $this->roles);
 			if(is_string($roles))
 				return $role == $this->roles;
