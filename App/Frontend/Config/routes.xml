@@ -9,7 +9,7 @@
 	<route url="/deconnection" module="Connection" action="deconnection" auth="yes" roles="no"/>
 	
 	<route url="/afficherprofil" module="Profil" action="afficher" auth="yes" roles="no"/>
-	<route url="/modifierprofil" module="Profil" action="modifier" auth="no" roles="no"/>
+	<route url="/modifierprofil" module="Profil" action="modifier" auth="yes" roles="no"/>
 	<route url="/voirmescompetitions" module="Profil" action="voirmescompetitions" auth="no" roles="no"/>
 	<route url="/voirmesinvitations" module="Profil" action="voirmesinvitations" auth="no" roles="no"/>
 	
@@ -36,4 +36,6 @@
 	<route url="/ajoutbenevole" module="Benevole" action="ajoutbenevole" auth="no" roles="no"/>
 	<route url="/ajoutbenevoleofficiel" module="Benevole" action="ajoutbenevoleofficiel" auth="no" roles="no"/>
 	<route url="/listebenevoles" module="Benevole" action="listebenevoles" auth="no" roles="no"/>
+	
+	<route url="/navbar" module="Ajax" action="getNavbar" auth="no" roles="no" />
 </routes>
