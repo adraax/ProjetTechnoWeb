@@ -14,9 +14,8 @@ class ProfilController extends BaseController
 		//Si l'utilisateur est un compétiteur
 		$is_competiteur = false;
 		
-		$id_user = $this->app->getUser()->getAttribute('id');
-	//Pour le test
-	$id_user = 4;
+		$id_user = $this->app->getUser()->getAttribute('user_id');
+
 		//Récupération des rôles, pour savoir s'il faut aussi afficher les informations pour compétiteur
 		$userManager = $this->managers->getManagerOf('User');
 		$user = $userManager->getUnique($id_user);

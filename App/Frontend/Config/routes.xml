@@ -6,8 +6,9 @@
     <route url="/inscription" module="Connection" action="inscription" auth="no" roles="no"/>
     <route url="/createuser" module="Connection" action="createUser" auth="no" roles="no"/>
 	<route url="/connectionajax" module="Connection" action="connectionAjax" auth="no" roles="no"/>
+	<route url="/deconnection" module="Connection" action="deconnection" auth="yes" roles="no"/>
 	
-	<route url="/afficherprofil" module="Profil" action="afficher" auth="no" roles="no"/>
+	<route url="/afficherprofil" module="Profil" action="afficher" auth="yes" roles="no"/>
 	<route url="/modifierprofil" module="Profil" action="modifier" auth="no" roles="no"/>
 	<route url="/voirmescompetitions" module="Profil" action="voirmescompetitions" auth="no" roles="no"/>
 	<route url="/voirmesinvitations" module="Profil" action="voirmesinvitations" auth="no" roles="no"/>

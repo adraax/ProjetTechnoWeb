@@ -149,7 +149,7 @@ class ConnectionController extends BaseController
             if($request->getMethod() == 'POST' && $form->isValid())
             {
                 $userManager = $this->managers->getManagerOf('User');
-                $user2 = $userManager->getByName($user->getUsername);
+                $user2 = $userManager->getByName($user->getUsername());
                 
                 if(is_null($user2))
                 {
@@ -239,5 +239,13 @@ class ConnectionController extends BaseController
         
         require __DIR__.'/Views/connectionajax.php';
         exit;
+    }
+    
+    public function deconnectionAction(HTTPRequest $request)
+    {
+        $this->app->getUser()->setAuthenticated(false);
+        $this->app->getUser()->removeAttribute('roles');
+        $this->app->getUser()->removeAttribute('user_id');
+        $this->app->getHttpResponse()->redirect('/');
     }
 }

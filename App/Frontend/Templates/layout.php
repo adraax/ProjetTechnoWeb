@@ -41,7 +41,7 @@
                     <ul class="dropdown-menu dropdown-menu-left">
                         <li><span class="glyphicon glyphicon-user"></span> Profil</li>
                         <li role="separator" class="divider"></li>
-                        <li><span class="glyphicon glyphicon-off"></span> Deconnexion</li>
+                        <li><a href="/deconnection"><span class="glyphicon glyphicon-off"></span> Deconnexion</a></li>
                     </ul>
                 </li>
             <?php } ?>
