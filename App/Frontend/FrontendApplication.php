@@ -19,13 +19,22 @@ class FrontendApplication extends Application
         $auth = new Auth($this, $this->httpRequest->getRequestURI());
         $role = new Roles($this, $this->httpRequest->getRequestURI());
         
-        if($auth->getAuth() && $role->hasRoles($this->user->getAttribute('roles')) && !$this->user->isAuthenticated())
+        if($auth->getAuth() && !$this->user->isAuthenticated())
         {
             $controller = new Modules\Connection\ConnectionController($this, 'Connection', 'connection');
         }  
         else
         {
-            $controller = $this->getController();
+            if($role->hasRoles($this->user->getAttribute('roles')))
+            {
+                $controller = $this->getController();
+            }
+            else
+            {
+                echo 'roles incorrects';
+                var_dump($this->user->getAttribute('roles'));
+                exit;
+            }
         }
         
         $controller->execute();

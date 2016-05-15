@@ -11,6 +11,7 @@ class Roles extends ApplicationComponent
     public function __construct(Application $app, $uri)
     {
         parent::__construct($app);
+        $this->roles = null;
         
         $this->setUri($uri);
     }
@@ -59,41 +60,28 @@ class Roles extends ApplicationComponent
     /* ********** Méthode ********** */
     public function hasRoles($roles)
     {
-        if(!is_null($roles))
+        if(is_null($this->roles))
         {
-            if(!is_null($this->roles))
-            {
-                if(is_array($roles))
-                {
-                    foreach ($roles as $role)
-                    {
-                        if(!in_array($role, $this->roles))
-                        {
-                            return false;
-                        }
-                    }
-                    
-                    return true;
-                }
-                else if(is_string($roles))
-                {
-                    if(!in_array($roles, $this->roles))
-                        return false;
-                    return true;
-                }
-                else
-                {
-                    throw new \InvalidArgumentException('Le paramètre doit être une string ou un tableau de string.');
-                }
-            }
-            else
-            {
-                return true;
-            }
+            return true;
         }
         else
         {
-            return true;
+            if(is_null($roles))
+            {
+                return false;
+            }
+            else
+            {
+                $roles = explode(',', $roles);
+                foreach ($this->roles as $role)
+                {
+                    if(!in_array($role, $roles))
+                    {
+                        return false;
+                    }
+                }
+                return true;
+            }
         }
     }
 }

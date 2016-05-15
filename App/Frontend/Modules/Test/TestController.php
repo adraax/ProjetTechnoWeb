@@ -9,7 +9,6 @@ class TestController extends BaseController
 {
     public function indexAction(HTTPRequest $request)
     {
-        $this->app->getUser()->setAuthenticated(false);
         $db = PDOFactory::getMysqlConnection('localhost', 'projet_techno_web', 'cadoc', 'perceval');
 
         var_dump($db);

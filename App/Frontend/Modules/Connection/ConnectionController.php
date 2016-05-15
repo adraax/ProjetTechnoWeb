@@ -15,6 +15,11 @@ class ConnectionController extends BaseController
 {
     public function connectionAction(HTTPRequest $request)
     {
+        if($this->app->getUser()->isAuthenticated())
+        {
+            $this->app->getHttpResponse()->redirect('/');
+        }
+        
         if($request->getMethod() == 'POST')
         {
             $user = new User([
@@ -116,6 +121,7 @@ class ConnectionController extends BaseController
         }
         
         $this->page->addVar('form', $form->createView());
+        $this->page->addVar('script', 'test');
     }
     
     public function createUserAction(HTTPRequest $request)
@@ -143,7 +149,7 @@ class ConnectionController extends BaseController
             if($request->getMethod() == 'POST' && $form->isValid())
             {
                 $userManager = $this->managers->getManagerOf('User');
-                $user2 = $userManager->getByName($user->getUsername);
+                $user2 = $userManager->getByName($user->getUsername());
                 
                 if(is_null($user2))
                 {
@@ -205,12 +211,41 @@ class ConnectionController extends BaseController
         
         if($request->getMethod() == 'POST' && $form->isValid())
         {
-            $this->app->getHttpResponse()->redirect('/');
+            $userManager = $this->managers->getManagerOf('User');
+            $user2 = $userManager->getByName($user->getUsername());
+            
+            if(is_null($user2))
+            {
+                $this->app->getUser()->setFlash('Utilisateur inexistant.', 'alert-warning');
+            }
+            else
+            {
+                if(password_verify($user->getPassword(), $user2->getPassword()))
+                {
+                    echo 'ok';
+                    $this->app->getUser()->setAuthenticated(true);
+                    $this->app->getUser()->setAttribute('roles', $user2->getRoles());
+                    $this->app->getUser()->setAttribute('user_id', $user2->getId());
+                    
+                    exit;
+                }
+                else
+                {
+                    echo var_dump($user2);
+                    $this->app->getUser()->setFlash('Identifiants incorrects.', 'alert-danger');
+                }
+            }
         }
         
-       echo '<form method="post" action="/connection">'.$form->createView().'
-                <button type="submit" class="btn btn-default">Connexion</button></form>
-            <a href="/inscription">Pas de compte ? Cliquez ici pour vous inscrire</a>';
+        require __DIR__.'/Views/connectionajax.php';
         exit;
+    }
+    
+    public function deconnectionAction(HTTPRequest $request)
+    {
+        $this->app->getUser()->setAuthenticated(false);
+        $this->app->getUser()->removeAttribute('roles');
+        $this->app->getUser()->removeAttribute('user_id');
+        $this->app->getHttpResponse()->redirect('/');
     }
 }
