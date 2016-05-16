@@ -49,7 +49,7 @@ class UserManagerPDO extends UserManager
     
     public function getByPersonneId($id)
     {
-        $requete = $this->dao->prepare('SELECT id, username FROM user WHERE id_personne = :id');
+        $requete = $this->dao->prepare('SELECT * FROM user WHERE id_personne = :id');
         $requete->bindValue(':id',(int) $id, \PDO::PARAM_INT);
         $requete->execute();
         

@@ -76,7 +76,7 @@ class Licence extends Entity
     {
         $bool = (int) $bool;
         
-        if($bool <= 0)
+        if($bool < 0)
         {
             $this->errors[] = self::ACTIVATED_INV;
         }
@@ -99,6 +99,6 @@ class Licence extends Entity
     /* ********** Méthode ********** */
     public function isValid()
     {
-        return !(empty($this->num) || empty($this->type) || empty($this->id_personne) || empty($this->activated) || !empty($errors));
+        return !(empty($this->num) || empty($this->type) || empty($this->id_personne)/* || empty($this->activated) */|| !empty($errors));
     }
 }

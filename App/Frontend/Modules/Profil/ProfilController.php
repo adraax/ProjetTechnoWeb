@@ -3,6 +3,7 @@ namespace App\Frontend\Modules\Profil;
 
 use \GJLMFramework\BaseController;
 use \GJLMFramework\HTTPRequest;
+use \Entity\Personne;
 use \FormBuilder\PersonneFormBuilder;
 
 class ProfilController extends BaseController
@@ -59,9 +60,7 @@ class ProfilController extends BaseController
 		//Si l'utilisateur est un compétiteur
 		$is_competiteur = false;
 		
-		$id_user = $this->app->getUser()->getAttribute("id");
-	//Pour le test
-	$id_user = 4;
+		$id_user = $this->app->getUser()->getAttribute("user_id");
 		$userManager = $this->managers->getManagerOf('User');
 		$user = $userManager->getUnique($id_user);
 	
@@ -69,6 +68,22 @@ class ProfilController extends BaseController
 		$personneManager = $this->managers->getManagerOf('Personne');
 		$personne = $personneManager->getUnique($user->getId_personne());
 		
+		//Modification des éléments remplis
+		if($request->getMethod() == 'POST' && $request->postExists('nom'))
+			$personne->setNom($request->getPostData('nom'));
+		if($request->getMethod() == 'POST' && $request->postExists('prenom'))
+			$personne->setPrenom($request->getPostData('prenom'));
+		if($request->getMethod() == 'POST' && $request->postExists('date_naissance'))
+			$personne->setDate_naissance($request->getPostData('date_naissance'));
+		if($request->getMethod() == 'POST' && $request->postExists('adresse'))
+			$personne->setAdresse($request->getPostData('adresse'));
+		if($request->getMethod() == 'POST' && $request->postExists('email'))
+			$personne->setEmail($request->getPostData('email'));
+		if($request->getMethod() == 'POST' && $request->postExists('num_tel'))
+			$personne->setNum_tel($request->getPostData('num_tel'));
+		if($request->getMethod() == 'POST' && $request->postExists('sexe'))
+			$personne->setSexe($request->getPostData('sexe'));
+
 		//Construction du formulaire
 		$formBuilder = new PersonneFormBuilder($personne);
         $formBuilder->build();
@@ -134,9 +149,7 @@ class ProfilController extends BaseController
 		//Si l'utilisateur est un compétiteur
 		$is_competiteur = true;
 		
-		$id_user = $this->app->getUser()->getAttribute("id");
-	//Pour le test
-	$id_user = 4;
+		$id_user = $this->app->getUser()->getAttribute("user_id");
 		$userManager = $this->managers->getManagerOf('User');
 		$user = $userManager->getUnique($id_user);
 		
@@ -163,7 +176,7 @@ class ProfilController extends BaseController
 
 		foreach($competitions as $competition)
 		{
-			$competition = $competitionmanager->getUnique($competition);
+			$competition = $competitionmanager->getUnique($competition[0]);
 			$tabcompetitions .= '<tr><td>'.strftime("%d/%m/%Y",strtotime($competition->getDate_competition())).'</td>';
 			$tabcompetitions .= '<td><form method="post" action="/affichecompetition">';
 			$tabcompetitions .= '<input type="hidden" name="id_competition" value="'.$competition->getId().'" />';
@@ -184,9 +197,7 @@ class ProfilController extends BaseController
 		if($request->getMethod() == 'POST' && $request->postExists('id_equipage_accepte'))
 		{
 			//Récupération du compétiteur
-			$id_user = $this->app->getUser()->getAttribute("id");
-	//Pour le test
-	$id_user = 4;
+			$id_user = $this->app->getUser()->getAttribute("user_id");
 			$usermanager = $this->managers->getManagerOf('User');
 			$user = $usermanager->getUnique($id_user);
 			
@@ -209,18 +220,25 @@ class ProfilController extends BaseController
 			else
 				$valide = true;
 			
-			$equipagemanager->addParticipant($competiteur->getId(), $request->getPostData('id_equipage_accepte'), $valide);
+			//On vérifie que l'adhérent n'est pas déjà inscrit à la compétition
+			$competitionmanager = $this->managers->getManagerOf('Competition');
+			$equipage = $equipagemanager->getUnique($request->getPostData('id_equipage_accepte'));
 			
-			$this->app->getUser()->setFlash('Vous avez accepté cette invitation.', 'alert-success');
+			if($competitionmanager->isInscrit($competiteur->getId(), $equipage->getId_competition()))
+				$this->app->getUser()->setFlash('Vous êtes déjà inscrit à cette compétition.', 'alert-danger');
+			else
+			{
+				$equipagemanager->addParticipant($competiteur->getId(), $request->getPostData('id_equipage_accepte'), $valide);
+				
+				$this->app->getUser()->setFlash('Vous avez accepté cette invitation.', 'alert-success');
+			}
 		}
 		
 		//Gestion invitation refusée
 		if($request->getMethod() == 'POST' && $request->postExists('id_equipage_refuse'))
 		{
 			//Récupération du compétiteur
-			$id_user = $this->app->getUser()->getAttribute("id");
-	//Pour le test
-	$id_user = 4;
+			$id_user = $this->app->getUser()->getAttribute("user_id");
 			$usermanager = $this->managers->getManagerOf('User');
 			$user = $usermanager->getUnique($id_user);
 			
@@ -239,9 +257,7 @@ class ProfilController extends BaseController
 		//Si l'utilisateur est un compétiteur
 		$is_competiteur = true;
 		
-		$id_user = $this->app->getUser()->getAttribute("id");
-	//Pour le test
-	$id_user = 4;
+		$id_user = $this->app->getUser()->getAttribute("user_id");
 		$userManager = $this->managers->getManagerOf('User');
 		$user = $userManager->getUnique($id_user);
 		
@@ -261,7 +277,7 @@ class ProfilController extends BaseController
 		
 		//Affichage du tableau des invitations du compétiteur
 		$tabinvitations = '<div class="panel panel-default"><div class="panel-heading">Mes invitations</div><table class="table">';
-		$tabinvitations .= '<tr><th>Date de la compétition</th><th>Lien vers la compétition</th><th></th><th></th></tr>';
+		$tabinvitations .= '<tr><th>Date de la compétition</th><th>Lien vers l\'équipage</th><th></th><th></th></tr>';
 		
 		$competitionmanager = $this->managers->getManagerOf('Competition');
 		$equipages = $equipagemanager->getInvitesByCompetiteurId($competiteur->getId());
@@ -270,9 +286,9 @@ class ProfilController extends BaseController
 		{
 			$competition = $competitionmanager->getUnique($equipage->getId_competition());
 			$tabinvitations .= '<tr><td>'.strftime("%d/%m/%Y",strtotime($competition->getDate_competition())).'</td>';
-			$tabinvitations .= '<td><form method="post" action="/affichecompetition">';
-			$tabinvitations .= '<input type="hidden" name="id_competition" value="'.$competition->getId().'" />';
-			$tabinvitations .= '<button type="submit" class="btn btn-default">Voir la compétition</button>';
+			$tabinvitations .= '<td><form method="post" action="/voirequipage">';
+			$tabinvitations .= '<input type="hidden" name="id_equipage" value="'.$equipage->getId().'" />';
+			$tabinvitations .= '<button type="submit" class="btn btn-default">Voir l\'équipage</button>';
 			$tabinvitations .= '</form></td>';
 			
 			//Bouton validation / refus de l'invitations

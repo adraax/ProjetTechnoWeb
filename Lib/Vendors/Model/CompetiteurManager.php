@@ -14,6 +14,7 @@ abstract class CompetiteurManager extends Manager
 	abstract public function getByPersonneId($id);
 	abstract public function getList();
 	abstract public function getListDispo($id_competition);
+	abstract public function getSansCertif();
     
     public function save(Competiteur $competiteur)
     {

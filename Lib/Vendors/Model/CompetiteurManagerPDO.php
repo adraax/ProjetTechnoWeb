@@ -30,7 +30,11 @@ class CompetiteurManagerPDO extends CompetiteurManager
 		$requete->bindValue(':categorie', $competiteur->getCategorie(), \PDO::PARAM_STR);
 		$requete->bindValue(':specialite', $competiteur->getSpecialite(), \PDO::PARAM_STR);
 		$requete->bindValue(':objectif_saison', $competiteur->getObjectif_saison(), \PDO::PARAM_STR);
-		$requete->bindValue(':certif_med', $competiteur->getCertif_med(), \PDO::PARAM_INT);
+		if($competiteur->getCertif_med())
+			$certif = 1;
+		else
+			$certif = 0;
+		$requete->bindValue(':certif_med', $certif, \PDO::PARAM_INT);
 	   
 		$requete->execute();
 	}
@@ -90,5 +94,15 @@ class CompetiteurManagerPDO extends CompetiteurManager
 		$requete->setFetchMode(\PDO::FETCH_CLASS | \PDO::FETCH_PROPS_LATE, '\Entity\Competiteur');  
 	
 		return $requete->fetchAll();  
-    } 
+    }
+	
+	public function getSansCertif()
+	{  
+		$requete = $this->dao->prepare('SELECT * FROM adherent WHERE certif_med = 0');		
+		$requete->execute();  
+       
+		$requete->setFetchMode(\PDO::FETCH_CLASS | \PDO::FETCH_PROPS_LATE, '\Entity\Competiteur');  
+	
+		return $requete->fetchAll();  
+    }
 }

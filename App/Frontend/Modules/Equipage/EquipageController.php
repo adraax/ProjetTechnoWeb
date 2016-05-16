@@ -15,7 +15,7 @@ class EquipageController extends BaseController
 		if($request->getMethod() == 'POST' && $request->postExists('id_invite_refuse'))
 		{
 			//Récupération du compétiteur
-			$id_user = $this->app->getUser()->getAttribute("id");
+			$id_user = $this->app->getUser()->getAttribute('user_id');
 			$usermanager = $this->managers->getManagerOf('User');
 			$user = $usermanager->getUnique($id_user);
 			
@@ -34,7 +34,7 @@ class EquipageController extends BaseController
 		if($request->getMethod() == 'POST' && $request->postExists('id_invite_accepte'))
 		{
 			//Récupération du compétiteur
-			$id_user = $this->app->getUser()->getAttribute("id");
+			$id_user = $this->app->getUser()->getAttribute('user_id');
 			$usermanager = $this->managers->getManagerOf('User');
 			$user = $usermanager->getUnique($id_user);
 			
@@ -84,9 +84,7 @@ class EquipageController extends BaseController
 			$equipage = $equipagemanager->getUnique($id_equipage);
 			
 			//Récupération du compétiteur
-			$id_user = $this->app->getUser()->getAttribute("id");
-	//Pour le test
-	$id_user = 4;
+			$id_user = $this->app->getUser()->getAttribute('user_id');
 			$usermanager = $this->managers->getManagerOf('User');
 			$user = $usermanager->getUnique($id_user);
 			
@@ -185,9 +183,7 @@ class EquipageController extends BaseController
 		if($request->getMethod() == 'POST' && $request->postExists('id_competition'))
 		{
 			//Récupération du compétiteur
-			$id_user = $this->app->getUser()->getAttribute("id");
-	//Pour le test
-	$id_user = 4;
+			$id_user = $this->app->getUser()->getAttribute('user_id');
 			$usermanager = $this->managers->getManagerOf('User');
 			$user = $usermanager->getUnique($id_user);
 			
@@ -358,6 +354,7 @@ class EquipageController extends BaseController
 				//Remplissage du tableau des invités
 				$competiteurmanager = $this->managers->getManagerOf('Competiteur');
 				$personnemanager = $this->managers->getManagerOf('Personne');
+				$usermanager = $this->managers->getManagerOf('User');
 				
 				$tabinvites = '<div class="panel panel-default"><div class="panel-heading">Invités</div><table class="table">';
 				$tabinvites .= '<tr><th>Nom</th><th>Prénom</th><th>Catégorie</th><th></th></tr>';
@@ -392,9 +389,12 @@ class EquipageController extends BaseController
 						if($competiteur->categorieValide($equipage->getCategorie()) && $competiteur->getCertif_med())
 						{
 							$personne = $personnemanager->getUnique($competiteur->getNum_personne());
-							
-							$form .= '<option value="'.$competiteur->getId().'">'.$personne->getNom().' '.$personne->getPrenom().
-							' '.$competiteur->getCategorie().' '.$competiteur->getSpecialite().'</option>';
+							$user = $usermanager->getByPersonneId($personne->getId());
+
+							//On vérifie qu'il a bien le rôle de compétiteur
+							if($user->hasRole('competiteur'))
+								$form .= '<option value="'.$competiteur->getId().'">'.$personne->getNom().' '.$personne->getPrenom().
+								' '.$competiteur->getCategorie().' '.$competiteur->getSpecialite().'</option>';
 						}
 					}
 				}
@@ -476,12 +476,13 @@ class EquipageController extends BaseController
 				$personnemanager = $this->managers->getManagerOf('Personne');
 				
 				//Récupération du compétiteur
-				$id_user = $this->app->getUser()->getAttribute("id");
-		//Pour le test
-		$id_user = 4;
+				$id_user = $this->app->getUser()->getAttribute('user_id');
 				$usermanager = $this->managers->getManagerOf('User');
-				$user = $usermanager->getUnique($id_user);		
-				$id_user_competiteur = $competiteurmanager->getByPersonneId($user->getId_personne())->getId();
+				$user = $usermanager->getUnique($id_user);	
+				if(empty($competiteurmanager->getByPersonneId($user->getId_personne())))
+					$id_user_competiteur = 0;
+				else
+					$id_user_competiteur = $competiteurmanager->getByPersonneId($user->getId_personne())->getId();
 				//Fin de récupération du compétiteur
 				
 				$tabparticipants = '<div class="panel panel-default"><div class="panel-heading">Participants</div><table class="table">';

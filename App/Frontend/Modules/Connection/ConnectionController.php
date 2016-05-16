@@ -7,6 +7,7 @@ use \GJLMFramework\HTTPRequest;
 use \Entity\User;
 use \Entity\Licence;
 use \Entity\Personne;
+use \Entity\Competiteur;
 use \FormBuilder\UserFormBuilder;
 use \FormBuilder\UserInscriptionFormBuilder;
 use \FormBuilder\LicenceFormBuilder;
@@ -160,9 +161,8 @@ class ConnectionController extends BaseController
                     else
                     {
                         $user->setId_personne($this->app->getUser()->getAttribute('id_personne'));
-                        $user->addRole($this->app->getUser()->getAttribute('type_licence'));
-                        $this->app->getUser()->removeAttribute('id_personne');
-                        $this->app->getUser()->removeAttribute('type_licence');
+						if($this->app->getUser()->getAttribute('type_licence') == 'Competiteur')
+							$user->addRole('competiteur');
                         $userManager = $this->managers->getManagerOf('User');
                         $userManager->save($user);
                         
@@ -172,6 +172,53 @@ class ConnectionController extends BaseController
                         $licence->setId(5);
                         $licenceManager->save($licence);
                         
+						if($this->app->getUser()->getAttribute('type_licence') == 'Competiteur')
+						{
+							//Définition de la catégorie en fonction de l'âge, spécialité de base : kayak (l'adhérent peut le modifier dans son profil)
+							$competiteurManager = $this->managers->getManagerOf('Competiteur');
+							$competiteur = new Competiteur;
+							$competiteur->setNum_personne($user->getId_personne());
+							$competiteur->setSpecialite('kayak');
+							$competiteur->setCertif_med(false);
+							$competiteur->setObjectif_saison('');
+							//On récupère la date de naissance pour la catégorie
+							$personneManager = $this->managers->getManagerOf('Personne');
+							$personne = $personneManager->getUnique($user->getId_personne());
+							$date_nais = $personne->getDate_naissance();
+							$date_nais = \DateTime::createFromFormat('Y-m-d',$date_nais);
+							$aujourdhui = new \DateTime();
+							$interv = new \DateInterval('P15Y');
+							$cat = '';
+							if($date_nais->add($interv) >= $aujourdhui)
+								$cat = 'minime';
+							else
+							{
+								$interv = new \DateInterval('P17Y');
+								if($date_nais->add($interv) >= $aujourdhui)
+									$cat = 'cadet';
+								else
+								{
+									$interv = new \DateInterval('P19Y');
+									if($date_nais->add($interv) >= $aujourdhui)
+										$cat = 'junior';
+									else
+									{
+										$interv = new \DateInterval('P39Y');
+										if($date_nais->add($interv) >= $aujourdhui)
+											$cat = 'senior';
+										else
+											$cat = 'veteran';
+									}
+								}
+							}
+							$competiteur->setCategorie($cat);
+							$competiteurManager->save($competiteur);
+						}
+						
+						$this->app->getUser()->removeAttribute('id_personne');
+                        $this->app->getUser()->removeAttribute('type_licence');
+						
+						$this->app->getUser()->setFlash('Inscription validée ! Vous pouvez vous connecter.', 'alert-success');
                         $this->app->getHttpResponse()->redirect('/');
                     }
                 }

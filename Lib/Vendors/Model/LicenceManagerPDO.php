@@ -54,6 +54,18 @@ class LicenceManagerPDO extends LicenceManager
         $requete->execute();
     }
     
+	public function existe($num)
+	{
+		$requete = $this->dao->prepare('SELECT * FROM licence WHERE num = :num');
+		$requete->bindValue(':num', $num, \PDO::PARAM_INT);
+		$requete->execute();
+	   
+		if(empty($requete->fetch()))
+			return false;
+		else
+			return true;
+	}
+	
     public function delete($num)
     {
         $this->dao->exec('DELETE FROM licence WHERE num = '.(int) $num);

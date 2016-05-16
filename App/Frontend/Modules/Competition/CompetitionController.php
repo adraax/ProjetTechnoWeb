@@ -9,7 +9,6 @@ use \FormBuilder\CompetitionFormBuilder;
 
 class CompetitionController extends BaseController
 {
-	//id_user = 4 à enlever à la fin des tests
 	public function ajoutcompetitionAction(HTTPRequest $request)
 	{
 		if($request->getMethod() == 'POST')
@@ -69,9 +68,7 @@ class CompetitionController extends BaseController
 		$this->page->addVar('form', $form);
 		
 		//Récupération de l'user pour connaître son rôle
-		$id_user = $this->app->getUser()->getAttribute("id");
-	//pour le test
-	$id_user = 4;
+		$id_user = $this->app->getUser()->getAttribute('user_id');
 		$usermanager = $this->managers->getManagerOf('User');
 		$user = $usermanager->getUnique($id_user);
 		
@@ -178,14 +175,17 @@ class CompetitionController extends BaseController
 			
 			//Lien pour inscrire un équipage
 			//Récupération du compétiteur
-			$id_user = $this->app->getUser()->getAttribute("id");
-			//pour le test
-			$id_user = 4;
+			$id_user = $this->app->getUser()->getAttribute("user_id");
 			$usermanager = $this->managers->getManagerOf('User');
 			$user = $usermanager->getUnique($id_user);
 			
 			$competiteurmanager = $this->managers->getManagerOf('Competiteur');
-			$competiteur = $competiteurmanager->getByPersonneId($user->getId_personne());
+			
+			//Seuls les compétiteurs peuvent s'inscrire
+			if($user->hasRole('competiteur'))
+				$competiteur = $competiteurmanager->getByPersonneId($user->getId_personne());
+			else
+				$competiteur = null;
 			//Fin de récupération du compétiteur
 			if($competition->getDate_competition()>=date('Y-m-d'))
 			{
@@ -212,7 +212,7 @@ class CompetitionController extends BaseController
 					
 					//Lien pour inscription au transport (seulement si le compétiteur est inscrit)
 					if($competitionmanager->isTransport($competiteur->getId(), $competition->getId()))
-						$affichecompetition .= '<a id="bouton_transport" class="btn btn-primary btn-lg" href="#" onclick="modiftransport('.$competiteur->getId().', '.$competition->getId().')" role="button">Annuler l\'inscription au transport</a>';
+						$affichecompetition .= '<a id="bouton_transport" class="btn btn-primary btn-lg" href="#" onclick="modiftransport('.$competiteur->getId().', '.$competition->getId().')" role="button">Annuler l\'inscription au transport</a><br />';
 					else
 					{
 						if($competitionmanager->isInscrit($competiteur->getId(), $competition->getId()))
