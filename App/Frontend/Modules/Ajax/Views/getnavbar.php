@@ -1,4 +1,4 @@
-<!-- Barre de navigation -->
+ <!-- Barre de navigation -->
         <nav class="navbar navbar-inverse navbar-fixed-top">
         <div class="container">
             <div class="navbar-header">
@@ -14,14 +14,14 @@
                 <ul class="nav navbar-nav">
                     <li><a href="/">Accueil</a></li>
                     <li><a href="/listecompetitions">Comp&eacute;titions</a></li>
-					<?php if(!empty($user->getAttribute('roles')) && in_array('admin', explode(',',$user->getAttribute('roles')))) { ?>
-					<li><a href="/ajoutpersonne">Administration</a></li>
-					<?php } if(!empty($user->getAttribute('roles')) && in_array('secretaire', explode(',',$user->getAttribute('roles')))) { ?>
-					<li><a href="/gestioncategories">Gestion des cat&eacute;gories</a></li>
-					<li><a href="/gestioncertificats">Gestion des certificats</a></li>
-					<?php } if(!empty($user->getAttribute('roles')) && in_array('entraineur', explode(',',$user->getAttribute('roles')))) { ?>
-					<li><a href="/valideparticipants">Valider les inscriptions</a></li>
-					<?php } ?>
+                    <?php if(!empty($user->getAttribute('roles')) && in_array('admin', explode(',',$user->getAttribute('roles')))) {?>  
+                    <li><a href="/ajoutpersonne">Administration</a></li>  
+                    <?php } if(!empty($user->getAttribute('roles')) && in_array('secretaire', explode(',',$user->getAttribute('roles')))) { ?>  
+                    <li><a href="/gestioncategories">Gestion des cat&eacute;gories</a></li>  
+                    <li><a href="/gestioncertificats">Gestion des certificats</a></li>  
+                    <?php } if(!empty($user->getAttribute('roles')) && in_array('entraineur', explode(',',$user->getAttribute('roles')))) { ?>  
+                    <li><a href="/valideparticipants">Valider les inscriptions</a></li>  
+                    <?php } ?>
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
                 <?php if(!$user->isAuthenticated()) { ?>
