@@ -37,4 +37,6 @@
 	<route url="/ajoutbenevole" module="Benevole" action="ajoutbenevole" auth="yes" roles="admin,secretaire"/>
 	<route url="/ajoutbenevoleofficiel" module="Benevole" action="ajoutbenevoleofficiel" auth="yes" roles="no"/>
 	<route url="/listebenevoles" module="Benevole" action="listebenevoles" auth="yes" roles="no"/>
+	
+	<route url="/navbar" module="Ajax" action="getNavbar" auth="no" roles="no" />
 </routes>
