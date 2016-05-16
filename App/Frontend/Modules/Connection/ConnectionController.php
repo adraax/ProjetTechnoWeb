@@ -192,17 +192,17 @@ class ConnectionController extends BaseController
 								$cat = 'minime';
 							else
 							{
-								$interv = new \DateInterval('P17Y');
+								$interv = new \DateInterval('P2Y');
 								if($date_nais->add($interv) >= $aujourdhui)
 									$cat = 'cadet';
 								else
 								{
-									$interv = new \DateInterval('P19Y');
+									$interv = new \DateInterval('P2Y');
 									if($date_nais->add($interv) >= $aujourdhui)
 										$cat = 'junior';
 									else
 									{
-										$interv = new \DateInterval('P39Y');
+										$interv = new \DateInterval('P20Y');
 										if($date_nais->add($interv) >= $aujourdhui)
 											$cat = 'senior';
 										else
