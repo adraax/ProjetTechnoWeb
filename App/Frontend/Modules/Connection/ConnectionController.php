@@ -161,8 +161,7 @@ class ConnectionController extends BaseController
                     else
                     {
                         $user->setId_personne($this->app->getUser()->getAttribute('id_personne'));
-						if($this->app->getUser()->getAttribute('type_licence') == 'Competiteur')
-							$user->addRole('competiteur');
+						$user->addRole($this->app->getUser()->getAttribute('type_licence'));
                         $userManager = $this->managers->getManagerOf('User');
                         $userManager->save($user);
                         
