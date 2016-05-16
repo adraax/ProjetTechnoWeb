@@ -1,38 +1,41 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <routes>
-    <route url="/" module="Test" action="index" auth="yes"/>
-    <route url="/connection" module="Connection" action="connection" auth="no"/>
-    <route url="/connectionajax" module="Connection" action="connectionAjax" auth="no"/>
-    <route url="/inscription" module="Connection" action="inscription" auth="no"/>
-    <route url="/createuser" module="Connection" action="createUser" auth="no"/>
-	<route url="/connectionajax" module="Connection" action="connectionAjax" auth="no"/>
+    <route url="/" module="Test" action="index" auth="yes" roles="no"/>
+    <route url="/connection" module="Connection" action="connection" auth="no" roles="no"/>
+    <route url="/connectionajax" module="Connection" action="connectionAjax" auth="no" roles="no"/>
+    <route url="/inscription" module="Connection" action="inscription" auth="no" roles="no"/>
+    <route url="/createuser" module="Connection" action="createUser" auth="no" roles="no"/>
+	<route url="/connectionajax" module="Connection" action="connectionAjax" auth="no" roles="no"/>
+	<route url="/deconnection" module="Connection" action="deconnection" auth="yes" roles="no"/>
 	
-	<route url="/afficherprofil" module="Profil" action="afficher" auth="no"/>
-	<route url="/modifierprofil" module="Profil" action="modifier" auth="no"/>
-	<route url="/voirmescompetitions" module="Profil" action="voirmescompetitions" auth="no"/>
-	<route url="/voirmesinvitations" module="Profil" action="voirmesinvitations" auth="no"/>
+	<route url="/afficherprofil" module="Profil" action="afficher" auth="yes" roles="no"/>
+	<route url="/modifierprofil" module="Profil" action="modifier" auth="yes" roles="no"/>
+	<route url="/voirmescompetitions" module="Profil" action="voirmescompetitions" auth="no" roles="no"/>
+	<route url="/voirmesinvitations" module="Profil" action="voirmesinvitations" auth="no" roles="no"/>
 	
-	<route url="/ajoutpersonne" module="Administration" action="ajoutpersonne" auth="no"/>
-	<route url="/ajoutadherent" module="Administration" action="ajoutadherent" auth="no"/>
-	<route url="/gestionroles" module="Administration" action="gestionroles" auth="no"/>
-	<route url="/returnroles" module="Administration" action="returnroles" auth="no"/>
+	<route url="/ajoutpersonne" module="Administration" action="ajoutpersonne" auth="no" roles="no"/>
+	<route url="/ajoutadherent" module="Administration" action="ajoutadherent" auth="no" roles="no"/>
+	<route url="/gestionroles" module="Administration" action="gestionroles" auth="no" roles="no"/>
+	<route url="/returnroles" module="Administration" action="returnroles" auth="no" roles="no"/>
 	
-	<route url="/valideparticipants" module="Administration" action="valideparticipants" auth="no"/>
+	<route url="/valideparticipants" module="Administration" action="valideparticipants" auth="no" roles="no"/>
 	
-	<route url="/gestioncategories" module="Administration" action="gestioncategories" auth="no"/>
-	<route url="/returncategorie" module="Administration" action="returncategorie" auth="no"/>
+	<route url="/gestioncategories" module="Administration" action="gestioncategories" auth="no" roles="no"/>
+	<route url="/returncategorie" module="Administration" action="returncategorie" auth="no" roles="no"/>
 	
-	<route url="/ajoutcompetition" module="Competition" action="ajoutcompetition" auth="no"/>
-	<route url="/affichecompetition" module="Competition" action="affichecompetition" auth="no"/>
-	<route url="/listecompetitions" module="Competition" action="listecompetitions" auth="no"/>
-	<route url="/modiftransport" module="Competition" action="modiftransport" auth="no"/>
+	<route url="/ajoutcompetition" module="Competition" action="ajoutcompetition" auth="no" roles="no"/>
+	<route url="/affichecompetition" module="Competition" action="affichecompetition" auth="no" roles="no"/>
+	<route url="/listecompetitions" module="Competition" action="listecompetitions" auth="no" roles="no"/>
+	<route url="/modiftransport" module="Competition" action="modiftransport" auth="no" roles="no"/>
 	
-	<route url="/ajoutequipage" module="Equipage" action="ajoutequipage" auth="no"/>
-	<route url="/voirequipage" module="Equipage" action="voirequipage" auth="no"/>
-	<route url="/gestioninvites" module="Equipage" action="gestioninvites" auth="no"/>
-	<route url="/gestionparticipants" module="Equipage" action="gestionparticipants" auth="no"/>
+	<route url="/ajoutequipage" module="Equipage" action="ajoutequipage" auth="no" roles="no"/>
+	<route url="/voirequipage" module="Equipage" action="voirequipage" auth="no" roles="no"/>
+	<route url="/gestioninvites" module="Equipage" action="gestioninvites" auth="no" roles="no"/>
+	<route url="/gestionparticipants" module="Equipage" action="gestionparticipants" auth="no" roles="no"/>
 	
-	<route url="/ajoutbenevole" module="Benevole" action="ajoutbenevole" auth="no"/>
-	<route url="/ajoutbenevoleofficiel" module="Benevole" action="ajoutbenevoleofficiel" auth="no"/>
-	<route url="/listebenevoles" module="Benevole" action="listebenevoles" auth="no"/>
+	<route url="/ajoutbenevole" module="Benevole" action="ajoutbenevole" auth="no" roles="no"/>
+	<route url="/ajoutbenevoleofficiel" module="Benevole" action="ajoutbenevoleofficiel" auth="no" roles="no"/>
+	<route url="/listebenevoles" module="Benevole" action="listebenevoles" auth="no" roles="no"/>
+	
+	<route url="/navbar" module="Ajax" action="getNavbar" auth="no" roles="no" />
 </routes>

@@ -3,6 +3,7 @@ namespace App\Frontend;
 
 use \GJLMFramework\Application;
 use \GJLMFramework\Auth;
+use \GJLMFramework\Roles;
 
 class FrontendApplication extends Application
 {
@@ -16,6 +17,7 @@ class FrontendApplication extends Application
     public function run()
     {
         $auth = new Auth($this, $this->httpRequest->getRequestURI());
+        $role = new Roles($this, $this->httpRequest->getRequestURI());
         
         if($auth->getAuth() && !$this->user->isAuthenticated())
         {
@@ -23,7 +25,16 @@ class FrontendApplication extends Application
         }  
         else
         {
-            $controller = $this->getController();
+            if($role->hasRoles($this->user->getAttribute('roles')))
+            {
+                $controller = $this->getController();
+            }
+            else
+            {
+                echo 'roles incorrects';
+                var_dump($this->user->getAttribute('roles'));
+                exit;
+            }
         }
         
         $controller->execute();
