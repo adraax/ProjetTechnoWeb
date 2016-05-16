@@ -43,6 +43,7 @@ class RoleFormBuilder extends FormBuilder
 		$roles->addBouton('entraineur');
 		$roles->addBouton('secretaire');
 		$roles->addBouton('competiteur');
+		$roles->addBouton('loisir');
 		
 		$this->form->add($option)
 		->add($roles);

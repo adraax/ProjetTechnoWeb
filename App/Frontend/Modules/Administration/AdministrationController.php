@@ -7,7 +7,7 @@ use \GJLMFramework\HTTPRequest;
 use \Entity\Personne;
 use \Entity\Licence;
 use \Entity\User;
-use \Entiy\Competiteur;
+use \Entity\Competiteur;
 use \FormBuilder\PersonneFormBuilder;
 use \FormBuilder\LicenceFormBuilder;
 use \FormBuilder\RoleFormBuilder;
@@ -233,11 +233,69 @@ class AdministrationController extends BaseController
 			if($request->postExists('id'))
 			{
 				$user = $usermanager->getUnique($request->getPostData('id'));
+				//Si le role competiteur est supprimé, on détruit la table adherent
+				if($user->hasRole('competiteur'))
+					$supprtable = true;
+				else
+					$supprtable = false;
 				$user->setRoles('');
 				$user->setConfirm_password($user->getPassword());
+				$personneManager = $this->managers->getManagerOf('Personne');
+				$competiteurManager = $this->managers->getManagerOf('Competiteur');
+				$personne = $personneManager->getUnique($user->getId_personne());
+				
 				if($request->postExists('roles'))
+				{
 					foreach($request->getPostData('roles') as $role)
+					{
 						$user->addRole($role);
+						//Si le rôle competiteur est ajouté, on crée une table adherent
+						if($role == 'competiteur' && !$supprtable)
+						{
+							//Définition de la catégorie en fonction de l'âge, spécialité de base : kayak (l'adhérent peut le modifier dans son profil)
+							$competiteur = new Competiteur;
+							$competiteur->setNum_personne($user->getId_personne());
+							$competiteur->setSpecialite('kayak');
+							$competiteur->setCertif_med(false);
+							$competiteur->setObjectif_saison('');
+							//On récupère la date de naissance pour la catégorie
+							$date_nais = $personne->getDate_naissance();
+							$date_nais = \DateTime::createFromFormat('Y-m-d',$date_nais);
+							$aujourdhui = new \DateTime();
+							$interv = new \DateInterval('P15Y');
+							$cat = '';
+							if($date_nais->add($interv) >= $aujourdhui)
+								$cat = 'minime';
+							else
+							{
+								$interv = new \DateInterval('P17Y');
+								if($date_nais->add($interv) >= $aujourdhui)
+									$cat = 'cadet';
+								else
+								{
+									$interv = new \DateInterval('P19Y');
+									if($date_nais->add($interv) >= $aujourdhui)
+										$cat = 'junior';
+									else
+									{
+										$interv = new \DateInterval('P39Y');
+										if($date_nais->add($interv) >= $aujourdhui)
+											$cat = 'senior';
+										else
+											$cat = 'veteran';
+									}
+								}
+							}
+							$competiteur->setCategorie($cat);
+							$competiteurManager->save($competiteur);
+						}
+					}
+				}
+				if($supprtable)
+				{
+					$competiteur = $competiteurManager->getByPersonneId($user->getId_personne());
+					$competiteurManager->delete($competiteur->getId());
+				}	
 			}
 			else
 				$user = new User;

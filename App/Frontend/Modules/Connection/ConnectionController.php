@@ -171,7 +171,7 @@ class ConnectionController extends BaseController
                         $licence->setId(5);
                         $licenceManager->save($licence);
                         
-						if($this->app->getUser()->getAttribute('type_licence') == 'Competiteur')
+						if($this->app->getUser()->getAttribute('type_licence') == 'competiteur')
 						{
 							//Définition de la catégorie en fonction de l'âge, spécialité de base : kayak (l'adhérent peut le modifier dans son profil)
 							$competiteurManager = $this->managers->getManagerOf('Competiteur');
