@@ -29,7 +29,6 @@
             <div id="navbar" class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
                     <li><a href="/">Accueil</a></li>
-                    <li><a href="/afficherprofil">Profil</a></li>
                     <li><a href="/listecompetitions">Comp&eacute;titions</a></li>
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
@@ -39,7 +38,7 @@
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Nom Utilisateur <span class="caret"></span></a>
                         <ul class="dropdown-menu dropdown-menu-left">
-                            <li><span class="glyphicon glyphicon-user"></span> Profil</li>
+                            <li><a href="/afficherprofil"><span class="glyphicon glyphicon-user"></span> Profil</a></li>
                             <li role="separator" class="divider"></li>
                             <li><a href="/deconnection"><span class="glyphicon glyphicon-off"></span> Deconnexion</a></li>
                         </ul>
