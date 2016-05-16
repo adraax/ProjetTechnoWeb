@@ -15,6 +15,7 @@ $(function() {
 			if(data=="ok")
 			{
 				$('#myModal').modal('toggle');
+				$('#navbar').load('/navbar');
 			}
 			else
 			{
