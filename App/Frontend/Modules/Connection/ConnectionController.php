@@ -40,11 +40,31 @@ class ConnectionController extends BaseController
         
         if($request->getMethod() == 'POST' && $form->isValid())
         {
-            $this->app->getHttpResponse()->redirect('/');
+            $userManager = $this->managers->getManagerOf('User');
+            $user2 = $userManager->getByName($user->getUsername());
+            
+            if(is_null($user2))
+            {
+                $this->app->getUser()->setFlash('Utilisateur inexistant.', 'alert-warning');
+            }
+            else
+            {
+                if(password_verify($user->getPassword(), $user2->getPassword()))
+                {
+                    $this->app->getUser()->setAuthenticated(true);
+                    $this->app->getUser()->setAttribute('roles', $user2->getRoles());
+                    $this->app->getUser()->setAttribute('user_id', $user2->getId());
+                    $this->app->getHttpResponse()->redirect('/listecompetitions');
+                }
+                else
+                {
+                    echo var_dump($user2);
+                    $this->app->getUser()->setFlash('Identifiants incorrects.', 'alert-danger');
+                }
+            }
         }
         
         $this->page->addVar('form', $form->createView());
-        $this->page->addVar('script', 'test');
     }
     
     public function inscriptionAction(HTTPRequest $request)
@@ -277,7 +297,6 @@ class ConnectionController extends BaseController
                 }
                 else
                 {
-                    echo var_dump($user2);
                     $this->app->getUser()->setFlash('Identifiants incorrects.', 'alert-danger');
                 }
             }
