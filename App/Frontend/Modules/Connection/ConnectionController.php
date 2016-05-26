@@ -40,11 +40,31 @@ class ConnectionController extends BaseController
         
         if($request->getMethod() == 'POST' && $form->isValid())
         {
-            $this->app->getHttpResponse()->redirect('/');
+            $userManager = $this->managers->getManagerOf('User');
+            $user2 = $userManager->getByName($user->getUsername());
+            
+            if(is_null($user2))
+            {
+                $this->app->getUser()->setFlash('Utilisateur inexistant.', 'alert-warning');
+            }
+            else
+            {
+                if(password_verify($user->getPassword(), $user2->getPassword()))
+                {
+                    $this->app->getUser()->setAuthenticated(true);
+                    $this->app->getUser()->setAttribute('roles', $user2->getRoles());
+                    $this->app->getUser()->setAttribute('user_id', $user2->getId());
+                    $this->app->getHttpResponse()->redirect('/listecompetitions');
+                }
+                else
+                {
+                    echo var_dump($user2);
+                    $this->app->getUser()->setFlash('Identifiants incorrects.', 'alert-danger');
+                }
+            }
         }
         
         $this->page->addVar('form', $form->createView());
-        $this->page->addVar('script', 'test');
     }
     
     public function inscriptionAction(HTTPRequest $request)
@@ -161,8 +181,7 @@ class ConnectionController extends BaseController
                     else
                     {
                         $user->setId_personne($this->app->getUser()->getAttribute('id_personne'));
-						if($this->app->getUser()->getAttribute('type_licence') == 'Competiteur')
-							$user->addRole('competiteur');
+						$user->addRole($this->app->getUser()->getAttribute('type_licence'));
                         $userManager = $this->managers->getManagerOf('User');
                         $userManager->save($user);
                         
@@ -172,7 +191,7 @@ class ConnectionController extends BaseController
                         $licence->setId(5);
                         $licenceManager->save($licence);
                         
-						if($this->app->getUser()->getAttribute('type_licence') == 'Competiteur')
+						if($this->app->getUser()->getAttribute('type_licence') == 'competiteur')
 						{
 							//Définition de la catégorie en fonction de l'âge, spécialité de base : kayak (l'adhérent peut le modifier dans son profil)
 							$competiteurManager = $this->managers->getManagerOf('Competiteur');
@@ -193,17 +212,17 @@ class ConnectionController extends BaseController
 								$cat = 'minime';
 							else
 							{
-								$interv = new \DateInterval('P17Y');
+								$interv = new \DateInterval('P2Y');
 								if($date_nais->add($interv) >= $aujourdhui)
 									$cat = 'cadet';
 								else
 								{
-									$interv = new \DateInterval('P19Y');
+									$interv = new \DateInterval('P2Y');
 									if($date_nais->add($interv) >= $aujourdhui)
 										$cat = 'junior';
 									else
 									{
-										$interv = new \DateInterval('P39Y');
+										$interv = new \DateInterval('P20Y');
 										if($date_nais->add($interv) >= $aujourdhui)
 											$cat = 'senior';
 										else
@@ -278,7 +297,6 @@ class ConnectionController extends BaseController
                 }
                 else
                 {
-                    echo var_dump($user2);
                     $this->app->getUser()->setFlash('Identifiants incorrects.', 'alert-danger');
                 }
             }

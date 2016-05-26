@@ -1,0 +1,211 @@
+Structure du dossier
+Le num‚ro de s‚rie du volume est 58E8-DA6B
+C:\WAMP64\WWW\PROJETTECHNOWEB
+|   arch.txt
+|   bd.sql
+|   bugstrouves.txt
+|   Rapport de technologies du web.docx
+|   README.md
+|   
++---.vscode
+|       settings.json
+|       
++---App
+|   \---Frontend
+|       |   FrontendApplication.php
+|       |   
+|       +---Config
+|       |       config.xml
+|       |       routes.xml
+|       |       
+|       +---Modules
+|       |   +---Administration
+|       |   |   |   AdministrationController.php
+|       |   |   |   
+|       |   |   \---Views
+|       |   |           ajoutadherent.php
+|       |   |           ajoutpersonne.php
+|       |   |           gestioncategories.php
+|       |   |           gestioncertificats.php
+|       |   |           gestionroles.php
+|       |   |           menu_administration.php
+|       |   |           returncategorie.php
+|       |   |           returnroles.php
+|       |   |           valideparticipants.php
+|       |   |           
+|       |   +---Ajax
+|       |   |   |   AjaxController.php
+|       |   |   |   
+|       |   |   \---Views
+|       |   |           getnavbar.php
+|       |   |           
+|       |   +---Benevole
+|       |   |   |   BenevoleController.php
+|       |   |   |   
+|       |   |   \---Views
+|       |   |           ajoutbenevole.php
+|       |   |           ajoutbenevoleofficiel.php
+|       |   |           listebenevoles.php
+|       |   |           
+|       |   +---Competition
+|       |   |   |   CompetitionController.php
+|       |   |   |   
+|       |   |   \---Views
+|       |   |           affichecompetition.php
+|       |   |           ajoutcompetition.php
+|       |   |           listecompetitions.php
+|       |   |           modiftransport.php
+|       |   |           
+|       |   +---Connection
+|       |   |   |   ConnectionController.php
+|       |   |   |   
+|       |   |   \---Views
+|       |   |           connection.php
+|       |   |           connectionajax.php
+|       |   |           createuser.php
+|       |   |           deconnection.php
+|       |   |           inscription.php
+|       |   |           
+|       |   +---Equipage
+|       |   |   |   EquipageController.php
+|       |   |   |   
+|       |   |   \---Views
+|       |   |           ajoutequipage.php
+|       |   |           gestioninvites.php
+|       |   |           gestionparticipants.php
+|       |   |           voirequipage.php
+|       |   |           
+|       |   +---Profil
+|       |   |   |   ProfilController.php
+|       |   |   |   
+|       |   |   \---Views
+|       |   |           afficher.php
+|       |   |           menu_profil.php
+|       |   |           modifier.php
+|       |   |           voirmescompetitions.php
+|       |   |           voirmesinvitations.php
+|       |   |           
+|       |   \---Test
+|       |       |   TestController.php
+|       |       |   
+|       |       \---Views
+|       |               index.php
+|       |               
+|       \---Templates
+|               layout.php
+|               
++---Errors
+|       404.html
+|       
++---Lib
+|   +---GJLMFramework
+|   |       Application.php
+|   |       ApplicationComponent.php
+|   |       Auth.php
+|   |       BaseController.php
+|   |       CheckboxField.php
+|   |       Config.php
+|   |       DatePickerField.php
+|   |       EmailField.php
+|   |       Entity.php
+|   |       Field.php
+|   |       Form.php
+|   |       FormBuilder.php
+|   |       HTTPRequest.php
+|   |       HTTPResponse.php
+|   |       Hydrator.php
+|   |       ListField.php
+|   |       Manager.php
+|   |       Managers.php
+|   |       MaxLengthValidator.php
+|   |       NotNullValidator.php
+|   |       NumberField.php
+|   |       Page.php
+|   |       PasswordField.php
+|   |       PDOFactory.php
+|   |       RadioField.php
+|   |       Roles.php
+|   |       Route.php
+|   |       Router.php
+|   |       SplClassLoader.php
+|   |       StringField.php
+|   |       TextField.php
+|   |       User.php
+|   |       Validator.php
+|   |       
+|   \---Vendors
+|       +---Entity
+|       |       Benevole.php
+|       |       BenevoleOfficiel.php
+|       |       Competiteur.php
+|       |       Competition.php
+|       |       Equipage.php
+|       |       Licence.php
+|       |       Personne.php
+|       |       User.php
+|       |       
+|       +---FormBuilder
+|       |       BenevoleFormBuilder.php
+|       |       BenevoleOfficielFormBuilder.php
+|       |       CategorieFormBuilder.php
+|       |       CompetitionFormBuilder.php
+|       |       EquipageFormBuilder.php
+|       |       LicenceFormBuilder.php
+|       |       PersonneFormBuilder.php
+|       |       RoleFormBuilder.php
+|       |       UserFormBuilder.php
+|       |       UserInscriptionFormBuilder.php
+|       |       
+|       \---Model
+|               BenevoleManager.php
+|               BenevoleManagerPDO.php
+|               BenevoleOfficielManager.php
+|               BenevoleOfficielManagerPDO.php
+|               CompetiteurManager.php
+|               CompetiteurManagerPDO.php
+|               CompetitionManager.php
+|               CompetitionManagerPDO.php
+|               EquipageManager.php
+|               EquipageManagerPDO.php
+|               LicenceManager.php
+|               LicenceManagerPDO.php
+|               PersonneManager.php
+|               PersonneManagerPDO.php
+|               UserManager.php
+|               UserManagerPDO.php
+|               
+\---Web
+    |   .htaccess
+    |   bootstrap.php
+    |   config.xml
+    |   index.php
+    |   routes.xml
+    |   
+    +---css
+    |       bootstrap-theme.css
+    |       bootstrap-theme.css.map
+    |       bootstrap-theme.min.css
+    |       bootstrap-theme.min.css.map
+    |       bootstrap.css
+    |       bootstrap.css.map
+    |       bootstrap.min.css
+    |       bootstrap.min.css.map
+    |       style.css
+    |       
+    +---fonts
+    |       glyphicons-halflings-regular.eot
+    |       glyphicons-halflings-regular.svg
+    |       glyphicons-halflings-regular.ttf
+    |       glyphicons-halflings-regular.woff
+    |       glyphicons-halflings-regular.woff2
+    |       
+    \---js
+            bootstrap.js
+            bootstrap.min.js
+            connexion.js
+            jquery.js
+            modiftransport.js
+            returncategorie.js
+            returnroles.js
+            XMLHttpRequest.js
+            

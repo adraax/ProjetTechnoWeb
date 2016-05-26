@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Client :  127.0.0.1
--- Généré le :  Ven 13 Mai 2016 à 13:50
+-- Généré le :  Dim 22 Mai 2016 à 15:07
 -- Version du serveur :  5.7.9
 -- Version de PHP :  7.0.0
 
@@ -35,14 +35,7 @@ CREATE TABLE IF NOT EXISTS `accompagnateur_benevole` (
   PRIMARY KEY (`id`),
   KEY `numeroPersonne` (`id_personne`),
   KEY `numeroCompetition` (`id_competition`)
-) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8;
-
---
--- Contenu de la table `accompagnateur_benevole`
---
-
-INSERT INTO `accompagnateur_benevole` (`id`, `id_personne`, `id_competition`, `role`) VALUES
-(11, 3, 1, 'Buvette');
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -59,14 +52,14 @@ CREATE TABLE IF NOT EXISTS `accompagnateur_officiel` (
   PRIMARY KEY (`id`),
   KEY `numero_adherent` (`id_licence`),
   KEY `numeroCompetition` (`id_competition`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
 
 --
 -- Contenu de la table `accompagnateur_officiel`
 --
 
 INSERT INTO `accompagnateur_officiel` (`id`, `id_licence`, `id_competition`, `role`) VALUES
-(2, 12345, 1, 'coucou');
+(2, 12345, 1, 'Buvette');
 
 -- --------------------------------------------------------
 
@@ -84,15 +77,15 @@ CREATE TABLE IF NOT EXISTS `adherent` (
   `certif_med` tinyint(1) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `numeroPersonne` (`num_personne`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8;
 
 --
 -- Contenu de la table `adherent`
 --
 
 INSERT INTO `adherent` (`id`, `num_personne`, `categorie`, `specialite`, `objectif_saison`, `certif_med`) VALUES
-(1, 1, 'cadet', 'kayak', 'Objectif !', 1),
-(2, 2, 'senior', 'kayak', '', 1);
+(9, 7, 'cadet', 'kayak', '', 1),
+(13, 6, 'senior', 'kayak', '', 0);
 
 -- --------------------------------------------------------
 
@@ -109,14 +102,6 @@ CREATE TABLE IF NOT EXISTS `adherent_equipage` (
   KEY `numeroAdherent` (`num_competiteur`),
   KEY `numeroEquipage` (`num_equipage`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
---
--- Contenu de la table `adherent_equipage`
---
-
-INSERT INTO `adherent_equipage` (`num_competiteur`, `num_equipage`, `valide`) VALUES
-(1, 49, 1),
-(2, 49, 1);
 
 -- --------------------------------------------------------
 
@@ -166,7 +151,7 @@ CREATE TABLE IF NOT EXISTS `competition` (
   `nb_places_dispo` int(11) NOT NULL,
   `club_organisateur` varchar(30) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
 
 --
 -- Contenu de la table `competition`
@@ -174,7 +159,7 @@ CREATE TABLE IF NOT EXISTS `competition` (
 
 INSERT INTO `competition` (`id`, `niveau`, `date_competition`, `adresse`, `code_postal`, `ville`, `meteo`, `type_hebergement`, `mode_transport`, `nb_places_dispo`, `club_organisateur`) VALUES
 (1, 'departemental', '2017-02-01', 'ici', 21000, 'Dijon', 'Soleil', 'particulier', 'Car', 1, 'Dijon Kayak'),
-(2, 'national', '2018-01-01', 'une adresse\r\nsur deux ligne', 55000, 'Jesaispas', 'Beau', '', 'Car', 10, 'Dijon Kayak');
+(6, 'national', '2016-05-30', 'lac', 71250, 'Massy', '', '', 'Car', 10, 'Dijon Kayak');
 
 -- --------------------------------------------------------
 
@@ -191,14 +176,14 @@ CREATE TABLE IF NOT EXISTS `equipage` (
   `id_competition` int(11) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `numeroCompetition` (`id_competition`)
-) ENGINE=InnoDB AUTO_INCREMENT=50 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=60 DEFAULT CHARSET=utf8;
 
 --
 -- Contenu de la table `equipage`
 --
 
 INSERT INTO `equipage` (`id`, `specialite`, `categorie`, `nb_places`, `id_competition`) VALUES
-(49, 'kayak', 'senior', 2, 1);
+(56, 'canoe', 'junior', 4, 1);
 
 -- --------------------------------------------------------
 
@@ -221,7 +206,11 @@ CREATE TABLE IF NOT EXISTS `licence` (
 --
 
 INSERT INTO `licence` (`num`, `id_personne`, `type`, `activated`) VALUES
-(12345, 1, 'bleu', 0);
+(1111, 4, 'Dirigeant', 1),
+(2222, 5, 'Dirigeant', 1),
+(3333, 6, 'competiteur', 1),
+(4444, 7, 'Competiteur', 1),
+(12345, 1, 'admin', 1);
 
 -- --------------------------------------------------------
 
@@ -241,16 +230,19 @@ CREATE TABLE IF NOT EXISTS `personne` (
   `sexe` varchar(1) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `numero` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8;
 
 --
 -- Contenu de la table `personne`
 --
 
 INSERT INTO `personne` (`id`, `nom`, `prenom`, `num_tel`, `email`, `adresse`, `date_naissance`, `sexe`) VALUES
-(1, 'nomadmin', 'prenomadmin', '0102030405', 'coucou@lalala.fr', 'ici', '1998-05-12', 'F'),
-(2, 'Yolo', 'Lalala', '0123456789', 'blabla', 'là', '2016-05-11', 'H'),
-(3, 'Test', 'Idem', '0123456789', 'email', 'dgjqkl', '2000-01-01', 'H');
+(1, 'Nomadmin', 'Prenomadmin', '0102030406', 'coucou@lalala.com', 'toujours la', '1998-05-13', 'H'),
+(4, 'Nomentraineur', 'Prenomentraineur', '0123456789', 'email@coucou.fr', 'adresse', '2000-01-01', 'H'),
+(5, 'Nomsecretaire', 'Prenomsecretaire', '0123456789', 'email@coucou.fr', 'ici', '1992-01-01', 'F'),
+(6, 'Nomcompetiteur', 'Prenomcompetiteur', '0123456789', 'email@coucou.fr', 'ici', '1992-01-01', 'F'),
+(7, 'Nomcompetiteur2', 'Prenomcompetiteur2', '0123456789', 'email@coucou.fr', 'ici', '2000-01-01', 'F'),
+(8, 'Nompersonne', 'Prenompersonne', '0123456789', 'email@coucou.fr', 'ici', '2000-01-01', 'F');
 
 -- --------------------------------------------------------
 
@@ -265,17 +257,20 @@ CREATE TABLE IF NOT EXISTS `user` (
   `username` varchar(30) NOT NULL,
   `password` varchar(255) NOT NULL,
   `roles` varchar(255) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
+  PRIMARY KEY (`id`),
+  KEY `id_personne` (`id_personne`)
+) ENGINE=InnoDB AUTO_INCREMENT=25 DEFAULT CHARSET=utf8;
 
 --
 -- Contenu de la table `user`
 --
 
 INSERT INTO `user` (`id`, `id_personne`, `username`, `password`, `roles`) VALUES
-(4, 1, 'admin', '$2y$10$i16peYiZ5kNj9qJE5l757OYVuqLEYm31xI.NDlsDUIUAWFtfMDrQe', 'entraineur,competiteur'),
-(5, 2, 'test', 'osef', 'competiteur'),
-(6, 3, 'test', 'osef', 'secretaire,entraineur');
+(4, 1, 'admin', '$2y$10$i16peYiZ5kNj9qJE5l757OYVuqLEYm31xI.NDlsDUIUAWFtfMDrQe', 'admin'),
+(10, 4, 'entraineur', '$2y$10$UM9NPmtcCWOSEs.XpKn09eo06OiuFer6dZmvF1zIxqhhfUDiVOfF2', 'entraineur'),
+(11, 5, 'secretaire', '$2y$10$dqo5QT.8MaU2KrPhTG4mw.s9MIB0zrShl.5j1mPUrOJwEl.4LkOla', 'secretaire'),
+(21, 7, 'competiteur2', '$2y$10$im6YEBYncTYxXsNc7oEmEOvX9pqK4IKMbTvIrpWwN3I2V9O8TPsbm', 'competiteur'),
+(24, 6, 'competiteur', '$2y$10$uTJ0g18gKhsNoMG/pT4RgeliwPkbnTljyKWzb1ZodKWYlT/.8Sg7m', 'competiteur');
 
 --
 -- Contraintes pour les tables exportées
@@ -327,6 +322,18 @@ ALTER TABLE `adherent_transport`
 --
 ALTER TABLE `equipage`
   ADD CONSTRAINT `equipage_ibfk_1` FOREIGN KEY (`id_competition`) REFERENCES `competition` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Contraintes pour la table `licence`
+--
+ALTER TABLE `licence`
+  ADD CONSTRAINT `licence_ibfk_1` FOREIGN KEY (`id_personne`) REFERENCES `personne` (`id`) ON DELETE CASCADE;
+
+--
+-- Contraintes pour la table `user`
+--
+ALTER TABLE `user`
+  ADD CONSTRAINT `user_ibfk_1` FOREIGN KEY (`id_personne`) REFERENCES `personne` (`id`) ON DELETE CASCADE;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
