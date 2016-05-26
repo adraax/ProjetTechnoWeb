@@ -30,7 +30,7 @@ class PersonneFormBuilder extends FormBuilder
             'name' => "nom",
             'maxLength' => 30,
             'validators' => [
-                new MaxLengthValidator('Le nom d\'utilisateur est trop long.', 30),
+                new MaxLengthValidator('Le nom de l\'utilisateur est trop long.', 30),
                 new NotNullValidator('Il faut entrer un nom.')
             ]
         ]))
@@ -39,7 +39,7 @@ class PersonneFormBuilder extends FormBuilder
             'name' => "prenom",
             'maxLength' => 30,
             'validators' => [
-                new MaxLengthValidator('Le prénom d\'utilisateur est trop long.', 30),
+                new MaxLengthValidator('Le prénom de l\'utilisateur est trop long.', 30),
                 new NotNullValidator('Il faut entrer un prénom.')
             ]
         ]))
