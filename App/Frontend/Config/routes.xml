@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <routes>
-    <route url="/" module="Test" action="index" auth="yes" roles="no"/>
+    <route url="/" module="Competition" action="listecompetitions" auth="yes" roles="no"/>
     <route url="/connection" module="Connection" action="connection" auth="no" roles="no"/>
 	<route url="/deconnection" module="Connection" action="deconnection" auth="no" roles="no"/>
     <route url="/connectionajax" module="Connection" action="connectionAjax" auth="no" roles="no"/>
