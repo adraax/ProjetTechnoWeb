@@ -208,7 +208,7 @@ CREATE TABLE IF NOT EXISTS `licence` (
 INSERT INTO `licence` (`num`, `id_personne`, `type`, `activated`) VALUES
 (1111, 4, 'Dirigeant', 1),
 (2222, 5, 'Dirigeant', 1),
-(3333, 6, 'competiteur', 1),
+(3333, 6, 'Competiteur', 1),
 (4444, 7, 'Competiteur', 1),
 (12345, 1, 'admin', 1);
 
