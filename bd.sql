@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Client :  127.0.0.1
--- Généré le :  Dim 22 Mai 2016 à 15:07
+-- Généré le :  Lun 30 Mai 2016 à 15:01
 -- Version du serveur :  5.7.9
 -- Version de PHP :  7.0.0
 
@@ -19,6 +19,8 @@ SET time_zone = "+00:00";
 --
 -- Base de données :  `projet_techno_web`
 --
+CREATE DATABASE IF NOT EXISTS `projet_techno_web` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
+USE `projet_techno_web`;
 
 -- --------------------------------------------------------
 
