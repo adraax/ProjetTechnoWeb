@@ -1,15 +1,7 @@
-Structure du dossier
-Le num‚ro de s‚rie du volume est 58E8-DA6B
 C:\WAMP64\WWW\PROJETTECHNOWEB
 |   arch.txt
 |   bd.sql
-|   bugstrouves.txt
-|   Rapport de technologies du web.docx
-|   README.md
-|   
-+---.vscode
-|       settings.json
-|       
+|   README.md   
 +---App
 |   \---Frontend
 |       |   FrontendApplication.php
